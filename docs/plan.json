@@ -590,7 +590,7 @@
       "dependsOn": ["T026"],
       "files": ["e2e", ".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
