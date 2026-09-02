@@ -560,7 +560,7 @@
       "dependsOn": ["T032"],
       "files": ["apps/storefront/src/i18n/terms"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
