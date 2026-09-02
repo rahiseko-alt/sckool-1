@@ -41,6 +41,10 @@
 
 **作業中のブランチは `claude/checkin-jb6vw4`、PR は #5。**
 
+**`main` の `docs/plan.json` は古い**（全項目が `todo` のまま）。実装もコードも
+PR #5 のブランチにあり、`main` にはこの引継ぎと判断記録しか入れていない。
+**進み具合を見るときは、先に `claude/checkin-jb6vw4` を取り出すこと。**
+
 **公開先が決まった（2026-09-02）。** サーバー本体は Oracle Cloud の無料枠、
 **生徒のデータは Aiven の無料 PostgreSQL、生徒の画面は Cloudflare Pages。**
 分ける理由と、他社を採らなかった理由は `docs/decisions.md`「42.」に全部ある。
