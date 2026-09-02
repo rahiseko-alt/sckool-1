@@ -4,6 +4,7 @@ import { ADS_MODULE } from '../../../modules/ads'
 import type AdsService from '../../../modules/ads/service'
 import { CATALOG_MODULE } from '../../../modules/catalog'
 import type CatalogService from '../../../modules/catalog/service'
+import { marketIdOf } from '../../../modules/market-auth/token'
 import { MP_MODULE } from '../../../modules/mp'
 import type MpService from '../../../modules/mp/service'
 import { ORGANIZATION_MODULE } from '../../../modules/organization'
@@ -49,13 +50,14 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 }
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const body = (req.body ?? {}) as { market_id?: unknown; listing_id?: unknown; days?: unknown }
-  const marketId = typeof body.market_id === 'string' ? body.market_id.trim().toUpperCase() : ''
+  const body = (req.body ?? {}) as { listing_id?: unknown; days?: unknown }
+  // 広告を出す企業は**合鍵から決める**。本文の market_id は読まない。
+  const marketId = marketIdOf(req)
   const listingId = typeof body.listing_id === 'string' ? body.listing_id : ''
   const days = typeof body.days === 'number' ? body.days : Number.NaN
 
-  if (!marketId || !listingId) {
-    res.status(400).json({ code: 'market_id_and_listing_id_required' })
+  if (!listingId) {
+    res.status(400).json({ code: 'listing_id_required' })
     return
   }
 

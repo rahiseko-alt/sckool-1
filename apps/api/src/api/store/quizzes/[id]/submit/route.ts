@@ -2,6 +2,7 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
 import { MP_MODULE } from '../../../../../modules/mp'
 import type MpService from '../../../../../modules/mp/service'
+import { marketIdOf } from '../../../../../modules/market-auth/token'
 import { ORGANIZATION_MODULE } from '../../../../../modules/organization'
 import type OrganizationService from '../../../../../modules/organization/service'
 import { QUIZ_MODULE } from '../../../../../modules/quiz'
@@ -14,17 +15,14 @@ import type QuizService from '../../../../../modules/quiz/service'
  * 1回しか出ない。
  */
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const body = (req.body ?? {}) as { market_id?: unknown; answers?: unknown }
-  const marketId = typeof body.market_id === 'string' ? body.market_id.trim().toUpperCase() : ''
+  const body = (req.body ?? {}) as { answers?: unknown }
+  // 受験する企業は**合鍵から決める**。本文の market_id は読まない。
+  const marketId = marketIdOf(req)
   const answers =
     typeof body.answers === 'object' && body.answers !== null
       ? (body.answers as Record<string, unknown>)
       : {}
 
-  if (!marketId) {
-    res.status(400).json({ code: 'market_id_required' })
-    return
-  }
 
   const organizations = req.scope.resolve(ORGANIZATION_MODULE) as OrganizationService
   const organization = await organizations.findByMarketId(marketId)

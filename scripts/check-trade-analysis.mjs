@@ -55,19 +55,32 @@ async function request(method, path, { body, token } = {}) {
 }
 
 const password = 'good-password-1234';
+
+/** 生徒としてログインして合鍵をもらう。企業として行う操作に要る。 */
+async function loginAsOrganization(marketId, pass = 'good-password-1234') {
+  const result = await request('POST', '/auth/customer/emailpass', {
+    body: { email: marketId, password: pass },
+  });
+  return result.body?.token;
+}
+
 const stamp = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
 async function createOrganization(label) {
   const created = await request('POST', '/store/accounts', {
     body: { password, organization_name: `${label} ${stamp}` },
   });
-  return { marketId: created.body?.market_id, name: created.body?.organization_name };
+  const marketId = created.body?.market_id;
+  return {
+    marketId,
+    name: created.body?.organization_name,
+    token: await loginAsOrganization(marketId),
+  };
 }
 
-async function createListing(marketId, price) {
+async function createListing(org, price) {
   const created = await request('POST', '/store/listings', {
     body: {
-      market_id: marketId,
       title: `商品 ${Math.random().toString(36).slice(2, 8)}`,
       description: '説明',
       target_customer: 'ターゲット',
@@ -78,13 +91,15 @@ async function createListing(marketId, price) {
       sale_starts_at: '2026-01-01T00:00:00Z',
       sale_ends_at: '2099-12-31T00:00:00Z',
     },
+    token: org.token,
   });
   return created.body?.listing;
 }
 
-async function buy(buyerMarketId, listingId) {
+async function buy(buyer, listingId) {
   const purchase = await request('POST', '/store/purchases', {
-    body: { market_id: buyerMarketId, listing_id: listingId },
+    body: { listing_id: listingId },
+    token: buyer.token,
   });
   return purchase.status;
 }
@@ -102,22 +117,22 @@ for (const org of [pairX, pairY, openA, openB, openC]) {
   expect(`${org.name} を作れた`, typeof org.marketId, 'string');
 }
 
-const listingX = await createListing(pairX.marketId, 2_000);
-const listingY = await createListing(pairY.marketId, 2_000);
-const listingB = await createListing(openB.marketId, 1_000);
-const listingC = await createListing(openC.marketId, 1_000);
+const listingX = await createListing(pairX, 2_000);
+const listingY = await createListing(pairY, 2_000);
+const listingB = await createListing(openB, 1_000);
+const listingC = await createListing(openC, 1_000);
 
 // 買い合い: X→Y と Y→X をそれぞれ3回
 for (let i = 0; i < 3; i += 1) {
-  expect(`X が Y から買えた（${i + 1}回目）`, await buy(pairX.marketId, listingY.id), 201);
-  expect(`Y が X から買えた（${i + 1}回目）`, await buy(pairY.marketId, listingX.id), 201);
+  expect(`X が Y から買えた（${i + 1}回目）`, await buy(pairX, listingY.id), 201);
+  expect(`Y が X から買えた（${i + 1}回目）`, await buy(pairY, listingX.id), 201);
 }
 
 // 偏り: A は B から4回、C から1回買う（購入集中率 80%）
 for (let i = 0; i < 4; i += 1) {
-  expect(`A が B から買えた（${i + 1}回目）`, await buy(openA.marketId, listingB.id), 201);
+  expect(`A が B から買えた（${i + 1}回目）`, await buy(openA, listingB.id), 201);
 }
-expect('A が C から買えた', await buy(openA.marketId, listingC.id), 201);
+expect('A が C から買えた', await buy(openA, listingC.id), 201);
 
 console.log('\n=== 生徒のアカウントでは開けない ===');
 expect(

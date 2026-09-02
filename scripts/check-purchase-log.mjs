@@ -57,6 +57,15 @@ async function request(method, path, { body, token } = {}) {
 }
 
 const password = process.env.ADMIN_PASSWORD ?? 'probe-password-1234';
+
+/** 生徒としてログインして合鍵をもらう。企業として行う操作に要る。 */
+async function loginAsOrganization(marketId, pass = 'good-password-1234') {
+  const result = await request('POST', '/auth/customer/emailpass', {
+    body: { email: marketId, password: pass },
+  });
+  return result.body?.token;
+}
+
 const firstAdmin = process.env.ADMIN_IDENTIFIER ?? 'probe-admin@anon.invalid';
 const secondAdmin = process.env.ADMIN_2_IDENTIFIER ?? 'probe-admin-2@anon.invalid';
 
@@ -74,11 +83,11 @@ const seller = await request('POST', '/store/accounts', {
 });
 expect('企業を作れた', seller.status, 201);
 const sellerId = seller.body?.market_id;
+const sellerToken = await loginAsOrganization(sellerId);
 
 const listing = (
   await request('POST', '/store/listings', {
     body: {
-      market_id: sellerId,
       title: `商品 ${stamp}`,
       description: '説明',
       target_customer: 'ターゲット',
@@ -89,6 +98,7 @@ const listing = (
       sale_starts_at: '2026-01-01T00:00:00Z',
       sale_ends_at: '2099-12-31T00:00:00Z',
     },
+    token: sellerToken,
   })
 ).body?.listing;
 expect('商品を出せた', typeof listing?.id, 'string');
@@ -196,7 +206,7 @@ expect('購入件数の合計が数字', typeof both.body?.totals?.purchase_coun
 expect('金額の合計が数字', typeof both.body?.totals?.total_amount, 'number');
 
 console.log('\n=== 売った企業の売上に入っている（受け入れ基準 G1 と揃う）===');
-const dashboard = (await request('GET', `/store/dashboard?market_id=${sellerId}`)).body;
+const dashboard = (await request('GET', '/store/dashboard', { token: sellerToken })).body;
 expect('企業の売上は5,000', dashboard?.stats?.revenue, 5_000);
 expect('企業の販売件数は2', dashboard?.stats?.sales_count, 2);
 

@@ -2,6 +2,7 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
 import { CATALOG_MODULE } from '../../../modules/catalog'
 import type CatalogService from '../../../modules/catalog/service'
+import { marketIdOf } from '../../../modules/market-auth/token'
 import { MP_MODULE } from '../../../modules/mp'
 import type MpService from '../../../modules/mp/service'
 import { ORGANIZATION_MODULE } from '../../../modules/organization'
@@ -26,13 +27,8 @@ const KIND_LABELS: Record<string, string> = {
 }
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
-  const marketId =
-    typeof req.query.market_id === 'string' ? req.query.market_id.trim().toUpperCase() : ''
-
-  if (!marketId) {
-    res.status(400).json({ code: 'market_id_required' })
-    return
-  }
+  // 見せる企業は**合鍵から決める**。他社の取引履歴を覗けないようにするため。
+  const marketId = marketIdOf(req)
 
   const organizations = req.scope.resolve(ORGANIZATION_MODULE) as OrganizationService
   const organization = await organizations.findByMarketId(marketId)

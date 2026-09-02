@@ -58,6 +58,14 @@ async function request(method, path, { body, token } = {}) {
 
 const password = 'good-password-1234';
 
+/** 生徒としてログインして合鍵をもらう。企業として行う操作に要る。 */
+async function loginAsOrganization(marketId, pass = 'good-password-1234') {
+  const result = await request('POST', '/auth/customer/emailpass', {
+    body: { email: marketId, password: pass },
+  });
+  return result.body?.token;
+}
+
 async function createOrganization(label) {
   const created = await request('POST', '/store/accounts', {
     body: {
@@ -65,7 +73,12 @@ async function createOrganization(label) {
       organization_name: `${label} ${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     },
   });
-  return { marketId: created.body?.market_id, name: created.body?.organization_name };
+  const marketId = created.body?.market_id;
+  return {
+    marketId,
+    name: created.body?.organization_name,
+    token: await loginAsOrganization(marketId),
+  };
 }
 
 console.log('\n=== 準備: 売買と広告を一通り起こす ===');
@@ -77,7 +90,6 @@ expect('買う側を作れた', typeof buyer.marketId, 'string');
 const listing = (
   await request('POST', '/store/listings', {
     body: {
-      market_id: seller.marketId,
       title: `商品 ${Math.random().toString(36).slice(2, 8)}`,
       description: '説明',
       target_customer: 'ターゲット',
@@ -88,6 +100,7 @@ const listing = (
       sale_starts_at: '2026-01-01T00:00:00Z',
       sale_ends_at: '2099-12-31T00:00:00Z',
     },
+    token: seller.token,
   })
 ).body?.listing;
 expect('商品を出せた', typeof listing?.id, 'string');
@@ -95,14 +108,16 @@ expect('商品を出せた', typeof listing?.id, 'string');
 // 売る側: 4,000 が2件 → 売上 8,000／買う側: 支出 8,000
 for (let i = 0; i < 2; i += 1) {
   const purchase = await request('POST', '/store/purchases', {
-    body: { market_id: buyer.marketId, listing_id: listing.id },
+    body: { listing_id: listing.id },
+    token: buyer.token,
   });
   expect(`${i + 1}件目を買えた`, purchase.status, 201);
 }
 
 // 売る側は広告も出す（一覧の広告費が0でない状態で見るため）。
 const placement = await request('POST', '/store/ads', {
-  body: { market_id: seller.marketId, listing_id: listing.id, days: 3 },
+  body: { listing_id: listing.id, days: 3 },
+  token: seller.token,
 });
 expect('広告を出せた', placement.status, 201);
 const adSpend = placement.body?.placement?.spend;
@@ -157,7 +172,7 @@ for (const [label, org, row] of [
   ['売る側', seller, sellerRow],
   ['買う側', buyer, buyerRow],
 ]) {
-  const dashboard = (await request('GET', `/store/dashboard?market_id=${org.marketId}`)).body;
+  const dashboard = (await request('GET', '/store/dashboard', { token: org.token })).body;
   expect(`${label}: 残高が一致`, row?.balance_total, dashboard?.balance?.total);
   expect(`${label}: ボーナス残高が一致`, row?.balance_bonus, dashboard?.balance?.bonus);
   expect(`${label}: 売上が一致`, row?.revenue, dashboard?.stats?.revenue);

@@ -652,6 +652,21 @@
       "automation": "human",
       "status": "todo",
       "origin": "initial"
+    },
+    {
+      "id": "T044",
+      "title": "企業の名乗りを合鍵で確かめる",
+      "deliverable": "企業として行う操作が、ログインした本人の合鍵からのみ実行できる状態",
+      "verify": [
+        "ログインせずに他社の Market ID を本文に入れて購入の経路を呼び、401 で断られることを確認する",
+        "A社の合鍵で、本文に B社の Market ID を入れて購入し、減るのが A社の残高であることを確認する",
+        "ログインせずに他社のダッシュボードと取引履歴を開こうとして、401 で断られることを確認する"
+      ],
+      "dependsOn": ["T020"],
+      "files": ["apps/api/src/modules/market-auth", "apps/api/src/api/middlewares.ts"],
+      "automation": "ci",
+      "status": "done",
+      "origin": "added"
     }
   ]
 }

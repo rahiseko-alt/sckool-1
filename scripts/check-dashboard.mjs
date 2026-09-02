@@ -36,10 +36,18 @@ function expect(label, actual, wanted) {
   if (!ok) failures.push(`${label}: ${JSON.stringify(actual)} ≠ ${JSON.stringify(wanted)}`);
 }
 
-async function request(method, path, body) {
+/**
+ * ログイン後の合鍵。**企業として行う操作には必ず要る。**
+ * 本文に market_id を書いても名乗ったことにならない（docs/decisions.md「37.」）。
+ */
+let currentToken;
+
+async function request(method, path, body, token = currentToken) {
+  const headers = { 'content-type': 'application/json', 'x-publishable-api-key': publishableKey };
+  if (token) headers.authorization = `Bearer ${token}`;
   const response = await fetch(new URL(path, BASE), {
     method,
-    headers: { 'content-type': 'application/json', 'x-publishable-api-key': publishableKey },
+    headers,
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
   const text = await response.text();
@@ -52,59 +60,62 @@ async function request(method, path, body) {
   return { status: response.status, body: parsed };
 }
 
+/** 生徒としてログインして合鍵をもらう。 */
+async function login(marketId, password = 'good-password-1234') {
+  const result = await request(
+    'POST',
+    '/auth/customer/emailpass',
+    { email: marketId, password },
+    null,
+  );
+  return result.body?.token;
+}
+
 async function createOrganization(label) {
   const account = await request('POST', '/store/accounts', {
     password: 'good-password-1234',
     organization_name: `${label} ${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
   });
-  return { marketId: account.body?.market_id, name: account.body?.organization_name };
+  const marketId = account.body?.market_id;
+  return { marketId, name: account.body?.organization_name, token: await login(marketId) };
 }
 
-async function createListing(marketId, price, quantity = 5) {
-  const created = await request('POST', '/store/listings', {
-    market_id: marketId,
-    title: `商品 ${Math.random().toString(36).slice(2, 8)}`,
-    description: '説明',
-    target_customer: 'ターゲット',
-    problem_solved: '課題',
-    price,
-    available_quantity: quantity,
-    image_url: 'https://example.com/a.png',
-    sale_starts_at: '2026-01-01T00:00:00Z',
-    sale_ends_at: '2099-12-31T00:00:00Z',
-  });
+async function createListing(org, price, quantity = 5) {
+  const created = await request(
+    'POST',
+    '/store/listings',
+    {
+      title: `商品 ${Math.random().toString(36).slice(2, 8)}`,
+      description: '説明',
+      target_customer: 'ターゲット',
+      problem_solved: '課題',
+      price,
+      available_quantity: quantity,
+      image_url: 'https://example.com/a.png',
+      sale_starts_at: '2026-01-01T00:00:00Z',
+      sale_ends_at: '2099-12-31T00:00:00Z',
+    },
+    org.token,
+  );
   return created.body?.listing;
 }
 
 console.log('\n=== 準備: 売買と広告を一通り起こす ===');
 const seller = await createOrganization('DASH SELLER');
 const buyer = await createOrganization('DASH BUYER');
-const listingA = await createListing(seller.marketId, 3_000);
-const listingB = await createListing(seller.marketId, 2_000);
+const listingA = await createListing(seller, 3_000);
+const listingB = await createListing(seller, 2_000);
 
 // 売る側: 3,000 が2件、2,000 が1件 → 売上 8,000
-await request('POST', '/store/purchases', {
-  market_id: buyer.marketId,
-  listing_id: listingA.id,
-});
-await request('POST', '/store/purchases', {
-  market_id: buyer.marketId,
-  listing_id: listingA.id,
-});
-await request('POST', '/store/purchases', {
-  market_id: buyer.marketId,
-  listing_id: listingB.id,
-});
+await request('POST', '/store/purchases', { listing_id: listingA.id }, buyer.token);
+await request('POST', '/store/purchases', { listing_id: listingA.id }, buyer.token);
+await request('POST', '/store/purchases', { listing_id: listingB.id }, buyer.token);
 // 売る側: 広告に 1日分 500
-const ad = await request('POST', '/store/ads', {
-  market_id: seller.marketId,
-  listing_id: listingA.id,
-  days: 1,
-});
+const ad = await request('POST', '/store/ads', { listing_id: listingA.id, days: 1 }, seller.token);
 expect('広告を買えた', ad.status, 201);
 
 console.log('\n=== ダッシュボードの数字（受け入れ基準 G1）===');
-const dashboard = await request('GET', `/store/dashboard?market_id=${seller.marketId}`);
+const dashboard = await request('GET', '/store/dashboard', undefined, seller.token);
 expect('取れた', dashboard.status, 200);
 expect('売上', dashboard.body?.stats?.revenue, 8_000);
 expect('広告費', dashboard.body?.stats?.ad_spend, 500);
@@ -114,7 +125,7 @@ expect('販売件数', dashboard.body?.stats?.sales_count, 3);
 expect('通常残高', dashboard.body?.balance?.normal, 100_000 + 8_000 - 500);
 
 console.log('\n=== 履歴から計算し直した値と一致する（同 G1 の要）===');
-const history = await request('GET', `/store/transactions?market_id=${seller.marketId}`);
+const history = await request('GET', '/store/transactions', undefined, seller.token);
 const recomputedRevenue = (history.body?.transactions ?? [])
   .filter((row) => row.kind === 'sale')
   .reduce((sum, row) => sum + row.amount, 0);
@@ -142,7 +153,7 @@ expect(
 expect('日付が並んでいる', chart[0]?.date < chart[chart.length - 1]?.date, true);
 
 console.log('\n=== 買った側の支出も出る ===');
-const buyerDashboard = await request('GET', `/store/dashboard?market_id=${buyer.marketId}`);
+const buyerDashboard = await request('GET', '/store/dashboard', undefined, buyer.token);
 expect('支出', buyerDashboard.body?.stats?.expenses, 8_000);
 expect('購入件数', buyerDashboard.body?.stats?.purchase_count, 3);
 expect('売上は0', buyerDashboard.body?.stats?.revenue, 0);
@@ -177,7 +188,11 @@ const fallback = await request('GET', '/store/ranking?metric=きのう');
 expect('売上に戻る', fallback.body?.metric, 'revenue');
 
 console.log('\n=== 無い企業のダッシュボードは404 ===');
-expect('404が返る', (await request('GET', '/store/dashboard?market_id=MKT-ZZZZ-ZZZZ')).status, 404);
+expect(
+  'ログインしていなければ断られる',
+  (await request('GET', '/store/dashboard', undefined, null)).status,
+  401,
+);
 
 console.log('');
 if (failures.length > 0) {

@@ -33,10 +33,18 @@ function expect(label, actual, wanted) {
   if (!ok) failures.push(`${label}: ${JSON.stringify(actual)} ≠ ${JSON.stringify(wanted)}`);
 }
 
-async function request(method, path, body) {
+/**
+ * ログイン後の合鍵。**企業として行う操作には必ず要る。**
+ * 本文に market_id を書いても名乗ったことにならない（docs/decisions.md「37.」）。
+ */
+let currentToken;
+
+async function request(method, path, body, token = currentToken) {
+  const headers = { 'content-type': 'application/json', 'x-publishable-api-key': publishableKey };
+  if (token) headers.authorization = `Bearer ${token}`;
   const response = await fetch(new URL(path, BASE), {
     method,
-    headers: { 'content-type': 'application/json', 'x-publishable-api-key': publishableKey },
+    headers,
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
   const text = await response.text();
@@ -49,6 +57,17 @@ async function request(method, path, body) {
   return { status: response.status, body: parsed };
 }
 
+/** 生徒としてログインして合鍵をもらう。 */
+async function login(marketId, password = 'good-password-1234') {
+  const result = await request(
+    'POST',
+    '/auth/customer/emailpass',
+    { email: marketId, password },
+    null,
+  );
+  return result.body?.token;
+}
+
 console.log('\n=== 準備: 企業を1つ作る ===');
 const account = await request('POST', '/store/accounts', {
   password: 'good-password-1234',
@@ -56,6 +75,8 @@ const account = await request('POST', '/store/accounts', {
 });
 expect('作れた', account.status, 201);
 const marketId = account.body?.market_id;
+currentToken = await login(marketId);
+expect('合鍵を受け取った', typeof currentToken, 'string');
 const organizationName = account.body?.organization_name;
 
 /** 通る入力。各テストはここから1つだけ壊す。 */

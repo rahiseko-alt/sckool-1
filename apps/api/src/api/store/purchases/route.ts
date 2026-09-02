@@ -3,6 +3,7 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 import { ADS_MODULE } from '../../../modules/ads'
 import type AdsService from '../../../modules/ads/service'
 import { CATALOG_MODULE } from '../../../modules/catalog'
+import { marketIdOf } from '../../../modules/market-auth/token'
 import type CatalogService from '../../../modules/catalog/service'
 import { MP_MODULE } from '../../../modules/mp'
 import type MpService from '../../../modules/mp/service'
@@ -23,12 +24,14 @@ import type OrganizationService from '../../../modules/organization/service'
  * 逆にすると、MP を払ったのに在庫が無くて買えない状態が起きる。
  */
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const body = (req.body ?? {}) as { market_id?: unknown; listing_id?: unknown }
-  const marketId = typeof body.market_id === 'string' ? body.market_id.trim().toUpperCase() : ''
+  const body = (req.body ?? {}) as { listing_id?: unknown }
   const listingId = typeof body.listing_id === 'string' ? body.listing_id : ''
 
-  if (!marketId || !listingId) {
-    res.status(400).json({ code: 'market_id_and_listing_id_required' })
+  // 買う側は**合鍵から決める**。本文に入れられた market_id は読まない。
+  const marketId = marketIdOf(req)
+
+  if (!listingId) {
+    res.status(400).json({ code: 'listing_id_required' })
     return
   }
 

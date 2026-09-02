@@ -2,6 +2,7 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
 import { CATALOG_MODULE } from '../../../modules/catalog'
 import type CatalogService from '../../../modules/catalog/service'
+import { marketIdOf } from '../../../modules/market-auth/token'
 import { ORGANIZATION_MODULE } from '../../../modules/organization'
 import type OrganizationService from '../../../modules/organization/service'
 
@@ -60,12 +61,8 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const body = (req.body ?? {}) as Record<string, unknown>
-  const marketId = typeof body.market_id === 'string' ? body.market_id.trim().toUpperCase() : ''
-
-  if (!marketId) {
-    res.status(400).json({ code: 'market_id_required' })
-    return
-  }
+  // 出品する企業は**合鍵から決める**。本文の market_id は読まない。
+  const marketId = marketIdOf(req)
 
   const organizations = req.scope.resolve(ORGANIZATION_MODULE) as OrganizationService
   const organization = await organizations.findByMarketId(marketId)
