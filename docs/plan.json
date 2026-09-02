@@ -299,7 +299,7 @@
       "dependsOn": ["T016", "T019"],
       "files": ["apps/api/src/workflows/purchase"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -314,7 +314,7 @@
       "dependsOn": ["T020"],
       "files": ["apps/storefront/src/app/transactions", "apps/api/src/api/vendor/transactions"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

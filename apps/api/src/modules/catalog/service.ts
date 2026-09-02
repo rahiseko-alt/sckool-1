@@ -114,6 +114,18 @@ class CatalogService extends MedusaService({ Listing }) {
     await this.updateListings({ id, available_quantity: current - amount })
     return true
   }
+
+  /**
+   * 押さえた在庫を戻す。
+   *
+   * 購入は「先に在庫を押さえ、MP の移動に失敗したら戻す」順で行う。
+   * これが無いと、買えなかった商品の在庫が減ったまま戻らない。
+   */
+  async increaseQuantity(id: string, amount = 1): Promise<void> {
+    const [row] = await this.listListings({ id })
+    if (!row) return
+    await this.updateListings({ id, available_quantity: Number(row.available_quantity) + amount })
+  }
 }
 
 export default CatalogService
