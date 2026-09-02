@@ -509,6 +509,9 @@ export type Routes = {
                 subscribe: typeof import("@medusajs/medusa/api/admin/workflows-executions/[workflow_id]/subscribe/route");
             };
         };
+        accounts: {
+            resetPassword: typeof import("../src/api/admin/accounts/reset-password/route");
+        };
         custom: typeof import("../src/api/admin/custom/route");
     };
     auth: {
@@ -640,6 +643,8 @@ export type Routes = {
         };
         accounts: typeof import("../src/api/store/accounts/route");
         custom: typeof import("../src/api/store/custom/route");
+        listings: typeof import("../src/api/store/listings/route");
+        recovery: typeof import("../src/api/store/recovery/route");
     };
     vendor: {
         campaigns: typeof import("@mercurjs/core/api/vendor/campaigns/route") & {

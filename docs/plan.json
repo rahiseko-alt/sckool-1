@@ -268,7 +268,7 @@
       "dependsOn": ["T013"],
       "files": ["apps/api/src/api/vendor/products", "apps/storefront/src/app/products/new"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -283,7 +283,7 @@
       "dependsOn": ["T018"],
       "files": ["apps/storefront/src/app/market", "apps/api/src/api/store/products"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

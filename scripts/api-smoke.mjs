@@ -17,9 +17,14 @@ const BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:9000';
 const TIMEOUT_MS = Number(process.env.API_SMOKE_TIMEOUT_MS ?? 180_000);
 const POLL_INTERVAL_MS = 2_000;
 
+/**
+ * `detached: true` にして自分のプロセスグループを持たせる。グループごと止められないと
+ * 孫（medusa 本体）が生き残り、標準出力をつかんだまま CI のステップが終わらない。
+ */
 const server = spawn(process.execPath, [join(repoRoot, 'scripts', 'run-api.mjs'), 'start'], {
   cwd: repoRoot,
   stdio: ['ignore', 'pipe', 'pipe'],
+  detached: true,
 });
 
 /** 失敗したときに何が起きていたかを見せるため、出力は捨てずに貯めておく。 */
@@ -50,11 +55,20 @@ async function waitForHealth() {
   throw new Error(`${TIMEOUT_MS}ミリ秒待っても /health が応答しませんでした`);
 }
 
+/** サーバーとその配下をまとめて止める。 */
+function signalGroup(signal) {
+  try {
+    process.kill(-server.pid, signal);
+  } catch {
+    // すでに終わっていれば何もしなくてよい。
+  }
+}
+
 async function stopServer() {
   if (serverExited) return;
-  server.kill('SIGTERM');
+  signalGroup('SIGTERM');
   await Promise.race([once(server, 'exit'), sleep(10_000)]);
-  if (!serverExited) server.kill('SIGKILL');
+  if (!serverExited) signalGroup('SIGKILL');
 }
 
 try {

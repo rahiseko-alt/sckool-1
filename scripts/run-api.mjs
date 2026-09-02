@@ -46,11 +46,37 @@ if (args.length === 0) {
   process.exit(1);
 }
 
+/**
+ * `detached: true` で自分のプロセスグループを持たせる。
+ *
+ * こうしないと、このスクリプトを止めても孫（medusa 本体）が生き残る。
+ * 生き残った孫は標準出力をつかんだままなので、**CI のステップが終わらない**
+ * （実際に GitHub Actions で8分以上止まった）。グループごと止められるようにする。
+ */
 const child = spawn('pnpm', ['exec', 'medusa', ...args], {
   cwd: apiDir,
   env,
   stdio: 'inherit',
+  detached: true,
 });
+
+/** 子とその孫まで、まとめて止める。 */
+function stopChild(signal) {
+  try {
+    process.kill(-child.pid, signal);
+  } catch {
+    // すでに終わっていれば何もしなくてよい。
+  }
+}
+
+for (const signal of ['SIGTERM', 'SIGINT']) {
+  process.on(signal, () => {
+    stopChild(signal);
+    // 孫が落ちるのを少し待ってから自分も終わる。
+    setTimeout(() => process.exit(0), 2_000).unref();
+  });
+}
+
 child.on('exit', (code, signal) => {
   if (signal) process.kill(process.pid, signal);
   else process.exit(code ?? 0);

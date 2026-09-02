@@ -44,9 +44,16 @@ if (commands.length === 0) {
   process.exit(1);
 }
 
+/**
+ * `detached: true` にして、サーバーを自分のプロセスグループに入れる。
+ *
+ * グループごと止められないと孫（medusa 本体）が生き残り、標準出力を
+ * つかんだままになる。CI のステップが終わらなくなる（実際に起きた）。
+ */
 const server = spawn(process.execPath, [join(repoRoot, 'scripts', 'run-api.mjs'), 'start'], {
   cwd: repoRoot,
   stdio: ['ignore', 'pipe', 'pipe'],
+  detached: true,
 });
 
 /** 失敗したときに何が起きていたかを見せるため、出力は貯めておく。 */
@@ -76,11 +83,20 @@ async function waitForReady() {
   throw new Error(`${TIMEOUT_MS}ミリ秒待っても起動しませんでした`);
 }
 
+/** サーバーとその配下をまとめて止める。1つでも残ると次の実行が port を取れない。 */
+function signalGroup(signal) {
+  try {
+    process.kill(-server.pid, signal);
+  } catch {
+    // すでに終わっていれば何もしなくてよい。
+  }
+}
+
 async function stopServer() {
   if (serverExited) return;
-  server.kill('SIGTERM');
+  signalGroup('SIGTERM');
   await Promise.race([once(server, 'exit'), sleep(10_000)]);
-  if (!serverExited) server.kill('SIGKILL');
+  if (!serverExited) signalGroup('SIGKILL');
 }
 
 try {
