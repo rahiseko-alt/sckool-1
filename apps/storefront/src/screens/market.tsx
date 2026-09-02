@@ -12,7 +12,7 @@ import { card, errorText, hint, money, primaryButton, quietButton } from '../ui'
  * 「自分の商品が売れないのは期間の設定のせいだ」と気づけない。
  */
 export function MarketScreen(props: { onOpen: (listingId: string) => void }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [listings, setListings] = useState<Listing[] | undefined>()
   const [failed, setFailed] = useState(false)
   const [attempt, setAttempt] = useState(0)
@@ -21,7 +21,10 @@ export function MarketScreen(props: { onOpen: (listingId: string) => void }) {
     let cancelled = false
     void (async () => {
       setFailed(false)
-      const response = await api<{ listings: Listing[] }>('GET', '/store/listings')
+      const response = await api<{ listings: Listing[] }>(
+        'GET',
+        `/store/listings?locale=${i18n.language}`,
+      )
       if (cancelled) return
       if (!response.ok || !response.data) {
         setFailed(true)
@@ -32,7 +35,8 @@ export function MarketScreen(props: { onOpen: (listingId: string) => void }) {
     return () => {
       cancelled = true
     }
-  }, [attempt])
+    // 言語を変えたら読み直す。訳が入っている商品は表示が変わる（受け入れ基準 I3）。
+  }, [attempt, i18n.language])
 
   return (
     <div>

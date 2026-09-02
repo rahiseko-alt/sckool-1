@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { api } from '../api'
+import { LOCALES } from '../i18n/locales'
 import type { Session } from '../session'
 import { card, errorText, hint, label, money, primaryButton, quietButton } from '../ui'
 
@@ -26,6 +27,8 @@ export interface Listing {
   organization_name: string | null
   can_buy: boolean
   unavailable_reason?: 'not_started' | 'ended' | 'sold_out'
+  /** 訳で出しているとき、その言語。原文のときは付かない（受け入れ基準 I3）。 */
+  translated_from?: string
 }
 
 interface Purchased {
@@ -42,7 +45,7 @@ export function ListingDetailScreen(props: {
   onBack: () => void
   onNeedLogin: () => void
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [listing, setListing] = useState<Listing | undefined>()
   const [errorKey, setErrorKey] = useState<string | undefined>()
   const [busy, setBusy] = useState(false)
@@ -51,7 +54,10 @@ export function ListingDetailScreen(props: {
   useEffect(() => {
     let cancelled = false
     void (async () => {
-      const result = await api<{ listing: Listing }>('GET', `/store/listings/${props.listingId}`)
+      const result = await api<{ listing: Listing }>(
+        'GET',
+        `/store/listings/${props.listingId}?locale=${i18n.language}`,
+      )
       if (cancelled) return
       if (!result.ok || !result.data) {
         setErrorKey(result.errorKey ?? 'unknown')
@@ -62,7 +68,8 @@ export function ListingDetailScreen(props: {
     return () => {
       cancelled = true
     }
-  }, [props.listingId])
+    // 言語を変えたら読み直す。訳が入っていればそちらに変わる（受け入れ基準 I3）。
+  }, [props.listingId, i18n.language])
 
   const buy = async () => {
     if (!props.session) {
@@ -194,6 +201,16 @@ export function ListingDetailScreen(props: {
       </div>
 
       <section style={{ ...card, marginTop: 'var(--sp-6)' }}>
+        {/* 訳で読んでいることが分かるようにする。原文と違って見えても戸惑わない。 */}
+        {listing.translated_from && (
+          <p style={hint}>
+            {t('translations.shownAs', {
+              language:
+                LOCALES.find((locale) => locale.code === listing.translated_from)?.label ??
+                listing.translated_from,
+            })}
+          </p>
+        )}
         <div style={label}>{t('detail.description')}</div>
         <p style={{ marginTop: 0 }}>{listing.description}</p>
 

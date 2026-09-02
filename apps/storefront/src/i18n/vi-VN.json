@@ -212,5 +212,13 @@
     "roas": "Hiệu quả chi phí quảng cáo",
     "empty": "Bạn chưa chạy quảng cáo nào",
     "needListing": "Hãy đăng sản phẩm trước"
+  },
+  "translations": {
+    "title": "Bản dịch sang ngôn ngữ khác (không bắt buộc)",
+    "lead": "Không điền vẫn đăng bán được. Nếu điền, người đọc ngôn ngữ đó sẽ thấy bản này.",
+    "add": "Thêm bản dịch",
+    "remove": "Xóa bản dịch này",
+    "language": "Ngôn ngữ",
+    "shownAs": "Đang hiển thị bản dịch {{language}}"
   }
 }

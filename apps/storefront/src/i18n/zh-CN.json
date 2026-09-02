@@ -212,5 +212,13 @@
     "roas": "投入回报",
     "empty": "你还没有投放广告",
     "needListing": "请先发布商品"
+  },
+  "translations": {
+    "title": "其他语言的翻译（可选）",
+    "lead": "不填也可以发布。填写后，选择该语言的人会看到这个版本。",
+    "add": "添加翻译",
+    "remove": "删除这条翻译",
+    "language": "语言",
+    "shownAs": "正在显示 {{language}} 的翻译"
   }
 }

@@ -212,5 +212,13 @@
     "roas": "Return on ad spend",
     "empty": "You have not run any ads yet",
     "needListing": "List a product first"
+  },
+  "translations": {
+    "title": "Translations (optional)",
+    "lead": "You can list without these. If you add one, people reading that language see it instead.",
+    "add": "Add a translation",
+    "remove": "Remove this translation",
+    "language": "Language",
+    "shownAs": "Shown using the {{language}} translation"
   }
 }

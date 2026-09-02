@@ -1,6 +1,7 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
 import { CATALOG_MODULE } from '../../../../modules/catalog'
+import { localeOf } from '../../../../modules/catalog/locales'
 import type CatalogService from '../../../../modules/catalog/service'
 import { ORGANIZATION_MODULE } from '../../../../modules/organization'
 import type OrganizationService from '../../../../modules/organization/service'
@@ -14,7 +15,8 @@ import type OrganizationService from '../../../../modules/organization/service'
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const id = req.params.id
   const catalog = req.scope.resolve(CATALOG_MODULE) as CatalogService
-  const listing = await catalog.findListing(id)
+  // 閲覧者の言語の訳があればそれを、無ければ原文を出す（受け入れ基準 I3）。
+  const listing = await catalog.findListing(id, new Date(), localeOf(req))
 
   if (!listing) {
     res.status(404).json({ code: 'listing_not_found' })
@@ -38,6 +40,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       sale_ends_at: listing.sale_ends_at,
       // 出品者は企業名だけ。Market ID は返さない（要件38）。
       organization_name: organization?.name ?? null,
+      ...(listing.translated_from ? { translated_from: listing.translated_from } : {}),
       can_buy: listing.unavailable_reason === undefined,
       ...(listing.unavailable_reason ? { unavailable_reason: listing.unavailable_reason } : {}),
     },

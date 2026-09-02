@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { api } from '../api'
 import type { Session } from '../session'
-import { card, errorText, hint, input, label, money, primaryButton } from '../ui'
+import { LOCALES } from '../i18n/locales'
+import { card, errorText, hint, input, label, money, primaryButton, quietButton } from '../ui'
 import type { Listing } from './listing-detail'
 
 /**
@@ -41,6 +42,13 @@ export function ListingFormScreen(props: { session?: Session; onNeedLogin: () =>
   const [busy, setBusy] = useState(false)
   const [created, setCreated] = useState<Listing | undefined>()
   const [mine, setMine] = useState<Listing[]>([])
+  /**
+   * 他の言語の訳（受け入れ基準 I3）。**任意**なので、空のまま出しても登録できる。
+   * 必須にすると、6言語ぶん書けない生徒は商品を出せなくなる。
+   */
+  const [translations, setTranslations] = useState<
+    { locale_code: string; title: string; description: string }[]
+  >([])
 
   useEffect(() => {
     if (!props.session) return
@@ -86,6 +94,7 @@ export function ListingFormScreen(props: { session?: Session; onNeedLogin: () =>
         // 数字は数として送る。文字のままだと「1以上の整数」の判定に引っかかる。
         price: Number(values.price),
         available_quantity: Number(values.available_quantity),
+        translations,
       },
       token: props.session!.token,
     })
@@ -100,6 +109,7 @@ export function ListingFormScreen(props: { session?: Session; onNeedLogin: () =>
     }
 
     setValues({})
+    setTranslations([])
     setCreated(response.data.listing)
   }
 
@@ -160,6 +170,95 @@ export function ListingFormScreen(props: { session?: Session; onNeedLogin: () =>
               </div>
             )
           })}
+
+          <h2 style={{ fontSize: 'var(--text-h3)', marginTop: 'var(--sp-6)' }}>
+            {t('translations.title')}
+          </h2>
+          <p style={hint}>{t('translations.lead')}</p>
+
+          {translations.map((translation, index) => (
+            <div
+              key={translation.locale_code}
+              style={{
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                padding: 'var(--sp-3)',
+                marginBottom: 'var(--sp-3)',
+              }}
+            >
+              <label style={label} htmlFor={`translation-locale-${index}`}>
+                {t('translations.language')}
+              </label>
+              <select
+                id={`translation-locale-${index}`}
+                value={translation.locale_code}
+                onChange={(event) => {
+                  const next = [...translations]
+                  next[index] = { ...translation, locale_code: event.target.value }
+                  setTranslations(next)
+                }}
+                style={input}
+              >
+                {LOCALES.map((locale) => (
+                  <option key={locale.code} value={locale.code}>
+                    {locale.label}
+                  </option>
+                ))}
+              </select>
+
+              <label style={{ ...label, marginTop: 'var(--sp-3)' }}>
+                {t('listingForm.productTitle')}
+              </label>
+              <input
+                value={translation.title}
+                onChange={(event) => {
+                  const next = [...translations]
+                  next[index] = { ...translation, title: event.target.value }
+                  setTranslations(next)
+                }}
+                style={input}
+              />
+
+              <label style={{ ...label, marginTop: 'var(--sp-3)' }}>
+                {t('listingForm.description')}
+              </label>
+              <textarea
+                value={translation.description}
+                onChange={(event) => {
+                  const next = [...translations]
+                  next[index] = { ...translation, description: event.target.value }
+                  setTranslations(next)
+                }}
+                rows={3}
+                style={{ ...input, resize: 'vertical' }}
+              />
+
+              <button
+                type="button"
+                onClick={() => setTranslations(translations.filter((_, i) => i !== index))}
+                style={{ ...quietButton, marginTop: 'var(--sp-3)' }}
+              >
+                {t('translations.remove')}
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => {
+              // まだ使っていない言語を1つ選んで足す。同じ言語を2つ足せないようにする。
+              const used = new Set(translations.map((one) => one.locale_code))
+              const next = LOCALES.find((locale) => !used.has(locale.code))
+              if (!next) return
+              setTranslations([
+                ...translations,
+                { locale_code: next.code, title: '', description: '' },
+              ])
+            }}
+            style={{ ...quietButton, marginBottom: 'var(--sp-4)' }}
+          >
+            {t('translations.add')}
+          </button>
 
           {errorKey && problems.length === 0 && <p style={errorText}>{t(`errors.${errorKey}`)}</p>}
 

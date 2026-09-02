@@ -2,6 +2,7 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
 import { CATALOG_MODULE } from '../../../modules/catalog'
 import type CatalogService from '../../../modules/catalog/service'
+import { localeOf, LOCALE_CODES } from '../../../modules/catalog/locales'
 import { marketIdOf } from '../../../modules/market-auth/token'
 import { ORGANIZATION_MODULE } from '../../../modules/organization'
 import type OrganizationService from '../../../modules/organization/service'
@@ -32,7 +33,8 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const catalog = req.scope.resolve(CATALOG_MODULE) as CatalogService
   const organizations = req.scope.resolve(ORGANIZATION_MODULE) as OrganizationService
 
-  const listings = await catalog.listMarket()
+  // 閲覧者の言語。訳があればそれを、無ければ原文を出す（受け入れ基準 I3）。
+  const listings = await catalog.listMarket(new Date(), localeOf(req))
   const names = await organizationNames(
     organizations,
     listings.map((listing) => listing.organization_id),
@@ -53,6 +55,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       // 出品者は企業名だけ。Market ID は返さない。
       organization_name: names.get(listing.organization_id) ?? null,
       can_buy: listing.unavailable_reason === undefined,
+      ...(listing.translated_from ? { translated_from: listing.translated_from } : {}),
       ...(listing.unavailable_reason ? { unavailable_reason: listing.unavailable_reason } : {}),
     })),
     count: listings.length,
@@ -72,7 +75,8 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   }
 
   const catalog = req.scope.resolve(CATALOG_MODULE) as CatalogService
-  const result = await catalog.createListing(marketId, body)
+  // 訳は任意。入れなくても商品は出せる（受け入れ基準 I3）。
+  const result = await catalog.createListing(marketId, body, new Date(), LOCALE_CODES)
 
   if (!result.ok) {
     // 問題は全部まとめて返す。1つずつ返すと、直しては断られるのを繰り返す。

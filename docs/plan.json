@@ -545,7 +545,7 @@
         "apps/storefront/src/app/products/new"
       ],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
