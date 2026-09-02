@@ -1,372 +1,657 @@
 {
-  "goal": "docs/decisions.md「15.」に確定した5手段の未実装部分が全て配線され、非エンジニアが進捗・完了判定・見送りを実物で確認できる状態",
+  "goal": "docs/requirements.md 第2部の受け入れ基準A〜Kを全て満たし、60人の生徒が6言語のいずれかで匿名アカウントを作り、商品を出し、他社から買い、経営成績を見られる状態",
   "items": [
     {
       "id": "T001",
-      "title": "並列実行の手順をAGENTS.mdに追記する",
-      "deliverable": "並列にしてよい条件、Workflowのparallel()の呼び方、isolation: worktreeの指定方法がAGENTS.mdに書かれている状態",
+      "title": "MercurをApps配下に取り込んで起動する",
+      "deliverable": "pnpm install のあと1コマンドでPostgreSQLとRedisとMercurバックエンドが立ち上がり、ローカルでAPIが応答する状態",
       "verify": [
-        "AGENTS.mdを開き、並列実行に関する節があることを確認する",
-        "書かれた手順どおりにWorkflowを呼び出せることを目視で確認する"
+        "リポジトリ直下で pnpm install を実行する",
+        "起動コマンドを実行し、http://localhost:9000/health に curl して 200 が返ることを確認する",
+        "http://localhost:9000/dashboard をブラウザで開き、管理画面のログイン画面が表示されることを確認する"
       ],
       "dependsOn": [],
-      "files": ["AGENTS.md"],
+      "files": ["apps/api", "package.json", "pnpm-workspace.yaml", "scripts/dev-services.mjs"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T002",
-      "title": "canRunInParallelを呼ぶCLIコマンドを追加する",
-      "deliverable": "コマンドを実行すると、今並列に進めてよい項目の組がdocs/plan.jsonから一覧できる状態",
+      "title": "CIでバックエンドの起動まで検査する",
+      "deliverable": "GitHub Actions の check ジョブが postgres を使ってマイグレーションと起動確認まで通す状態",
       "verify": [
-        "依存関係が無くファイルも重ならない2項目を含むdocs/plan.jsonを用意する",
-        "コマンドを実行し、その2項目が組として表示されることを確認する",
-        "依存関係やファイル重複がある項目は組として出ないことを確認する"
+        "ci.yml を書き換えたブランチを push し、PR の check ジョブが緑になることを確認する",
+        "ジョブ名が check のままであることを GitHub の Checks 画面で確認する",
+        "わざとマイグレーションを壊した状態を push し、check が赤くなることを確認してから戻す"
       ],
-      "dependsOn": [],
-      "files": ["src/plan-cli/parallel.ts", "package.json"],
+      "dependsOn": ["T001"],
+      "files": [".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T003",
-      "title": "並列候補コマンドのテストを書く",
-      "deliverable": "T002のコマンドを検証する単体テストがある状態",
-      "verify": ["pnpm run testを実行し、新しいテストが通ることを確認する"],
-      "dependsOn": ["T002"],
-      "files": ["src/plan-cli/parallel.test.ts"],
+      "title": "MP口座の作り方を実機で比べて決める",
+      "deliverable": "Medusa の Store Credit を流用するか独自の MP モジュールを作るかの結論と、その根拠が docs/decisions.md に書かれている状態",
+      "verify": [
+        "Store Credit を有効にして口座を1つ作り、入金と出金を実行して残高が変わることを確認する",
+        "有効期限を持たせられるか、企業間で移転できるかを実際に試し、できたこととできなかったことを書き出す",
+        "docs/decisions.md に結論と、試した操作の実行結果が書かれていることを確認する"
+      ],
+      "dependsOn": ["T001"],
+      "files": ["docs/decisions.md", "apps/api/src/modules/mp"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T004",
-      "title": "/checkinに並列候補の提示を追加する",
-      "deliverable": "/checkinを実行すると、並列に進められる組み合わせがあれば提示される状態",
+      "title": "Market IDでログインできるかを実機で確かめる",
+      "deliverable": "標準の emailpass に Market ID を渡して使えるか、独自の認証プロバイダが要るかの結論が docs/decisions.md にある状態",
       "verify": [
-        "並列候補がある状態で/checkinを実行し、候補が提示されることを確認する",
-        "候補が無いdocs/plan.jsonでは何も提示されないことを確認する"
+        "MKT-7F4K-29QX のような文字列を識別子にしてアカウント登録APIを呼び、成功するか失敗するかを確認する",
+        "失敗する場合は、独自認証プロバイダの最小実装で同じ操作が成功することを確認する",
+        "docs/decisions.md に、採用する方式と実際のリクエストとレスポンスが書かれていることを確認する"
       ],
-      "dependsOn": ["T002"],
-      "files": [".claude/skills/checkin/SKILL.md"],
+      "dependsOn": ["T001"],
+      "files": ["docs/decisions.md", "apps/api/src/modules/auth-market-id"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T005",
-      "title": "実際に2項目を並列で走らせて動作確認する",
-      "deliverable": "Workflowのparallel()で実際に2つの独立項目を同時に完了させた記録がある状態",
+      "title": "多言語の実現方式を実機で確かめる",
+      "deliverable": "商品情報の翻訳（Translation Module）と画面文字列の翻訳（Storefront と Vendor Panel）それぞれの方式が docs/decisions.md に書かれている状態",
       "verify": [
-        "依存もファイル重複も無い2項目をparallel()で同時に実行する",
-        "両方完了後、git statusでファイルが衝突していないことを確認する",
-        "結果をdocs/decisions.mdに記録する"
+        "商品を1つ作り、英語の翻訳を登録してから locale=en を付けて Store API を呼び、英語名が返ることを確認する",
+        "locale を付けずに同じ商品を取得し、原文が返ることを確認する",
+        "Storefront の画面文字列がどこに書かれているかを1画面分たどり、docs/decisions.md に翻訳の入れ方を書いたことを確認する"
       ],
       "dependsOn": ["T001"],
-      "files": ["docs/decisions.md"],
+      "files": ["docs/decisions.md", "apps/api/src/scripts/i18n-probe.ts"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T006",
-      "title": "/goalの使い方をAGENTS.mdに追記する",
-      "deliverable": "1項目に着手する際、完了条件を/goalで宣言する手順が書かれている状態",
+      "title": "デザインの決まりを文書とトークンに固定する",
+      "deliverable": "色・余白・字体・禁止モチーフの一覧が docs/design.md にあり、Storefront から参照できる形で定義されている状態",
       "verify": [
-        "AGENTS.mdに手順があることを確認する",
-        "実際に1項目で試し、/goalが正しく「満たした」と判定することを確認する"
+        "docs/design.md を開き、背景色・文字色・アクセント色・余白の値が具体的な数値で書かれていることを確認する",
+        "要件40の禁止モチーフが漏れなく一覧になっていることを、docs/requirements.md の40番と読み比べて確認する",
+        "定義した色をユーザーに画面で見せ、教材っぽくないかを説明してもらう"
       ],
       "dependsOn": [],
-      "files": ["AGENTS.md"],
-      "automation": "ci",
-      "status": "done",
+      "files": ["docs/design.md", "apps/storefront/src/styles"],
+      "automation": "human",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T007",
-      "title": "「/checkoutでcompletion-checkerを呼ぶ」フローが実際に機能することを確認する",
-      "deliverable": ".claude/skills/checkout/SKILL.mdに既に書かれている完了判定フロー（completion-checker呼び出し→判定結果でstatus更新）が、書かれたとおりに動くことを実地で確認した記録がある状態",
+      "title": "Market IDとRecovery Codeを作る関数を書く",
+      "deliverable": "紛らわしい文字を除いた Market ID と Recovery Code を生成し、Recovery Code をハッシュ化する関数と、その単体テストがある状態",
       "verify": [
-        "docs/plan.jsonの適当な項目を1つ完了させた状態で/checkoutを実行する",
-        "completion-checkerが自動的に呼ばれ、verify手順をなぞった証拠が出力されることを確認する",
-        "判定が通った場合はstatusがdoneに、通らない場合はtodoのままになることを確認する",
-        "automationがhumanの項目ではawaiting_humanになることを確認する"
+        "pnpm run test を実行し、生成した1万件に 0 O 1 I が1つも含まれないテストが通ることを確認する",
+        "同じ Recovery Code から同じハッシュが、違うコードから違うハッシュが出るテストが通ることを確認する",
+        "生成した ID が MKT-XXXX-XXXX の形になっていることを確認する"
       ],
       "dependsOn": [],
-      "files": [".claude/skills/checkout/SKILL.md"],
+      "files": ["apps/api/src/modules/market-id"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T008",
+      "title": "アカウント作成画面を作る",
+      "deliverable": "パスワードを決めるとMarket IDとRecovery Codeが一度だけ表示され、以後どこにも再表示されない状態",
+      "verify": [
+        "作成画面でパスワードを入力して送信し、Market ID と Recovery Code が表示されることを確認する",
+        "画面を再読み込みし、Recovery Code がもう表示されないことを確認する",
+        "データベースを直接見て、Recovery Code が平文で保存されていないことを確認する"
+      ],
+      "dependsOn": ["T004", "T007"],
+      "files": ["apps/api/src/api/store/accounts", "apps/storefront/src/app/signup"],
+      "automation": "ci",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T009",
-      "title": "verifyの書き方を機械的にチェックする関数を追加する",
-      "deliverable": "「テストが通る」のように対象コマンドや期待結果を示さない書き方のverifyをvalidatePlanが拒否する状態。ただし『pnpm run testを実行し、〜が通ることを確認する』のように対象と期待結果を示すものは許容する（テスト追加そのものが目的の項目まで拒否しない）",
+      "title": "ログイン画面を作る",
+      "deliverable": "Market IDとパスワードでログインでき、存在しないIDとパスワード誤りが同じ文言になり、5回失敗で15分ロックされる状態",
       "verify": [
-        "対象コマンドも期待結果も書かれていない曖昧な書き方のverifyを含むdocs/plan.jsonでpnpm run testを実行し、エラーになることを確認する",
-        "docs/plan.jsonのT003・T010・T012のような『pnpm run testを実行し、〜を確認する』という書き方は通ることを確認する"
+        "正しい Market ID とパスワードでログインでき、企業の画面に入れることを確認する",
+        "存在しない ID と、存在する ID で誤ったパスワードの2通りを試し、画面に出る文言が同一であることを確認する",
+        "同じ ID で6回続けて失敗させ、6回目にロックの案内が出ることを確認する"
       ],
-      "dependsOn": [],
-      "files": ["src/plan.ts"],
+      "dependsOn": ["T008"],
+      "files": ["apps/api/src/api/store/auth-market-id", "apps/storefront/src/app/login"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T010",
-      "title": "verifyチェックのテストを書く",
-      "deliverable": "T009のチェックを検証するテストケースがある状態",
-      "verify": ["pnpm run testで新しいテストが通ることを確認する"],
-      "dependsOn": ["T009"],
-      "files": ["src/plan.test.ts"],
+      "title": "Recovery Codeでパスワードを作り直せるようにする",
+      "deliverable": "Recovery Codeを入力すると新しいパスワードを設定でき、使ったコードは無効になって新しいコードが1回だけ出る状態",
+      "verify": [
+        "Recovery Code と新しいパスワードを入力し、そのパスワードでログインできることを確認する",
+        "同じ Recovery Code をもう一度使い、拒否されることを確認する",
+        "再設定の直後に新しい Recovery Code が1回だけ表示され、再読み込みで消えることを確認する"
+      ],
+      "dependsOn": ["T008"],
+      "files": ["apps/api/src/api/store/recovery", "apps/storefront/src/app/recovery"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T011",
-      "title": "countProgressを呼ぶCLIコマンドを追加する",
-      "deliverable": "コマンドを実行すると、初期/追加項目それぞれの完了数と人間確認待ちの一覧が表示される状態",
+      "title": "管理者がパスワードを初期化できるようにする",
+      "deliverable": "管理者画面でMarket IDを指定すると一時パスワードが発行され、その場で表示される状態",
       "verify": [
-        "完了・未完了・人間確認待ちが混在するdocs/plan.jsonを用意する",
-        "コマンドを実行し、正しい数値と一覧が表示されることを確認する"
+        "管理画面で既存の Market ID を指定して初期化を実行し、一時パスワードが表示されることを確認する",
+        "その一時パスワードでログインできることを確認する",
+        "存在しない Market ID を指定した場合にエラーが出ることを確認する"
       ],
-      "dependsOn": [],
-      "files": ["src/plan-cli/progress.ts", "package.json"],
+      "dependsOn": ["T008"],
+      "files": ["apps/api/src/api/admin/accounts", "apps/api/src/admin/routes/accounts"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T012",
-      "title": "進捗表示コマンドのテストを書く",
-      "deliverable": "T011のコマンドを検証する単体テストがある状態",
-      "verify": ["pnpm run testで新しいテストが通ることを確認する"],
-      "dependsOn": ["T011"],
-      "files": ["src/plan-cli/progress.test.ts"],
+      "title": "個人情報の列が無いことを機械で検査する",
+      "deliverable": "禁止した列名がデータベースに1つも無いことを検査するスクリプトがあり、CIで毎回走る状態",
+      "verify": [
+        "検査スクリプトを実行し、違反0件と表示されることを確認する",
+        "試しに氏名の列を持つテーブルを作ってから実行し、その列が指摘されることを確認してから元に戻す",
+        "PR を出し、CI のログに検査が実行された記録があることを確認する"
+      ],
+      "dependsOn": ["T001"],
+      "files": ["scripts/check-no-personal-data.mjs", ".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T013",
-      "title": "進捗表示から専門用語を無くす",
-      "deliverable": "表示にidやstatusのような内部用語がそのまま出ず、「終わった」「まだ」等の日本語の文章で進み具合が表現される状態",
+      "title": "アカウントに企業を1社ひもづける",
+      "deliverable": "アカウント作成と同時に企業が1社でき、1〜40文字で他社と重複しない企業名を後から変更できる状態",
       "verify": [
-        "表示結果にsrc/plan.tsの内部フィールド名がそのまま出ていないことを確認する",
-        "完了数・全体数・残り数が日本語の文章として表示されていることを確認する"
+        "新しいアカウントを作り、企業が1社できていることを企業画面で確認する",
+        "他社と同じ企業名に変更しようとして拒否されることを確認する",
+        "41文字の企業名と空の企業名がそれぞれ拒否されることを確認する"
       ],
-      "dependsOn": ["T011"],
-      "files": ["src/plan-cli/progress.ts"],
+      "dependsOn": ["T008"],
+      "files": ["apps/api/src/modules/organization", "apps/storefront/src/app/settings"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T014",
-      "title": "非エンジニアに実際に見せて理解できるか確認する",
-      "deliverable": "実在の非エンジニアがこの画面を見て、今の進み具合を自分の言葉で説明できる状態",
-      "verify": ["実際に画面を見せ、進み具合を説明してもらう", "説明できなければT013に戻って直す"],
-      "dependsOn": ["T013"],
-      "files": ["src/plan-cli/progress.ts"],
-      "automation": "human",
-      "status": "done",
+      "title": "MP口座と取引履歴を作る",
+      "deliverable": "企業ごとに通常残高を持ち、取引履歴が追加のみで更新も削除もできず、取り消しは逆仕訳で表される状態",
+      "verify": [
+        "口座に入金と出金を行い、残高が履歴の合計と一致することを確認する",
+        "履歴の行を書き換える操作と削除する操作を試み、どちらも拒否されることを確認する",
+        "取り消しを実行し、元の行が残ったまま反対向きの行が増えることを確認する"
+      ],
+      "dependsOn": ["T003"],
+      "files": ["apps/api/src/modules/mp"],
+      "automation": "ci",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T015",
-      "title": "/checkinがnextItemを実際に呼ぶよう書き換える",
-      "deliverable": "「次の1件を選ぶ」手順が、文章の指示ではなくnextItem関数の呼び出しになっている状態",
+      "title": "企業に初期資金を配る",
+      "deliverable": "企業ができた時点で管理者が決めた額の通常残高が入り、履歴に初期資金の行が1本残る状態",
       "verify": [
-        "依存を満たしたtodo項目が複数あるdocs/plan.jsonで/checkinを実行する",
-        "nextItemの結果がそのまま次の1件として提示されることを確認する"
+        "新しいアカウントを作り、企業画面の残高が100,000MPと表示されることを確認する",
+        "取引履歴に初期資金の行が1本だけあることを確認する",
+        "管理画面で初期資金を50,000MPに変えてから新しいアカウントを作り、その額が入ることを確認する"
       ],
-      "dependsOn": ["T027"],
-      "files": [".claude/skills/checkin/SKILL.md"],
+      "dependsOn": ["T013", "T014"],
+      "files": ["apps/api/src/workflows/create-organization", "apps/api/src/modules/settings"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T016",
-      "title": "追記手順にnextIdの利用を明記する",
-      "deliverable": "新しい項目を追記するとき、AIが手で番号を決めずnextIdの結果を使うことがAGENTS.mdに明記されている状態",
+      "title": "期限つきボーナス残高を作る",
+      "deliverable": "ボーナス残高が有効期限を持ち、支払いでボーナスから先に減り、期限切れが失効として履歴に残り、売上として他社へは移らない状態",
       "verify": [
-        "AGENTS.mdの記述を確認する",
-        "実際に追記してみて番号が既存最大値+1になることを確認する"
+        "通常10,000とボーナス1,500の企業で2,000の支払いを行い、ボーナスが0、通常が9,500になることを確認する",
+        "期限を過ぎたボーナスを持つ企業の残高表示を見て、そのボーナスが数えられておらず履歴に失効の行があることを確認する",
+        "他社へ支払った側の履歴を見て、受け取った側の残高が通常残高だけ増えていることを確認する"
       ],
-      "dependsOn": ["T017"],
-      "files": ["AGENTS.md"],
+      "dependsOn": ["T014"],
+      "files": ["apps/api/src/modules/mp-bonus"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T017",
-      "title": "nextIdを呼ぶCLIコマンドを追加する",
-      "deliverable": "コマンドを実行すると、次に振るべき番号がわかる状態",
-      "verify": ["コマンドを実行し、既存最大値+1が表示されることを確認する"],
-      "dependsOn": [],
-      "files": ["src/plan-cli/next-id.ts", "package.json"],
+      "title": "残高の食い違いを見つけるコマンドを作る",
+      "deliverable": "全企業について残高と履歴の合計を突き合わせ、差がある企業を一覧するコマンドがある状態",
+      "verify": [
+        "コマンドを実行し、差分0件と表示されることを確認する",
+        "データベースで1社の残高を直接書き換えてから実行し、その企業が一覧に出ることを確認してから元に戻す",
+        "終了コードが差分ありのとき0以外になることを確認する"
+      ],
+      "dependsOn": ["T014"],
+      "files": ["apps/api/src/scripts/check-balances.ts"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T018",
-      "title": "進捗と見送り件数を確認するRoutineを作成する",
-      "deliverable": "定期的にdocs/plan.jsonとdocs/neglected-log.mdを確認するRoutineが実在する状態",
-      "verify": ["claude.ai/code/routinesまたは/scheduleでRoutineが作成されていることを確認する"],
-      "dependsOn": ["T011"],
-      "files": ["AGENTS.md"],
+      "title": "商品登録の画面と検査を作る",
+      "deliverable": "要件6の必須8項目が揃わないと登録できず、価格が1MP以上の整数に限られる状態",
+      "verify": [
+        "ターゲット顧客を空にして登録を試み、その項目にエラーが出て登録されないことを確認する",
+        "価格に0と-100と1.5をそれぞれ入れて、いずれも拒否されることを確認する",
+        "8項目すべてを埋めて登録し、企業の商品一覧に出ることを確認する"
+      ],
+      "dependsOn": ["T013"],
+      "files": ["apps/api/src/api/vendor/products", "apps/storefront/src/app/products/new"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T019",
-      "title": "Routineを手動実行して通知が届くことを確認する",
-      "deliverable": "Routineを1回実行すると、通知が実際に届く状態",
-      "verify": ["Run nowでRoutineを実行し、通知が届くことを目視で確認する"],
+      "title": "市場一覧と商品詳細を作る",
+      "deliverable": "全企業の商品が一覧に並び、詳細を開けて、販売期間外と在庫切れが購入できないと分かる状態",
+      "verify": [
+        "市場一覧を開き、別の企業が登録した商品が並んでいることを確認する",
+        "販売期間が過ぎた商品を開き、購入できない旨が表示されることを確認する",
+        "提供可能数0の商品を開き、購入ボタンが押せないことを確認する"
+      ],
       "dependsOn": ["T018"],
-      "files": ["AGENTS.md"],
-      "automation": "human",
-      "status": "done",
+      "files": ["apps/storefront/src/app/market", "apps/api/src/api/store/products"],
+      "automation": "ci",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T020",
-      "title": "全項目done時の通知内容を確認する",
-      "deliverable": "ゴール到達時に通知の文言がそれとわかる内容に変わる状態",
+      "title": "購入とMP移転をひとまとまりで行う",
+      "deliverable": "購入で購入者が減り販売者が増える処理が1つのトランザクションで行われ、自己購入と残高不足が拒否され、在庫が1減る状態",
       "verify": [
-        "全項目をdoneにした状態でRoutineを実行し、通知文言がゴール到達を示すことを確認する"
+        "他社商品を買い、購入者の残高が減り販売者の残高が増えていることを両方の画面で確認する",
+        "自社商品の購入をAPIを直接呼んで試み、エラーになることを確認する",
+        "残高より高い商品の購入を試み、拒否されて残高が変わらないことを確認する",
+        "購入後に商品の提供可能数が1減っていることを確認する"
       ],
-      "dependsOn": ["T019"],
-      "files": ["AGENTS.md"],
-      "automation": "human",
-      "status": "done",
+      "dependsOn": ["T016", "T019"],
+      "files": ["apps/api/src/workflows/purchase"],
+      "automation": "ci",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T021",
-      "title": "Gate抵触検出の設計メモを書く",
-      "deliverable": "test-policy.mdのGateに触れたがヒヤリハットで済んだ場面を、何をトリガーに何を見て検出するかの設計メモがある状態",
-      "verify": ["設計メモを読み、検出方法が具体的に書かれていることを確認する"],
-      "dependsOn": [],
-      "files": ["docs/decisions.md"],
+      "title": "取引履歴の画面を作る",
+      "deliverable": "自社の入出金が時系列で並び、相手が企業名だけで表示される状態",
+      "verify": [
+        "購入した側の履歴に支払いの行が出ていることを確認する",
+        "販売した側の履歴に入金の行が出ていることを確認する",
+        "履歴のどこにも Market ID が出ていないことを確認する"
+      ],
+      "dependsOn": ["T020"],
+      "files": ["apps/storefront/src/app/transactions", "apps/api/src/api/vendor/transactions"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T022",
-      "title": "Gate抵触検出フックを実装する",
-      "deliverable": "設計どおりのフックが実際に動き、.claude/settings.jsonに登録されて自動発火する状態",
+      "title": "テストの出題画面を作る",
+      "deliverable": "SurveyJSで問題が表示され、問題取得の通信に正解が含まれない状態",
       "verify": [
-        "わざとGateに触れる状況を再現し、フックが反応することを確認する",
-        ".claude/settings.jsonのhooksにneglect-check.shが登録されていることを確認する"
+        "テストを開いて10問が表示され、回答を送信できることを確認する",
+        "ブラウザの通信を見て、問題を取得した応答に正解が含まれていないことを確認する",
+        "問題データのファイルを見て、正解がサーバー側だけにあることを確認する"
       ],
-      "dependsOn": ["T021"],
-      "files": [".claude/hooks/neglect-check.sh", ".claude/settings.json"],
+      "dependsOn": ["T001"],
+      "files": ["apps/api/src/modules/quiz", "apps/storefront/src/app/quiz"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T023",
-      "title": "台帳に書かれないまま/checkoutが進むのを止める",
-      "deliverable": "neglected-log.mdへの記入が無いまま/checkoutしようとすると警告される状態",
+      "title": "サーバーで採点してボーナスを配る",
+      "deliverable": "得点に応じたボーナスがサーバー側の採点で付与され、同じテストからは1回しか受け取れない状態",
       "verify": [
-        "記入せずに/checkoutを試し、警告が出ることを確認する",
-        "記入後は警告が出ないことを確認する"
+        "90点になる回答を送り、1,500MPのボーナスが残高に加わることを確認する",
+        "同じテストをもう一度受け、ボーナスが増えないことを確認する",
+        "管理画面で換算表を変更してから別のテストを受け、変更後の額が入ることを確認する"
       ],
-      "dependsOn": ["T022"],
-      "files": [".claude/hooks/handoff-check.sh"],
+      "dependsOn": ["T016", "T022"],
+      "files": ["apps/api/src/workflows/grade-quiz"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T024",
-      "title": "AskUserQuestionの使用をAGENTS.mdに明記する",
-      "deliverable": "専門的な内容を聞くときは選択肢付きで聞く、という実践がAGENTS.mdに明文化されている状態",
-      "verify": ["AGENTS.mdの該当節を確認する"],
-      "dependsOn": [],
-      "files": ["AGENTS.md"],
+      "title": "広告枠を買えるようにする",
+      "deliverable": "企業がMPを払って期間を決めてトップページのFeatured枠を買え、その期間だけ掲載される状態",
+      "verify": [
+        "広告枠を購入し、残高が広告費の分だけ減っていることを確認する",
+        "トップページを開き、購入した商品がFeatured枠に出ていることを確認する",
+        "期間を過ぎた広告がFeatured枠から消えることを確認する"
+      ],
+      "dependsOn": ["T016", "T019"],
+      "files": ["apps/api/src/modules/ads", "apps/storefront/src/app/ads"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T025",
-      "title": "質問スタイル検査の設計メモを書く",
-      "deliverable": "何をもって「非エンジニアに答えられない聞き方」と判定するかの設計メモがある状態",
-      "verify": ["設計メモを読み、具体的な判定基準が書かれていることを確認する"],
-      "dependsOn": [],
-      "files": ["docs/decisions.md"],
+      "title": "広告の効果を数える",
+      "deliverable": "表示回数とクリック数とCTRと広告経由の購入数とROASが記録され、企業の広告画面で見られる状態",
+      "verify": [
+        "トップページを3回開いてから広告画面を見て、表示回数が3増えていることを確認する",
+        "広告をクリックして購入まで進み、クリック数と広告経由購入数が増えることを確認する",
+        "広告費と売上からROASが計算されて表示されていることを確認する"
+      ],
+      "dependsOn": ["T024"],
+      "files": ["apps/api/src/modules/ads-metrics", "apps/storefront/src/app/ads/report"],
       "automation": "ci",
-      "status": "done",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T026",
-      "title": "質問スタイルを検査するフックを実装する",
-      "deliverable": "設計どおりのフックが実際に動き、.claude/settings.jsonに登録されて自動発火する状態",
+      "title": "経営ダッシュボードを作る",
+      "deliverable": "残高と売上と支出と利益と販売数と購入数と広告費と商品別売上が並び、どれも取引履歴から計算した値と一致する状態",
       "verify": [
-        "専門用語だけの質問をさせてみて、フックが反応することを確認する",
-        "平易な説明＋選択肢の質問は通ることを確認する",
-        ".claude/settings.jsonのhooksにquestion-style-check.shが登録されていることを確認する"
+        "ダッシュボードを開き、通常残高とボーナス残高が別々に表示されていることを確認する",
+        "取引履歴を手で合計した売上と、ダッシュボードの売上が一致することを確認する",
+        "商品を1つ売ってから再読み込みし、販売数と商品別売上が増えることを確認する"
       ],
-      "dependsOn": ["T025", "T024"],
-      "files": [".claude/hooks/question-style-check.sh", ".claude/settings.json"],
-      "automation": "human",
-      "status": "done",
+      "dependsOn": ["T021", "T025"],
+      "files": ["apps/storefront/src/app/dashboard", "apps/api/src/api/vendor/stats"],
+      "automation": "ci",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T027",
-      "title": "nextItemを呼ぶCLIコマンドを追加する",
-      "deliverable": "コマンドを実行すると、依存を満たしたtodo項目の中から次に着手すべき1件がわかる状態",
+      "title": "売上推移のグラフを出す",
+      "deliverable": "ダッシュボードに日ごとの売上の折れ線が表示され、教材風でない見た目になっている状態",
       "verify": [
-        "依存関係を満たしたtodo項目が複数あるdocs/plan.jsonでコマンドを実行する",
-        "正しい1件が表示されることを確認する",
-        "依存先が未完了の項目が選ばれないことを確認する"
+        "ダッシュボードを開き、売上の折れ線グラフが表示されることを確認する",
+        "取引が無い日が0として描かれ、線が途切れないことを確認する",
+        "グラフをユーザーに見せ、実在のサービスの画面に見えるかを説明してもらう"
       ],
-      "dependsOn": [],
-      "files": ["src/plan-cli/next-item.ts", "package.json"],
-      "automation": "ci",
-      "status": "done",
+      "dependsOn": ["T026"],
+      "files": ["apps/storefront/src/app/dashboard/chart"],
+      "automation": "human",
+      "status": "todo",
       "origin": "initial"
     },
     {
       "id": "T028",
-      "title": "確かめ方の書き方が機械で弾かれることを/plan-initに明記する",
-      "deliverable": ".claude/skills/plan-init/SKILL.md に、確かめ方の書き方が機械で検査され、条件を満たさないと検証が落ちることと、その条件が書かれている状態",
+      "title": "ランキングを5つの指標で出す",
+      "deliverable": "売上と利益と利益率と顧客数とROASで並べ替えられ、企業名だけが出るランキングがある状態",
       "verify": [
-        ".claude/skills/plan-init/SKILL.md を開き、確かめ方が機械で検査されると書かれていることを確認する",
-        "書かれている条件が、src/plan.ts の validateVerifySteps の実際の判定と一致していることを確認する"
+        "ランキング画面で5つの指標を順に切り替え、並び順が変わることを確認する",
+        "利益率で並べたとき、売上が小さくても利益率が高い企業が上に来ることを確認する",
+        "ランキングのどこにも Market ID が出ていないことを確認する"
       ],
-      "dependsOn": [],
-      "files": [".claude/skills/plan-init/SKILL.md"],
+      "dependsOn": ["T026"],
+      "files": ["apps/storefront/src/app/ranking", "apps/api/src/api/store/ranking"],
       "automation": "ci",
-      "status": "done",
-      "origin": "added"
+      "status": "todo",
+      "origin": "initial"
     },
     {
       "id": "T029",
-      "title": "引継ぎ本文に自動記録の目印を書かない注意を/handoffに入れる",
-      "deliverable": ".claude/skills/handoff/SKILL.md に、docs/handoff.md の本文へ自動記録の目印そのものを書いてはいけないことが書かれている状態",
+      "title": "管理者の全企業一覧を作る",
+      "deliverable": "管理者が全企業の残高と売上と利益と商品数と広告費を1画面で見られる状態",
       "verify": [
-        ".claude/skills/handoff/SKILL.md を開き、目印を本文に書かない注意があることを確認する",
-        "その注意が、書いた場合に何が起きるか（本文が切り落とされる）まで説明していることを確認する"
+        "管理画面を開き、登録済みの全企業が行として並んでいることを確認する",
+        "1社の数値を、その企業のダッシュボードの数値と突き合わせて一致することを確認する",
+        "生徒のアカウントでこの画面を開こうとして拒否されることを確認する"
       ],
-      "dependsOn": [],
-      "files": [".claude/skills/handoff/SKILL.md"],
+      "dependsOn": ["T026"],
+      "files": ["apps/api/src/admin/routes/organizations", "apps/api/src/api/admin/organizations"],
       "automation": "ci",
-      "status": "done",
-      "origin": "added"
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T030",
+      "title": "相互取引率と購入集中率を出す",
+      "deliverable": "企業ペアごとの相互取引率と企業ごとの購入集中率が管理画面に出て、しきい値を超えた組が目立つ状態",
+      "verify": [
+        "2社の間だけで何度も売買したデータを作り、その組の相互取引率が高く表示されることを確認する",
+        "しきい値の30%を超えた組が色などで強調されていることを確認する",
+        "1社に購入が偏った企業の購入集中率が高く出ることを確認する"
+      ],
+      "dependsOn": ["T021"],
+      "files": [
+        "apps/api/src/api/admin/trade-analysis",
+        "apps/api/src/admin/routes/trade-analysis"
+      ],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T031",
+      "title": "管理者の購入ログを共有できるようにする",
+      "deliverable": "どの管理者がどの企業からいくら買ったかを、管理者同士が見られる状態",
+      "verify": [
+        "管理者アカウントで商品を1つ買い、購入ログにその行が出ることを確認する",
+        "別の管理者アカウントで同じログ画面を開き、他の管理者の購入も見えることを確認する",
+        "管理者別の購入額の合計が表示されていることを確認する"
+      ],
+      "dependsOn": ["T020"],
+      "files": ["apps/api/src/api/admin/purchase-log", "apps/api/src/admin/routes/purchase-log"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T032",
+      "title": "6言語の翻訳の仕組みを作る",
+      "deliverable": "6言語の辞書ファイルと右上の言語切替があり、選択がブラウザに残り、未翻訳のキーを機械で見つけられる状態",
+      "verify": [
+        "右上の切替で英語に変えると画面の文字が英語になることを確認する",
+        "ブラウザを閉じて開き直しても英語のままであることを確認する",
+        "辞書から1つのキーを消してから検査コマンドを実行し、そのキーが指摘されることを確認してから戻す"
+      ],
+      "dependsOn": ["T005"],
+      "files": ["apps/storefront/src/i18n", "scripts/check-i18n-keys.mjs"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T033",
+      "title": "買う側の画面を6言語にする",
+      "deliverable": "市場一覧と商品詳細と購入とテストとランキングの文字列が6言語すべてに揃っている状態",
+      "verify": [
+        "言語を6つ順に切り替え、市場一覧に日本語が混ざらないことを確認する",
+        "購入時のエラーをわざと起こし、その文言も切り替えた言語で出ることを確認する",
+        "未翻訳キーの検査コマンドを実行し、0件であることを確認する"
+      ],
+      "dependsOn": ["T032", "T019"],
+      "files": ["apps/storefront/src/i18n/locales", "apps/storefront/src/app/market"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T034",
+      "title": "企業側の画面を6言語にする",
+      "deliverable": "商品登録とダッシュボードと取引履歴と広告の文字列が6言語すべてに揃っている状態",
+      "verify": [
+        "言語をネパール語に切り替え、商品登録画面の項目名がすべて訳されていることを確認する",
+        "必須項目を空にしてエラーを出し、その文言も訳されていることを確認する",
+        "未翻訳キーの検査コマンドを実行し、0件であることを確認する"
+      ],
+      "dependsOn": ["T032", "T026"],
+      "files": ["apps/storefront/src/i18n/vendor", "apps/storefront/src/app/dashboard"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T035",
+      "title": "管理者の画面を6言語にする",
+      "deliverable": "管理画面の全企業一覧と取引分析と購入ログの文字列が6言語すべてに揃っている状態",
+      "verify": [
+        "管理画面で言語をタイ語に切り替え、表の見出しがすべて訳されていることを確認する",
+        "相互取引率の説明文も訳されていることを確認する",
+        "未翻訳キーの検査コマンドを実行し、0件であることを確認する"
+      ],
+      "dependsOn": ["T032", "T029"],
+      "files": ["apps/api/src/admin/i18n"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T036",
+      "title": "商品名と説明に翻訳を入れられるようにする",
+      "deliverable": "生徒が商品ごとに各言語の訳を任意で入力でき、閲覧者の言語の訳が無ければ原文が出る状態",
+      "verify": [
+        "商品に英語の訳を入れ、英語表示のときにその訳が出ることを確認する",
+        "訳を入れていないタイ語表示にして、原文が出ることを確認する",
+        "訳を入力しなくても商品を登録できることを確認する"
+      ],
+      "dependsOn": ["T005", "T018"],
+      "files": [
+        "apps/api/src/api/vendor/product-translations",
+        "apps/storefront/src/app/products/new"
+      ],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T037",
+      "title": "呼び名を抽象化して差し替え可能にする",
+      "deliverable": "コードの中では Participant と Organization と Administrator で統一され、画面の表記は辞書だけで生徒や先生に変えられる状態",
+      "verify": [
+        "辞書の1語を生徒から参加者に書き換え、画面の表記が変わることを確認する",
+        "コードを検索し、画面に出る語として生徒や先生が直接書かれていないことを確認する",
+        "6言語すべてでこの語の訳があることを確認する"
+      ],
+      "dependsOn": ["T032"],
+      "files": ["apps/storefront/src/i18n/terms"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T038",
+      "title": "ルール説明とチュートリアルを作る",
+      "deliverable": "カルテルと循環取引と贔屓が禁止であることと、市場の使い方が6言語で読める状態",
+      "verify": [
+        "ルール説明のページを開き、カルテルと循環取引の説明があることを確認する",
+        "言語を切り替え、6言語すべてで読めることを確認する",
+        "初めて使う人にチュートリアルを読んでもらい、商品登録までたどり着けるか説明してもらう"
+      ],
+      "dependsOn": ["T032"],
+      "files": ["apps/storefront/src/app/rules", "apps/storefront/src/content"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T039",
+      "title": "主要な流れを自動テストで通す",
+      "deliverable": "アカウント作成から商品登録と購入とダッシュボード確認までを自動で通すテストがCIで走る状態",
+      "verify": [
+        "ローカルでE2Eテストを実行し、全て通ることを確認する",
+        "購入の処理をわざと壊してから実行し、テストが落ちることを確認してから戻す",
+        "PRを出し、CIのcheckジョブでこのテストが実行されていることを確認する"
+      ],
+      "dependsOn": ["T026"],
+      "files": ["e2e", ".github/workflows/ci.yml"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T040",
+      "title": "60社同時の購入で残高が狂わないことを確かめる",
+      "deliverable": "60社が一斉に購入しても残高と履歴が食い違わないことを、実行して確かめた記録がある状態",
+      "verify": [
+        "60社分のアカウントを作る種まきスクリプトを実行し、企業が60社できることを確認する",
+        "60社が同時に購入する負荷スクリプトを実行し、エラーで落ちないことを確認する",
+        "実行後に残高チェックのコマンドを走らせ、差分0件であることを確認する"
+      ],
+      "dependsOn": ["T020", "T017"],
+      "files": ["scripts/load-test.mjs", "apps/api/src/scripts/seed-60.ts"],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T041",
+      "title": "日本語なしで操作できるかを人が試す",
+      "deliverable": "日本語以外の1言語だけで、説明なしにアカウント作成から商品登録と購入とダッシュボード閲覧まで到達できることを、人が実際に操作して確かめた記録がある状態",
+      "verify": [
+        "言語を英語に固定し、日本語を一切表示しない状態で最初から操作してもらう",
+        "アカウント作成と商品登録と他社商品の購入とダッシュボード閲覧まで到達できたかを説明してもらう",
+        "途中で手が止まった画面があればその画面名を記録し、docs/neglected-log.md か次の項目として残したことを確認する"
+      ],
+      "dependsOn": ["T033", "T034", "T035"],
+      "files": ["docs/acceptance-i18n.md"],
+      "automation": "human",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T042",
+      "title": "デザインが教材っぽくないかを人が確かめる",
+      "deliverable": "禁止モチーフが全画面に無いことと、幅375pxで横スクロールが出ないことを、人が見て確かめた記録がある状態",
+      "verify": [
+        "主要な4画面を開いてもらい、禁止モチーフの一覧と照らして該当が無いかを説明してもらう",
+        "ブラウザの幅を375pxにして4画面を開き、横スクロールが出ないことを確認する",
+        "実在のマーケットプレイスに見えるかどうかを説明してもらう"
+      ],
+      "dependsOn": ["T006", "T033", "T034"],
+      "files": ["docs/acceptance-design.md"],
+      "automation": "human",
+      "status": "todo",
+      "origin": "initial"
+    },
+    {
+      "id": "T043",
+      "title": "受け入れ基準を全部そろえてリリース判定する",
+      "deliverable": "docs/requirements.md 第2部のA〜Kを1つずつ実物で確かめ、全て満たしたことを記録した状態",
+      "verify": [
+        "A1からK3までの各基準について、確かめた操作と結果を一覧にする",
+        "満たしていない基準が1つも無いことを確認する",
+        "その一覧をユーザーに見せ、リリースしてよいかを判断してもらう"
+      ],
+      "dependsOn": ["T039", "T040", "T041", "T042"],
+      "files": ["docs/release-check.md"],
+      "automation": "human",
+      "status": "todo",
+      "origin": "initial"
     }
   ]
 }

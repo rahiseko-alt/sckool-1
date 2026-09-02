@@ -1073,3 +1073,65 @@ AI の判断で勝手に掘り返したのではない）。
 「これを実行するのは誰か（AI のセッション／人がターミナルに入力／人が画面を見る）」を
 1手順ずつ書き出してから `automation` を決める。「25.」で立てた基準（「そのコマンドを誰が
 入力するか」まで下りる）を、`T006` 単体ではなく `verify` の全手順に適用する。
+
+### 29. 雛形から実プロジェクトへ移行した（ユーザー指示、2026-09-02）
+
+ユーザーが実プロジェクトの要件（44項目）を提示したため、引継ぎの選択肢3を実行した。
+このセッションで作ったのは**計画だけ**で、コードは1行も書いていない（ユーザー指示
+「受け入れ基準もきっちり決めろ・計画承認後は待機」）。
+
+#### T 番号の衝突をどう避けたか
+
+| 項目                 | 内容                                                                                                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 問題                 | `docs/plan.json` は雛形自身の28項目で埋まっており、既存項目は書き換え禁止。新プロジェクトの項目を追記すると `T029` から始まり、番号だけでは2つの計画が混ざる |
+| 採った方法           | 雛形の計画を `docs/plan.from-0.json` に `git mv` し、`docs/plan.json` を新しい計画（`T001`〜`T043`）として作り直した                                         |
+| なぜ改名が許されるか | 「書き換え禁止」は**項目の本文**についての規約。ファイルごと別名で保存し、中身を1文字も変えていないので、過去の PR・台帳からの参照は改名後のファイルで辿れる |
+| 参照の読み替え       | **`docs/decisions.md` の「28.」までに出てくる T 番号は、すべて `docs/plan.from-0.json` を指す。** 「29.」以降は `docs/plan.json`（新プロジェクト）を指す     |
+| 検証                 | `src/plan.file.test.ts` は `docs/plan.json` が存在するときだけ検証する作りなので、差し替え後も `pnpm run test` が新しい計画を検証する（46件通過を確認済み）  |
+
+**採らなかった案**: 新プロジェクトの項目を既存 `docs/plan.json` の末尾に `T029` から追記する。
+`plan:progress` の「当初計画28件」の分母に雛形の項目が混ざったままになり、
+新プロジェクトの進み具合が読めなくなるため却下した。
+
+#### 技術選定（調査した一次情報）
+
+**方針は「Mercur を改造して授業用経済圏にする」**。ユーザーの要件44番の構成をそのまま採る。
+
+| 決めたこと                                           | 区分     | 根拠                                                                                                                                                                                                                                                     |
+| ---------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 市場の土台に Mercur を使う                           | **判断** | MIT。マルチベンダー市場が主目的で、Storefront・Vendor Panel・Admin の3画面が揃う。[github.com/mercurjs/mercur](https://github.com/mercurjs/mercur)                                                                                                       |
+| Mercur は `apps/` に取り込む（別リポジトリにしない） | **判断** | ユーザーが選択。計画の「触るファイル」判定・CI・引継ぎが1つのリポジトリで完結する                                                                                                                                                                        |
+| バックエンドは Medusa `2.18.0` 系                    | **公式** | `apps/api/package.json` の `@medusajs/*` が全て `2.18.0`、`engines.node >=20`。[raw.githubusercontent.com](https://raw.githubusercontent.com/mercurjs/mercur/main/apps/api/package.json)                                                                 |
+| 商品情報の多言語は Translation Module                | **公式** | `@medusajs/medusa/translation`、Medusa v2.12.3+。Product・Category・Collection・Variant 等を翻訳できる。[docs.medusajs.com](https://docs.medusajs.com/resources/commerce-modules/translation)                                                            |
+| ロケール指定は `locale` クエリか `x-medusa-locale`   | **公式** | Store API の全ルートが両方に対応し、訳が無ければ原文にフォールバックする。[docs.medusajs.com](https://docs.medusajs.com/resources/storefront-development/localization)                                                                                   |
+| **画面文字列の翻訳は自前で用意する**                 | **判断** | Mercur の Storefront は言語・通貨・配送地域が結合しており、分離は未実装の Issue #1363（2026-08-07 起票、open、PR 無し）。[github.com](https://github.com/mercurjs/mercur/issues/1363)                                                                    |
+| テストは SurveyJS Form Library                       | **公式** | MIT。[github.com](https://github.com/surveyjs/survey-library/blob/master/LICENSE)。Survey Creator は別ライセンスのため使わない                                                                                                                           |
+| **採点はサーバー側で行う**                           | **判断** | 得点が MP になるため、`correctAnswer` をブラウザに送ると資金を自作できてしまう。受け入れ基準 E4 で「問題取得の応答に正解が含まれない」ことを検査する                                                                                                     |
+| MP 口座の実装方式は**未定**（`T003` で実機比較）     | **判断** | Store Credit Module は `@medusajs/loyalty-plugin` にあり Medusa v2.14.0+ が必要。口座・入出金・履歴はあるが、**公式ドキュメントに有効期限の記載が無い** `[曖昧]`。[docs.medusajs.com](https://docs.medusajs.com/resources/commerce-modules/store-credit) |
+| 認証方式は**未定**（`T004` で実機確認）              | **判断** | Market ID を `emailpass` の識別子に渡せるか（メール形式の検査があるか）は未確認 `[曖昧]`。[docs.medusajs.com](https://docs.medusajs.com/resources/commerce-modules/auth/auth-providers/emailpass)                                                        |
+| Chart.js / Graphology は MVP に入れない              | **判断** | Mercur 標準の統計で足りるか未確認のため、足りないと分かってから入れる。循環取引検知も SQL で数える方式を先に試す                                                                                                                                         |
+
+#### 実行環境で確かめたこと（2026-09-02、このコンテナ）
+
+- Node 22.22 / pnpm 10.33 / bun あり / PostgreSQL 16 のサーバー実体あり（`/usr/lib/postgresql/16/bin/`、PATH 外）/ redis-server 7 あり
+- **Docker デーモンは動いていない**（CLI だけ）。`docker-compose` 前提の起動手順は使えないので、
+  `T001` ではローカルクラスタを直接起動する方式にする
+- CI は `check` ジョブ1本でサービス無し。`T002` で postgres を足すが、**ジョブ名は変えない**
+  （Ruleset の必須チェックが外れて PR がマージ不能になる）
+
+#### 受け入れ基準を A〜K で先に固定した理由
+
+ユーザー指示「受け入れ基準もきっちり決めろ」。`docs/requirements.md` 第2部に、A（匿名認証）から
+K（非機能）まで **1つずつ確かめられる文**として書いた。`docs/plan.json` の43項目は、それぞれ
+どの基準を満たすためのものかが `deliverable` から辿れる。**「MVP が終わった」の判定は
+`T043` で A1〜K3 を1つずつ実物で確かめる**。個々の項目の `done` の積み上げでは判定しない。
+
+#### この計画の `[曖昧]`
+
+- **`automation` を `ci` にした項目のうち、E2E に近いものは実際には人の操作が要るかもしれない。**
+  「28.」で学んだとおり、`verify` の手順を誰が実行するかを、着手時にもう一度確かめること
+- 授業が PC 前提かスマホ併用かが未確認。受け入れ基準 J3（幅375px）の要否がこれで変わる
+- ロック時間・相互取引率のしきい値などの数値は仮置き。管理者が変えられる作りにして逃げている
+- **43項目という数は、1項目1セッションで終わる想定。** 実際にやってみて大きすぎたら、
+  末尾に分割した項目を追記する（既存項目は書き換えない）
