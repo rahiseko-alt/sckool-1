@@ -1,13 +1,16 @@
 import { defineConfig } from 'vitest/config';
 
 /**
- * ルートのテストは `src/` だけを見る。
+ * ルートのテストが見る範囲。
  *
- * `apps/` は Mercur 由来のアプリで、Jest（Medusa の作法）で動く別系統のテストを持つ。
- * 既定の include のままだと vitest がそれらを拾い、土台の検査が上物の都合で落ちる。
+ * - `src/` … 雛形から引き継いだ計画まわりのコード
+ * - `apps/api/src/` … このプロジェクトのバックエンド。**自分で書いた部分だけ**
+ *
+ * `apps/api/integration-tests/` は Medusa の作法（Jest）で動く別系統なので入れない。
+ * 既定の include のままだとそれらを拾い、土台の検査が上物の都合で落ちる。
  */
 export default defineConfig({
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'apps/api/src/**/*.test.ts'],
   },
 });

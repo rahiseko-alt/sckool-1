@@ -43,7 +43,7 @@
       "dependsOn": ["T001"],
       "files": ["docs/decisions.md", "apps/api/src/modules/mp"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -103,7 +103,7 @@
       "dependsOn": [],
       "files": ["apps/api/src/modules/market-id"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

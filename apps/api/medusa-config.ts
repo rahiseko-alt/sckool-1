@@ -34,6 +34,8 @@ module.exports = withMercur({
   featureFlags: {
     seller_registration: true
   },
+  // MP 口座に Medusa の Store Credit は使わない。有効期限を持てず、口座が
+  // 顧客ひとりにつき1つしか作れないため。実験の記録は docs/decisions.md「33.」
   modules: [
     {
       resolve: '@mercurjs/core/modules/admin-ui',
