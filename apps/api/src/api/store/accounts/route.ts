@@ -9,6 +9,9 @@ import {
 } from '../../../modules/market-id'
 import { MP_MODULE } from '../../../modules/mp'
 import type MpService from '../../../modules/mp/service'
+import { ORGANIZATION_MODULE } from '../../../modules/organization'
+import { checkName } from '../../../modules/organization/name'
+import type OrganizationService from '../../../modules/organization/service'
 
 /**
  * 匿名アカウントを1つ作る（受け入れ基準 A1・B1・B2）。
@@ -44,9 +47,14 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     return
   }
 
-  if (organizationName.length === 0 || organizationName.length > MAX_ORGANIZATION_NAME) {
+  // 名前の細かい決まりは organization モジュールが持つ（記号だけ、目に見えない
+  // 文字が混ざる、といった判定も含む）。ここで先に見るのは、アカウントを作ってから
+  // 企業名で失敗すると、使えないアカウントだけが残ってしまうため。
+  const nameProblem = checkName(organizationName)
+  if (nameProblem) {
     res.status(400).json({
       code: 'organization_name_invalid',
+      problem: nameProblem,
       max_length: MAX_ORGANIZATION_NAME,
     })
     return
@@ -55,6 +63,14 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const logger = req.scope.resolve(ContainerRegistrationKeys.LOGGER)
   const authService = req.scope.resolve(Modules.AUTH)
   const mp = req.scope.resolve(MP_MODULE) as MpService
+  const organizations = req.scope.resolve(ORGANIZATION_MODULE) as OrganizationService
+
+  // 企業名が既に使われていないかを、アカウントを作る前に見る。
+  // ここを後回しにすると、認証だけできて企業が無いアカウントが残る。
+  if (await organizations.findByNameKeyPublic(organizationName)) {
+    res.status(409).json({ code: 'organization_name_taken' })
+    return
+  }
 
   /**
    * Market ID は当たりにくいが、絶対に重ならないわけではない。
@@ -95,6 +111,13 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     },
   })
 
+  const organization = await organizations.createFor(marketId, organizationName)
+  if (!organization.ok) {
+    // ここに来るのは、確認したあとに他の人が同じ名前で先に作った場合だけ。
+    res.status(409).json({ code: 'organization_name_taken' })
+    return
+  }
+
   await mp.grantInitialFunds(marketId, DEFAULT_INITIAL_FUNDS)
 
   res.status(201).json({
@@ -102,7 +125,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     // 一度だけの表示であることを、受け取る側にも分かる形で伝える。
     recovery_code: recoveryCode,
     recovery_code_shown_once: true,
-    organization_name: organizationName,
+    organization_name: organization.organization.name,
     balance: await mp.getBalance(marketId),
   })
 }

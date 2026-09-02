@@ -106,6 +106,27 @@ const wrong = await post('/auth/customer/emailpass', { email: marketId, password
 expect('状態が同じ', [missing.status, wrong.status], [401, 401]);
 expect('本文が同じ', JSON.stringify(missing.body) === JSON.stringify(wrong.body), true);
 
+console.log('\n=== 同じ企業名は2社作れない（同 B1）===');
+const duplicateName = `DUPLICATE ${Date.now()}`;
+const first = await post('/store/accounts', { password, organization_name: duplicateName });
+expect('1社目は作れた', first.status, 201);
+const second = await post('/store/accounts', { password, organization_name: duplicateName });
+expect('2社目は断られた', second.status, 409);
+
+console.log('\n=== 大文字小文字だけの違いも同じ名前とみなす（同 B1）===');
+const cased = await post('/store/accounts', {
+  password,
+  organization_name: duplicateName.toLowerCase(),
+});
+expect('小文字にしても断られた', cased.status, 409);
+
+console.log('\n=== 企業ができている（同 B1）===');
+const orgRows = await client.query('SELECT name FROM organization WHERE market_id = $1', [
+  marketId,
+]);
+expect('企業が1社ある', orgRows.rows.length, 1);
+expect('名前が入っている', orgRows.rows[0]?.name, name);
+
 await client.end();
 
 console.log('');

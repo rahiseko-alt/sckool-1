@@ -30,7 +30,8 @@
 
 - 要件の正本は **`docs/requirements.md`**。第1部がユーザーの原文44項目、第2部が
   **MVP 受け入れ基準 A〜K**（1つずつ確かめられる文にしてある）
-- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **3件が `done`**
+- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **12件が `done`**、
+  1件が人の確認待ち（`T006` デザイン）
 - **雛形自身の28項目は `docs/plan.from-0.json` に改名して保存した。**
   `docs/decisions.md`「28.」までの T 番号はそちらを指す
 
@@ -53,9 +54,14 @@
 **実装**（PR #5、作業中）
 
 - `T001` Mercur を `apps/` に取り込んで起動できるようにした
-- `T002` CI に postgres / redis を足し、マイグレーション → 個人情報の検査 → 起動確認まで通す
-- `T012` 個人情報の検査を追加（`scripts/check-no-personal-data.mjs`）
-- `docs/decisions.md`「30.」を追記 — 受け入れ基準 A3 を2段構えに直した経緯
+- `T002` CI に postgres / redis を足し、各種の検査まで通す
+- `T003` `T004` `T005` 技術検証。**3件とも「土台をそのまま使えない」という結論**
+- `T006` デザインの決まりを `docs/design.md` とトークンに固定（**人の確認待ち**）
+- `T007` Market ID / Recovery Code の生成とハッシュ
+- `T008` `T015` 匿名アカウントの作成と初期資金の配布
+- `T012` 個人情報の検査（`scripts/check-no-personal-data.mjs`）
+- `T014` `T016` `T017` MP 口座・ボーナス残高・整合性チェック
+- `docs/decisions.md`「30.」〜「33.」を追記
 
 ### 前のセッションまで（雛形 `from-0` としての作業）
 
@@ -80,15 +86,24 @@
 
 **ブランチ `claude/checkin-jb6vw4` と PR #5 の続きから。** `pnpm run plan:next` が次の1件を返す。
 
-残りの技術検証（結論は必ず `docs/decisions.md` に書く）:
+**技術検証は5件とも終わった。3件は「土台をそのまま使えない」という結論だったので、
+当初計画より自前で作る部分が増えている**（`docs/decisions.md`「31.」〜「33.」）。
 
-- `T003` MP 口座を Medusa の Store Credit で作るか、独自に作るか — **未着手**
-- `T004` Market ID を標準の認証に渡せるか — **実機で確認済み、記録はこれから**
-  （`scripts/probe-auth.mjs` を実行すると再現できる）
-- `T005` 画面文字列の翻訳をどこに置くか — **未着手**
+| 項目   | 結論                                                            |
+| ------ | --------------------------------------------------------------- |
+| `T003` | MP 口座は**自前**。Store Credit は期限を持てず口座も1つだけ     |
+| `T004` | 認証は**標準のまま使える**。Market ID をそのまま渡せる          |
+| `T005` | 多言語は**自前**。Translation Module は経路も読み出しも動かない |
+
+次は `pnpm run plan:next` が返す1件から。`T009`（ログイン画面）か `T013`（企業名）あたり。
 
 **再開したらまず `pnpm run services` を実行すること。** コンテナが再起動すると
 PostgreSQL と Redis が止まっており、API もデータベースも動かない。
+そのあと `pnpm run seed`（公開鍵と販売channel）を実行すると Store API を呼べる。
+
+**Storefront（生徒が見る画面）はまだ無い。** いまあるのは `apps/api` の API と、
+Mercur が持ってきた管理画面・企業パネルだけ。`apps/storefront` にはデザインの
+トークンしか置いていない。
 
 補足: 週次 Routine は無効化済み（`trig_01LVCzPzXcTxdyGFdxtFQZSw`）。進み具合は
 `pnpm run plan:progress` で見る。
@@ -118,6 +133,16 @@ PostgreSQL と Redis が止まっており、API もデータベースも動か�
   「CI が動かない」ときは、まず PR の状態を確認する
 - **Playwright のブラウザは `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`。**
   `chromium/` という名前のディレクトリは無い
+- **`apps/api/src/api/` に経路を足したら、サーバーを完全に落として起動し直す。**
+  古いサーバーが残っていると新しい経路が 404 のままになる（`EADDRINUSE` は
+  ログを見ないと気づけない）。落とすときは `pgrep -f "[m]edusa"` で残りを確認する
+- **サーバーを立てて検査する種類のものは `node scripts/with-api.mjs <コマンド>` を使う。**
+  起動と後片付けを毎回書くと落とし忘れる
+- **Store API は公開鍵（`x-publishable-api-key`）が無いと全て 400。**
+  `pnpm run seed` で作る。鍵は67文字あるので、切り出すときは
+  `grep -oE 'pk_[a-f0-9]+'` ではなくデータベースから取る（短く切れる）
+- **Medusa の商品作成に `prices` と `shipping_profile_id` は渡せない**（Mercur 側で
+  弾かれる）。`options` と `variants` も、Mercur が既定のものを足すため付けない
 - **CI のジョブ名 `check` は変えない。** `T002` で postgres を足すときも名前は据え置く
   （Ruleset の必須チェックが外れて PR がマージ不能になる）
 - **`docs/plan.from-0.json` の `done` のうち3件は「要件の取り下げ」を意味する**

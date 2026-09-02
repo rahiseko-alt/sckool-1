@@ -193,7 +193,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/modules/organization", "apps/storefront/src/app/settings"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
