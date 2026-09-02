@@ -142,6 +142,93 @@ describe('ボーナスの失効（受け入れ基準 E2）', () => {
     )
     expect(expired).toEqual([])
   })
+
+  it('失効の行を入れても、残高と履歴の合計がそろう（受け入れ基準 B3）', () => {
+    // 失効の行は「期限切れの配布を打ち消す」ためのもの。
+    // 打ち消す相手（配布の行）を残高から外したまま失効の行だけ数えると、
+    // 存在しない 1,500 MP を二重に引くことになる（実際にそうなっていた）。
+    const entries = [
+      entry({ amount: 100_000, kind: 'initial_grant' }),
+      entry({
+        id: 'b1',
+        amount: 1_500,
+        kind: 'bonus_grant',
+        pocket: 'bonus',
+        expiresAt: YESTERDAY,
+      }),
+      entry({ amount: -1_500, kind: 'bonus_expired', pocket: 'bonus', reference: 'b1' }),
+    ]
+    const balance = calculateBalance(entries, NOW)
+
+    expect(balance).toEqual({ normal: 100_000, bonus: 0, total: 100_000 })
+    expect(balance.total).toBe(entries.reduce((sum, e) => sum + e.amount, 0))
+  })
+
+  it('一部だけ使ったボーナスは、使い残しだけが失効する', () => {
+    // 1,500 のうち 500 を使ったあとに期限が切れたら、消えるのは残りの 1,000。
+    // 配布額の 1,500 を丸ごと失効させると、通常残高から 500 が消える。
+    const before = [
+      entry({ amount: 100_000, kind: 'initial_grant' }),
+      entry({
+        id: 'b1',
+        amount: 1_500,
+        kind: 'bonus_grant',
+        pocket: 'bonus',
+        expiresAt: YESTERDAY,
+      }),
+      entry({ amount: -500, kind: 'purchase', pocket: 'bonus' }),
+    ]
+    expect(findExpiredBonuses(before, NOW)).toEqual([{ entryId: 'b1', amount: 1_000 }])
+
+    const after = [
+      ...before,
+      entry({ amount: -1_000, kind: 'bonus_expired', pocket: 'bonus', reference: 'b1' }),
+    ]
+    const balance = calculateBalance(after, NOW)
+
+    expect(balance).toEqual({ normal: 100_000, bonus: 0, total: 100_000 })
+    expect(balance.total).toBe(after.reduce((sum, e) => sum + e.amount, 0))
+    // 二度目は何も残っていない
+    expect(findExpiredBonuses(after, NOW)).toEqual([])
+  })
+
+  it('期限が切れていないボーナスは失効させず、残高にも残る', () => {
+    const entries = [
+      entry({ amount: 100_000, kind: 'initial_grant' }),
+      entry({
+        id: 'b1',
+        amount: 1_500,
+        kind: 'bonus_grant',
+        pocket: 'bonus',
+        expiresAt: IN_7_DAYS,
+      }),
+    ]
+    expect(findExpiredBonuses(entries, NOW)).toEqual([])
+    expect(calculateBalance(entries, NOW)).toEqual({
+      normal: 100_000,
+      bonus: 1_500,
+      total: 101_500,
+    })
+  })
+
+  it('ボーナスで払った分を取り消すと、ボーナス残高に戻る（受け入れ基準 K3）', () => {
+    const purchase = entry({
+      id: 'p1',
+      amount: -500,
+      kind: 'purchase',
+      pocket: 'bonus',
+      expiresAt: IN_7_DAYS,
+    })
+    const entries = [
+      entry({ id: 'b1', amount: 1_500, kind: 'bonus_grant', pocket: 'bonus', expiresAt: IN_7_DAYS }),
+      purchase,
+      buildReversal(purchase, 'r1', NOW),
+    ]
+    const balance = calculateBalance(entries, NOW)
+
+    expect(balance.bonus).toBe(1_500)
+    expect(balance.total).toBe(entries.reduce((sum, e) => sum + e.amount, 0))
+  })
 })
 
 describe('取り消し（受け入れ基準 K3）', () => {
