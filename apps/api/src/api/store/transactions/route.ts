@@ -59,19 +59,40 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     if (owner) counterpartNames.set(listing.organization_id, owner.name)
   }
 
+  /**
+   * 売れたときの相手（買った企業）を引く。
+   *
+   * 1回の売買は、買う側の行と売る側の行に**同じ印**（`group_id`）が入っている。
+   * その印で市場全体の履歴を引き直せば、買った企業が分かる。
+   * 印が無い古い行では分からないので、そのときは空のままにする。
+   *
+   * **出すのは企業名だけ**（要件38）。Market ID は返さない。
+   */
+  const saleGroupIds = entries
+    .filter((entry) => entry.kind === 'sale' && entry.groupId)
+    .map((entry) => entry.groupId!)
+
+  const buyerNameByGroup = new Map<string, string>()
+  if (saleGroupIds.length > 0) {
+    const buyerIds = await mp.findBuyersForGroups(saleGroupIds)
+    for (const [groupId, buyerId] of buyerIds) {
+      const buyer = await organizations.findByMarketId(buyerId)
+      if (buyer) buyerNameByGroup.set(groupId, buyer.name)
+    }
+  }
+
   const rows = entries
     .slice()
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     .map((entry) => {
       const listing = entry.reference ? listingById.get(entry.reference) : undefined
-      /**
-       * 相手の企業。買ったときは売り手、売れたときは買い手。
-       * 買い手は履歴からは分からないので、売れたときは商品名だけを出す。
-       */
-      const counterpart =
-        entry.kind === 'purchase' && listing
-          ? (counterpartNames.get(listing.organization_id) ?? null)
-          : null
+      /** 相手の企業。買ったときは売り手、売れたときは買い手。 */
+      let counterpart: string | null = null
+      if (entry.kind === 'purchase' && listing) {
+        counterpart = counterpartNames.get(listing.organization_id) ?? null
+      } else if (entry.kind === 'sale' && entry.groupId) {
+        counterpart = buyerNameByGroup.get(entry.groupId) ?? null
+      }
 
       return {
         id: entry.id,

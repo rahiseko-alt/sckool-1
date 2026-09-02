@@ -3,6 +3,7 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 import { ADS_MODULE } from '../../../modules/ads'
 import type AdsService from '../../../modules/ads/service'
 import { CATALOG_MODULE } from '../../../modules/catalog'
+import { localeOf } from '../../../modules/catalog/locales'
 import type CatalogService from '../../../modules/catalog/service'
 import { marketIdOf } from '../../../modules/market-auth/token'
 import { MP_MODULE } from '../../../modules/mp'
@@ -26,7 +27,8 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const featured = []
 
   for (const placement of placements) {
-    const listing = await catalog.findListing(placement.listing_id)
+    // 商品名は閲覧者の言語に合わせる。Featured だけ原文のままだと見比べにくい。
+    const listing = await catalog.findListing(placement.listing_id, new Date(), localeOf(req))
     if (!listing) continue
 
     const owner = await organizations.findByMarketId(listing.organization_id)

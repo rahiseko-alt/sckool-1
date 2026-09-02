@@ -117,6 +117,26 @@ const requireOrganization = (
   next()
 }
 
+/**
+ * 土台が最初から持っている「個人情報を入れる入口」を塞ぐ（受け入れ基準 A3）。
+ *
+ * **生徒の画面に入口が無いだけでは足りない。** 基準は「生徒がそれらの項目を
+ * 入力できる画面・API を**一切持たない**」と書いてある。判定役が実際に
+ * `POST /store/customers` を呼び、氏名「田中 太郎」・メールアドレス・電話番号を
+ * **保存できてしまう**ことを見つけた。
+ *
+ * この仕組みは Medusa の customer を使わない（企業は自前の `organization` で持つ）。
+ * だから丸ごと閉じてよい。**個別の項目を弾く形にしない**——土台が新しい項目を
+ * 足したときに、また入口が開く。
+ */
+const blockPersonalData = (
+  _req: MedusaRequest,
+  res: MedusaResponse,
+  _next: MedusaNextFunction,
+) => {
+  res.status(404).json({ code: 'not_found' })
+}
+
 export default defineMiddlewares({
   routes: [
     {
@@ -124,6 +144,28 @@ export default defineMiddlewares({
       matcher: '/auth/*/emailpass',
       method: 'POST',
       middlewares: [loginGuard],
+    },
+    /**
+     * 個人情報が入る土台の経路。**閉じる**（受け入れ基準 A3）。
+     *
+     *   - `/store/customers*` … 氏名・メール・電話・住所を持つ
+     *   - `/auth/customer/emailpass/register` … 好きなメールアドレスで登録できる。
+     *     アカウントは `POST /store/accounts` だけで作る（Market ID を機械が振る）
+     *
+     * 「無い」と答える（404）。「禁止」と答えると、その経路があること自体を教えてしまう。
+     */
+    {
+      matcher: '/store/customers',
+      middlewares: [blockPersonalData],
+    },
+    {
+      matcher: '/store/customers/*',
+      middlewares: [blockPersonalData],
+    },
+    {
+      matcher: '/auth/*/emailpass/register',
+      method: 'POST',
+      middlewares: [blockPersonalData],
     },
     /**
      * 企業として行う操作。**ログインしていないと呼べない。**
@@ -171,6 +213,11 @@ export default defineMiddlewares({
     {
       matcher: '/store/transactions',
       method: 'GET',
+      middlewares: [requireOrganization],
+    },
+    {
+      // 自社の企業名を見る・変える（受け入れ基準 B1）。
+      matcher: '/store/organization',
       middlewares: [requireOrganization],
     },
   ],

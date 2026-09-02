@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { api } from '../api'
+import { Featured } from '../components/featured'
 import type { Listing } from './listing-detail'
 import { card, errorText, hint, money, primaryButton, quietButton } from '../ui'
 
@@ -40,6 +41,9 @@ export function MarketScreen(props: { onOpen: (listingId: string) => void }) {
 
   return (
     <div>
+      {/* 広告枠を市場一覧の前に出す。ここが無いと、買った枠が誰の目にも触れない。 */}
+      <Featured onOpen={props.onOpen} />
+
       <h1 style={{ fontSize: 'var(--text-h1)', margin: 0 }}>{t('market.title')}</h1>
       <p style={hint}>{t('market.subtitle')}</p>
 

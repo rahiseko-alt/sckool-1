@@ -138,9 +138,17 @@ expect('買った側に購入の行がある', Boolean(bought), true);
 expect('相手が企業名で出る', bought?.counterpart_name, seller.name);
 const sold = (sellerView.body?.transactions ?? []).find((row) => row.kind === 'sale');
 expect('売った側に販売の行がある', Boolean(sold), true);
+// 売った側からも「誰が買ったか」が見える。判定役が、売った側の相手欄が
+// 空のままだと指摘したため足した。
+expect('売った側にも相手の企業名が出る', sold?.counterpart_name, buyer.name);
 expect(
   '履歴のどこにも Market ID が出ていない',
   JSON.stringify(buyerView.body).includes(seller.marketId),
+  false,
+);
+expect(
+  '売った側の履歴にも Market ID が出ていない',
+  JSON.stringify(sellerView.body).includes(buyer.marketId),
   false,
 );
 

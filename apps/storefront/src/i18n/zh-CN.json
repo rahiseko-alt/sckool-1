@@ -276,5 +276,32 @@
       "title": "4. 查看经营情况",
       "body": "会显示销售额、支出、利润以及每个商品的销售情况。卖不动的商品，可以试着改写说明、价格或展示方式。"
     }
+  },
+  "featured": {
+    "title": "推荐商品",
+    "lead": "$t(terms.organizations)正在投放广告的商品",
+    "badge": "广告"
+  },
+  "account": {
+    "title": "$t(terms.organization)设置",
+    "nameTitle": "修改$t(terms.organization)名称",
+    "nameLead": "打错字或改变方针时可以修改。",
+    "save": "修改",
+    "saving": "正在修改",
+    "saved": "已修改",
+    "recoveryTitle": "忘记密码时",
+    "recoveryLead": "用创建时记下的找回码设置新密码。",
+    "recoveryCode": "找回码",
+    "newPassword": "新密码",
+    "reset": "修改密码",
+    "resetDone": "密码已修改。请记下下面的新找回码。"
+  },
+  "nameProblem": {
+    "empty": "请填写这一项",
+    "too_long": "请控制在40个字符以内",
+    "no_visible_characters": "请输入可读的文字",
+    "control_characters": "含有不能使用的字符",
+    "name_taken": "这个名称已被使用",
+    "not_found": "找不到该$t(terms.organization)"
   }
 }

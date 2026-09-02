@@ -276,5 +276,32 @@
       "title": "4. Look at your business",
       "body": "Revenue, expenses, profit, and how each product is selling. If something is not selling, try changing the wording, the price, or how you show it."
     }
+  },
+  "featured": {
+    "title": "Featured",
+    "lead": "Products that $t(terms.organizations) are advertising",
+    "badge": "Ad"
+  },
+  "account": {
+    "title": "$t(terms.organization) settings",
+    "nameTitle": "Change your $t(terms.organization) name",
+    "nameLead": "Fix a typo, or change it when your plan changes.",
+    "save": "Change it",
+    "saving": "Changing",
+    "saved": "Changed",
+    "recoveryTitle": "If you forget your password",
+    "recoveryLead": "Use the recovery code you wrote down to set a new password.",
+    "recoveryCode": "Recovery code",
+    "newPassword": "New password",
+    "reset": "Change password",
+    "resetDone": "Your password is changed. Write down the new code below."
+  },
+  "nameProblem": {
+    "empty": "Please fill this in",
+    "too_long": "Use 40 characters or fewer",
+    "no_visible_characters": "Please include readable characters",
+    "control_characters": "This contains characters that cannot be used",
+    "name_taken": "That name is already taken",
+    "not_found": "That $t(terms.organization) was not found"
   }
 }

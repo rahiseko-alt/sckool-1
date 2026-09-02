@@ -274,6 +274,30 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     })
   }
 
+  /**
+   * 「この売買を誰が買ったか」を印（`group_id`）から引く（受け入れ基準 D5）。
+   *
+   * 売れた側の履歴に相手の企業名を出すために使う。買った側の行を探し、
+   * その `organization_id` が買った企業。**印の無い古い行は分からない**ので返さない。
+   */
+  async findBuyersForGroups(groupIds: readonly string[]): Promise<Map<string, string>> {
+    if (groupIds.length === 0) return new Map()
+
+    const rows = await this.listMpLedgerEntries({
+      // 印は重複するので、問い合わせの前に1つにまとめる。
+      group_id: [...new Set(groupIds)],
+      kind: 'purchase',
+    })
+
+    const buyers = new Map<string, string>()
+    for (const row of rows) {
+      if (!row.group_id) continue
+      // 1回の購入がボーナスと通常の2行に分かれても、買った企業は同じ。
+      buyers.set(row.group_id, row.organization_id)
+    }
+    return buyers
+  }
+
   /** 市場全体で MP の総量が保たれているかを見る（受け入れ基準 K1 の検査に使う）。 */
   async getSupply(): Promise<{
     granted: number

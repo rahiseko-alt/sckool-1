@@ -276,5 +276,32 @@
       "title": "4. 経営を見る",
       "body": "売上・支出・利益と、商品ごとの売れ行きが出ます。売れていない商品は、書き方か値段か、見せ方を変えてみてください。"
     }
+  },
+  "featured": {
+    "title": "注目の商品",
+    "lead": "$t(terms.organizations)が広告を出している商品です",
+    "badge": "広告"
+  },
+  "account": {
+    "title": "$t(terms.organization)の設定",
+    "nameTitle": "$t(terms.organization)名を変える",
+    "nameLead": "打ち間違えたときや、方針を変えたときに直せます。",
+    "save": "変える",
+    "saving": "変えています",
+    "saved": "変えました",
+    "recoveryTitle": "パスワードを忘れたとき",
+    "recoveryLead": "作ったときに控えた再発行コードで、新しいパスワードを決められます。",
+    "recoveryCode": "再発行コード",
+    "newPassword": "新しいパスワード",
+    "reset": "パスワードを変える",
+    "resetDone": "パスワードを変えました。次のコードを控えてください。"
+  },
+  "nameProblem": {
+    "empty": "入力してください",
+    "too_long": "40文字までにしてください",
+    "no_visible_characters": "読める字を入れてください",
+    "control_characters": "使えない文字が入っています",
+    "name_taken": "その名前はすでに使われています",
+    "not_found": "$t(terms.organization)が見つかりません"
   }
 }

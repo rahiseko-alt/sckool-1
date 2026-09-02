@@ -45,6 +45,26 @@ if (commands.length === 0) {
 }
 
 /**
+ * **すでに誰かが同じ port で動いていたら、何もせずに止まる。**
+ *
+ * 動いているサーバーがいると、新しく立てたほうは port を取れずに死ぬが、
+ * この道具は `/health` が返るのを待つだけなので**古いサーバーに繋がってしまう**。
+ * 検査は通るのに直したはずの変更が反映されない、という形で現れる
+ * （実際に、前のセッションが残したサーバーで1時間溶かした）。
+ */
+try {
+  const response = await fetch(new URL('/health', BASE_URL));
+  if (response.ok) {
+    console.error(`${BASE_URL} で別のサーバーがすでに動いています。`);
+    console.error('そのまま検査すると、古いコードのサーバーを相手にしてしまいます。');
+    console.error('止めてから、やり直してください: pgrep -af "[m]edusa start"');
+    process.exit(1);
+  }
+} catch {
+  // 誰も動いていない。これが普通の状態。
+}
+
+/**
  * `detached: true` にして、サーバーを自分のプロセスグループに入れる。
  *
  * グループごと止められないと孫（medusa 本体）が生き残り、標準出力を

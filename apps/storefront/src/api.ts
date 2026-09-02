@@ -23,6 +23,11 @@ export interface ApiResult<T> {
    * 日本語が出る（受け入れ基準 I2）。
    */
   problems?: { field: string; problem: string }[]
+  /**
+   * 1つだけの問題（企業名の変更で使う）。`problems` と同じ考え方で、
+   * **文言ではなく「どういう問題か」だけ**を受け取る。
+   */
+  problem?: string
 }
 
 /** サーバーが返す合図と、辞書のキーの対応。 */
@@ -83,15 +88,17 @@ export async function api<T>(
   }
 
   if (!response.ok) {
-    const body = parsed as { code?: unknown; problems?: unknown } | undefined
+    const body = parsed as { code?: unknown; problems?: unknown; problem?: unknown } | undefined
     const problems = Array.isArray(body?.problems)
       ? (body.problems as { field: string; problem: string }[])
       : undefined
+    const problem = typeof body?.problem === 'string' ? body.problem : undefined
     return {
       ok: false,
       status: response.status,
       errorKey: errorKeyOf(response.status, body?.code),
       ...(problems ? { problems } : {}),
+      ...(problem ? { problem } : {}),
     }
   }
 

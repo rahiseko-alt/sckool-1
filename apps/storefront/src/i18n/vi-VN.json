@@ -276,5 +276,32 @@
       "title": "4. Xem tình hình kinh doanh",
       "body": "Doanh thu, chi phí, lợi nhuận và mức bán của từng sản phẩm. Nếu không bán được, hãy thử đổi cách viết, giá, hoặc cách trình bày."
     }
+  },
+  "featured": {
+    "title": "Nổi bật",
+    "lead": "Sản phẩm mà $t(terms.organizations) đang quảng cáo",
+    "badge": "Quảng cáo"
+  },
+  "account": {
+    "title": "Cài đặt $t(terms.organization)",
+    "nameTitle": "Đổi tên $t(terms.organization)",
+    "nameLead": "Sửa lỗi gõ nhầm, hoặc đổi khi kế hoạch thay đổi.",
+    "save": "Đổi",
+    "saving": "Đang đổi",
+    "saved": "Đã đổi",
+    "recoveryTitle": "Khi bạn quên mật khẩu",
+    "recoveryLead": "Dùng mã khôi phục bạn đã ghi lại để đặt mật khẩu mới.",
+    "recoveryCode": "Mã khôi phục",
+    "newPassword": "Mật khẩu mới",
+    "reset": "Đổi mật khẩu",
+    "resetDone": "Mật khẩu đã đổi. Hãy ghi lại mã mới bên dưới."
+  },
+  "nameProblem": {
+    "empty": "Vui lòng điền mục này",
+    "too_long": "Tối đa 40 ký tự",
+    "no_visible_characters": "Hãy nhập ký tự đọc được",
+    "control_characters": "Có ký tự không dùng được",
+    "name_taken": "Tên đó đã có người dùng",
+    "not_found": "Không tìm thấy $t(terms.organization) đó"
   }
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LanguageSwitcher } from './components/language-switcher'
+import { AccountScreen } from './screens/account'
 import { AdsScreen } from './screens/ads'
 import { DashboardScreen } from './screens/dashboard'
 import { ListingDetailScreen } from './screens/listing-detail'
@@ -38,6 +39,7 @@ type Screen =
   | 'transactions'
   | 'ads'
   | 'rules'
+  | 'account'
 
 export default function App() {
   const { t } = useTranslation()
@@ -64,6 +66,7 @@ export default function App() {
     { key: 'quizzes', label: t('nav.quizzes') },
     { key: 'ranking', label: t('nav.ranking') },
     { key: 'rules', label: t('nav.rules') },
+    { key: 'account', label: t('account.title') },
   ]
 
   return (
@@ -202,6 +205,20 @@ export default function App() {
         {screen === 'ranking' && <RankingScreen />}
 
         {screen === 'rules' && <RulesScreen />}
+
+        {screen === 'account' && (
+          <AccountScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+            onRenamed={(organizationName) => {
+              // 上の「ログイン中」の表示も新しい名前にする。
+              if (!session) return
+              const next = { ...session, organizationName }
+              saveSession(next)
+              setSession(next)
+            }}
+          />
+        )}
 
         {screen === 'login' && (
           <div>
