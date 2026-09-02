@@ -51,7 +51,9 @@
     "check:storefront": "node scripts/check-storefront-i18n.mjs",
     "check:translations": "node scripts/check-translations.mjs",
     "admin:dev": "pnpm --filter @sckool/admin dev",
-    "check:admin-i18n": "node scripts/check-admin-i18n.mjs"
+    "check:admin-i18n": "node scripts/check-admin-i18n.mjs",
+    "check:e2e": "node scripts/check-e2e.mjs",
+    "check:e2e:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/with-storefront.mjs node scripts/check-e2e.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

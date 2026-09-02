@@ -97,3 +97,13 @@ jobs:
       # （受け入れ基準 K1）。手元で 24 秒だったので、この一連の中に入れてある。
       - name: 市場の確認（アカウント・ログイン・パスワード再設定・商品・60社同時購入）
         run: pnpm run check:market:ci
+
+      # 生徒と同じ手順をブラウザでなぞる検査に要る。使うのは chromium だけ。
+      - name: ブラウザの用意
+        run: pnpm exec playwright install --with-deps chromium
+
+      # アカウント作成 → 商品登録 → 他社商品の購入 → 経営の画面までを、
+      # 実際のブラウザでボタンを押して通す。API だけの検査では、画面と API の
+      # つなぎ目が切れていても気づけない。
+      - name: 主要な流れをブラウザで通す
+        run: pnpm run check:e2e:ci
