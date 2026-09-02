@@ -88,7 +88,7 @@
       "dependsOn": [],
       "files": ["docs/design.md", "apps/storefront/src/styles"],
       "automation": "human",
-      "status": "awaiting_human",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -575,7 +575,7 @@
       "dependsOn": ["T032"],
       "files": ["apps/storefront/src/app/rules", "apps/storefront/src/content"],
       "automation": "ci",
-      "status": "awaiting_human",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -620,7 +620,7 @@
       "dependsOn": ["T033", "T034", "T035"],
       "files": ["docs/acceptance-i18n.md"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -635,7 +635,7 @@
       "dependsOn": ["T006", "T033", "T034"],
       "files": ["docs/acceptance-design.md"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
