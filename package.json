@@ -29,7 +29,10 @@
     "api:build": "pnpm --filter @sckool/api build",
     "api:smoke": "node scripts/api-smoke.mjs",
     "check:no-personal-data": "node scripts/check-no-personal-data.mjs",
-    "check:mp": "node scripts/run-api.mjs exec ./src/scripts/check-mp.ts"
+    "check:mp": "node scripts/run-api.mjs exec ./src/scripts/check-mp.ts",
+    "seed": "node scripts/run-api.mjs exec ./src/scripts/seed-market.ts",
+    "check:accounts": "node scripts/check-accounts.mjs",
+    "check:accounts:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/check-accounts.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

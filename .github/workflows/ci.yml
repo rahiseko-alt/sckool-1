@@ -82,3 +82,8 @@ jobs:
 
       - name: バックエンドの起動確認
         run: pnpm run api:smoke
+
+      # 匿名アカウントの作成とログインを、動いているサーバーに対して確かめる。
+      # 起動したまま検査するので、サーバーを立ててから実行して最後に落とす。
+      - name: 匿名アカウントの確認
+        run: pnpm run check:accounts:ci

@@ -118,7 +118,7 @@
       "dependsOn": ["T004", "T007"],
       "files": ["apps/api/src/api/store/accounts", "apps/storefront/src/app/signup"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -223,7 +223,7 @@
       "dependsOn": ["T013", "T014"],
       "files": ["apps/api/src/workflows/create-organization", "apps/api/src/modules/settings"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -238,7 +238,7 @@
       "dependsOn": ["T014"],
       "files": ["apps/api/src/modules/mp-bonus"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
