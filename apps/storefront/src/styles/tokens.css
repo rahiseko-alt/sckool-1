@@ -1,0 +1,83 @@
+/*
+ * 画面の色・余白・字の大きさの正本。
+ *
+ * 値の意味と「なぜその値か」は docs/design.md に書いてある。
+ * **こちらだけを直さないこと。** 片方だけ変わると、次に読む人がどちらが正しいか
+ * 判断できなくなる。
+ *
+ * 差し色は1色だけ。増やすと教材めいた見た目になる（要件39・40）。
+ */
+
+:root {
+  /* 色 */
+  --bg: #ffffff;
+  --bg-subtle: #f7f7f8;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --text: #18181b;
+  --text-muted: #71717a;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-text: #ffffff;
+  /* 数字の増減にだけ使う。装飾には使わない。 */
+  --positive: #15803d;
+  --negative: #b91c1c;
+
+  /* 余白は4の倍数だけ */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+
+  /* 角の丸みと影。影は薄く1段だけ（濃い影はゲーム風に見える） */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  /* 文字 */
+  --text-display: 32px;
+  --text-h1: 28px;
+  --text-h2: 20px;
+  --text-h3: 16px;
+  --text-body: 14px;
+  --text-small: 13px;
+
+  /*
+   * 6言語ぶんの字体を配ると重くなるので、端末が持っているものを使う。
+   * 日本語・簡体字・タイ語・デーバナーガリー（ネパール語）を並べてある。
+   */
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', 'Noto Sans JP', 'Noto Sans SC', 'Noto Sans Thai',
+    'Noto Sans Devanagari', sans-serif;
+
+  /* 本文の最大幅。これより広い画面では左右に余白を置く */
+  --content-max: 1200px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/*
+ * 金額と数量は桁を揃える。揃っていないと残高や売上が並んだときに読み違える。
+ */
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * 表は入りきらないときに「表だけ」を横に流す。
+ * ページごと流すと、幅375pxで横スクロールが出て受け入れ基準 J3 に反する。
+ */
+.table-scroll {
+  overflow-x: auto;
+}
