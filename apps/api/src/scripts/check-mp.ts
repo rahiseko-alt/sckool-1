@@ -89,8 +89,16 @@ export default async function checkMp({ container }: ExecArgs) {
 
   console.log('\n=== 市場全体の MP の量 ===')
   const supply = await mp.getSupply()
-  console.log(`  配った: ${supply.granted} / 失効: ${supply.expired} / 出回っている: ${supply.circulating}`)
-  expect('配った分から失効分を引いた額が出回っている', supply.granted - supply.expired, supply.circulating)
+  console.log(
+    `  配った: ${supply.granted} / 失効: ${supply.expired} / 外へ出た: ${supply.spentOutside} / 出回っている: ${supply.circulating}`,
+  )
+  // 広告費（ad_spend）は企業から市場の外へ出ていくので、失効と同じく引く。
+  // ここを忘れると、広告が売れた分だけ MP が消えたように見える。
+  expect(
+    '出回っている額 = 配った額 − 失効 − 外へ出た額',
+    supply.granted - supply.expired - supply.spentOutside,
+    supply.circulating,
+  )
 
   console.log('')
   if (failures.length > 0) {

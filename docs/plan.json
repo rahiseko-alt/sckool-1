@@ -605,7 +605,7 @@
       "dependsOn": ["T020", "T017"],
       "files": ["scripts/load-test.mjs", "apps/api/src/scripts/seed-60.ts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

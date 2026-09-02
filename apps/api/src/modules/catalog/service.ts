@@ -1,5 +1,6 @@
 import { MedusaService } from '@medusajs/framework/utils'
 
+import { repositoryOf } from '../db/serialize'
 import { Listing } from './models/listing'
 import {
   checkAvailability,
@@ -103,16 +104,28 @@ class CatalogService extends MedusaService({ Listing }) {
    *
    * 減らせなければ `false` を返す。**呼ぶ側は必ずこれを見ること。**
    * 在庫を確かめずに MP だけ動かすと、売り切れた商品が売れ続ける。
+   *
+   * **「読む → 見る → 書く」を1文にまとめてある。** 3手に分けると、
+   * 読んでから書くまでの間に別の購入が割り込む。60社で同時に試したとき、
+   * 在庫5個の商品が33個売れた（`scripts/check-load.mjs` が見つけた）。
+   * `where` に残数の条件を入れておけば、足りない購入は0行の書き換えになり、
+   * 判定と書き込みが1つの動作になる。
    */
   async decreaseQuantity(id: string, amount = 1): Promise<boolean> {
-    const [row] = await this.listListings({ id })
-    if (!row) return false
-
-    const current = Number(row.available_quantity)
-    if (current < amount) return false
-
-    await this.updateListings({ id, available_quantity: current - amount })
-    return true
+    const changed = await repositoryOf(this).transaction(async (manager) => {
+      const rows = await manager.execute(
+        `update "listing"
+            set "available_quantity" = "available_quantity" - ?,
+                "updated_at" = now()
+          where "id" = ?
+            and "deleted_at" is null
+            and "available_quantity" >= ?
+        returning "id"`,
+        [amount, id, amount],
+      )
+      return rows.length
+    })
+    return changed > 0
   }
 
   /**
@@ -120,11 +133,20 @@ class CatalogService extends MedusaService({ Listing }) {
    *
    * 購入は「先に在庫を押さえ、MP の移動に失敗したら戻す」順で行う。
    * これが無いと、買えなかった商品の在庫が減ったまま戻らない。
+   *
+   * 減らす側と同じく1文で書く。読んでから足すと、同時に戻したぶんが消える。
    */
   async increaseQuantity(id: string, amount = 1): Promise<void> {
-    const [row] = await this.listListings({ id })
-    if (!row) return
-    await this.updateListings({ id, available_quantity: Number(row.available_quantity) + amount })
+    await repositoryOf(this).transaction(async (manager) => {
+      await manager.execute(
+        `update "listing"
+            set "available_quantity" = "available_quantity" + ?,
+                "updated_at" = now()
+          where "id" = ? and "deleted_at" is null`,
+        [amount, id],
+      )
+      return undefined
+    })
   }
 }
 

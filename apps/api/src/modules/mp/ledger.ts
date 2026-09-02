@@ -66,12 +66,21 @@ export interface Balance {
 }
 
 /**
+ * 残高を数えるのに要る分だけ。
+ *
+ * 支払いの直前は「鍵を取ってから数え直す」ため、履歴を金額・種類・期限だけの
+ * 軽い形で読む。1行まるごと読む必要がないので、必要な列だけを求める形にしてある。
+ */
+export type BalancePart = Pick<LedgerEntry, 'amount' | 'pocket'> &
+  Partial<Pick<LedgerEntry, 'expiresAt'>>
+
+/**
  * ある時点での残高を、取引履歴だけから数える。
  *
  * **保存された残高の値は使わない。** 二重に持つと必ずずれるため、
  * 残高は常にここで数え直す（受け入れ基準 B3）。
  */
-export function calculateBalance(entries: readonly LedgerEntry[], now: Date = new Date()): Balance {
+export function calculateBalance(entries: readonly BalancePart[], now: Date = new Date()): Balance {
   let normal = 0;
   let bonus = 0;
 
@@ -225,24 +234,34 @@ export function buildTransfer(input: {
 /**
  * 市場全体で MP の総量が保たれているかを調べる。
  *
- * 増えてよいのは配布（初期資金・ボーナス）だけ、減ってよいのは失効だけ。
- * 売り買いは移動なので総量を変えない。ここがずれたら、どこかで片側だけの
- * 行を書いている（受け入れ基準 K1 の検査に使う）。
+ * 増えてよいのは配布（初期資金・ボーナス）だけ。減ってよいのは失効
+ * （`bonus_expired`）と、市場の外へ出ていく支払い（広告費 `ad_spend`）だけ。
+ * 売り買いは企業から企業への移動なので総量を変えない。
+ *
+ * つまり `circulating = granted − expired − spentOutside` が必ず成り立つ。
+ * ここがずれたら、どこかで片側だけの行を書いている（受け入れ基準 K1 の検査に使う）。
+ *
+ * **広告費を数え忘れると、広告が売れた分だけ MP が消えたように見える。**
+ * 実際、広告の検査を先に走らせてから MP の検査を走らせると 73,500 MP 合わなくなった。
  */
 export function calculateSupply(entries: readonly LedgerEntry[]): {
   granted: number;
   expired: number;
+  /** 広告費など、企業から市場の外へ出ていった額（正の数）。 */
+  spentOutside: number;
   circulating: number;
 } {
   let granted = 0;
   let expired = 0;
+  let spentOutside = 0;
   let circulating = 0;
 
   for (const entry of entries) {
     circulating += entry.amount;
     if (entry.kind === 'initial_grant' || entry.kind === 'bonus_grant') granted += entry.amount;
     if (entry.kind === 'bonus_expired') expired += -entry.amount;
+    if (entry.kind === 'ad_spend') spentOutside += -entry.amount;
   }
 
-  return { granted, expired, circulating };
+  return { granted, expired, spentOutside, circulating };
 }
