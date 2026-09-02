@@ -148,7 +148,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/api/store/recovery", "apps/storefront/src/app/recovery"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -163,7 +163,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/api/admin/accounts", "apps/api/src/admin/routes/accounts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

@@ -47,8 +47,35 @@ export default async function seedMarket({ container }: ExecArgs) {
     [Modules.SALES_CHANNEL]: { sales_channel_id: channel.id },
   })
 
+  // 運営者のアカウント。生徒のものではないので email 列を使うが、
+  // 値は @anon.invalid（実在しないと決められた予約ドメイン）にする。
+  // docs/decisions.md「30.」の検査もこの形だけを通す。
+  const adminIdentifier = process.env.SEED_ADMIN_IDENTIFIER ?? 'probe-admin@anon.invalid'
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'probe-password-1234'
+
+  const userService = container.resolve(Modules.USER)
+  const authService = container.resolve(Modules.AUTH)
+
+  const [existingUser] = await userService.listUsers({ email: adminIdentifier })
+  if (!existingUser) {
+    const registered = await authService.register('emailpass', {
+      body: { email: adminIdentifier, password: adminPassword },
+    } as never)
+
+    const user = await userService.createUsers({ email: adminIdentifier })
+    if (registered.authIdentity) {
+      await authService.updateAuthIdentities({
+        id: registered.authIdentity.id,
+        app_metadata: { user_id: user.id },
+      })
+    }
+    logger.info(`運営者のアカウントを作りました: ${adminIdentifier}`)
+  }
+
   console.log('\n=== 用意できたもの ===')
   console.log(`販売channel: ${channel.id}`)
   console.log(`公開鍵: ${key.token}`)
+  console.log(`運営者: ${adminIdentifier}`)
   console.log('\nStore API を呼ぶときは、この鍵を x-publishable-api-key に入れてください。')
+  console.log('※ 運営者のパスワードは開発用の既定値です。本番では環境変数で与えてください。')
 }
