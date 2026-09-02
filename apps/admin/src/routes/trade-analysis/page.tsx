@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { PageShell } from '../../components/page-shell'
+import { adminI18n } from '../../i18n'
 
 /**
  * 取引の偏りを見る画面（要件20〜22、受け入れ基準 H2・H3）。
@@ -6,6 +10,9 @@ import { useEffect, useState } from 'react'
  * **「不正な企業の一覧」ではない。** 買い合いと、本当に良いと思って買うことは
  * データから区別できない。画面にもそう書いておく。書かないと、数字が高い企業を
  * そのまま「不正」と読んでしまう。
+ *
+ * その断り書きは6言語すべてに入れる（受け入れ基準 I1）。**ここだけ日本語のままだと、
+ * 日本語を読めない先生には「不正の一覧」に見える。**
  */
 
 declare const __BACKEND_URL__: string
@@ -44,7 +51,6 @@ interface Analysis {
   purchase_concentration: Concentration[]
 }
 
-const mp = (value: number) => `${value.toLocaleString('ja-JP')} MP`
 const nameOf = (named: Named) => named.organization_name ?? named.market_id
 
 const cell: React.CSSProperties = {
@@ -62,8 +68,11 @@ const numericCell: React.CSSProperties = {
 const headCell: React.CSSProperties = { ...cell, textAlign: 'left', fontWeight: 400, opacity: 0.7 }
 
 const TradeAnalysisPage = () => {
+  const { t } = useTranslation()
   const [data, setData] = useState<Analysis | undefined>()
   const [error, setError] = useState<string | undefined>()
+
+  const mp = (value: number) => `${value.toLocaleString()} ${t('money.unit')}`
 
   useEffect(() => {
     let cancelled = false
@@ -77,15 +86,15 @@ const TradeAnalysisPage = () => {
         if (!response.ok) {
           setError(
             response.status === 401
-              ? '管理者としてログインしてください'
-              : `読み込めません（${response.status}）`,
+              ? t('error.unauthorized')
+              : t('error.load', { status: response.status }),
           )
           return
         }
         setError(undefined)
         setData((await response.json()) as Analysis)
       } catch {
-        if (!cancelled) setError('バックエンドにつながりません')
+        if (!cancelled) setError(t('error.offline'))
       }
     }
 
@@ -93,36 +102,41 @@ const TradeAnalysisPage = () => {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [t])
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1200px' }}>
-      <h1 style={{ fontSize: '24px', margin: 0 }}>取引の偏り</h1>
+    <>
+      {/* 間の空白を JSX 側で入れる。日本語以外は語の間に空白が要るので、
+          辞書の文字列の端に空白を持たせると（見えないので）消える。 */}
       <p style={{ opacity: 0.7, marginTop: '8px' }}>
-        買い合いや1社への偏りを数字で出します。<strong>不正の判定ではありません。</strong>
-        仲の良い相手の商品を本当に良いと思って買うことと、点数のために買い合うことは、
-        データからは区別できません。気になった組は本人に聞いてください。
+        {t('tradeAnalysis.lead')} <strong>{t('tradeAnalysis.notice')}</strong>{' '}
+        {t('tradeAnalysis.detail')}
       </p>
 
       {error && <p style={{ color: ALERT }}>{error}</p>}
 
       {data && (
         <>
-          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>相互取引率</h2>
+          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>{t('tradeAnalysis.mutual.title')}</h2>
           <p style={{ opacity: 0.7 }}>
-            2社の間の取引額 ÷ その2社の総取引額。{data.threshold}% を超えた組を色で示します。
-            互いとしか取引していない2社は 50% になります（総取引額に同じ額が2回入るため）。
+            {t('tradeAnalysis.mutual.description', { threshold: data.threshold })}
           </p>
 
           <div style={{ overflowX: 'auto' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th style={headCell}>企業</th>
-                  <th style={headCell}>相手</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>2社の間</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>2社の総取引</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>相互取引率</th>
+                  <th style={headCell}>{t('tradeAnalysis.mutual.columns.company')}</th>
+                  <th style={headCell}>{t('tradeAnalysis.mutual.columns.partner')}</th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('tradeAnalysis.mutual.columns.between')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('tradeAnalysis.mutual.columns.total')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('tradeAnalysis.mutual.columns.rate')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -149,23 +163,33 @@ const TradeAnalysisPage = () => {
             </table>
           </div>
 
-          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>購入集中率</h2>
+          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>
+            {t('tradeAnalysis.concentration.title')}
+          </h2>
           <p style={{ opacity: 0.7 }}>
-            買った額のうち、一番多く買っている相手が占める割合。
-            <strong>1社からしか買っていなければ必ず 100% です。</strong>
-            買った回数が少ないだけの企業も上位に来るので、相手の数と金額を見てください。
+            {t('tradeAnalysis.concentration.lead')}{' '}
+            <strong>{t('tradeAnalysis.concentration.notice')}</strong>{' '}
+            {t('tradeAnalysis.concentration.detail')}
           </p>
 
           <div style={{ overflowX: 'auto' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th style={headCell}>企業</th>
-                  <th style={headCell}>一番多い購入先</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>その相手へ</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>買った額</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>相手の数</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>購入集中率</th>
+                  <th style={headCell}>{t('tradeAnalysis.concentration.columns.company')}</th>
+                  <th style={headCell}>{t('tradeAnalysis.concentration.columns.topSeller')}</th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('tradeAnalysis.concentration.columns.topAmount')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('tradeAnalysis.concentration.columns.totalAmount')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('tradeAnalysis.concentration.columns.sellerCount')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('tradeAnalysis.concentration.columns.rate')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -183,16 +207,22 @@ const TradeAnalysisPage = () => {
             </table>
           </div>
 
-          {data.trade_count === 0 && <p style={{ opacity: 0.7 }}>まだ取引がありません。</p>}
+          {data.trade_count === 0 && <p style={{ opacity: 0.7 }}>{t('tradeAnalysis.empty')}</p>}
         </>
       )}
-    </div>
+    </>
   )
 }
 
-/** 左のメニューに出す。 */
+const TradeAnalysisRoute = () => (
+  <PageShell titleKey="tradeAnalysis.title">
+    <TradeAnalysisPage />
+  </PageShell>
+)
+
+/** 左のメニューに出す。文言は起動時の言語で固定される（企業一覧のページと同じ）。 */
 export const config = {
-  label: '取引の偏り',
+  label: adminI18n.t('tradeAnalysis.title'),
 }
 
-export default TradeAnalysisPage
+export default TradeAnalysisRoute

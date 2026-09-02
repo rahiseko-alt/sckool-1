@@ -1,0 +1,104 @@
+{
+  "language": {
+    "label": "Ngôn ngữ"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "Vui lòng đăng nhập với tư cách quản trị viên",
+    "load": "Không đọc được ({{status}})",
+    "offline": "Không kết nối được với máy chủ"
+  },
+  "organizations": {
+    "title": "Danh sách doanh nghiệp",
+    "description": "Số dư, doanh thu, lợi nhuận, số sản phẩm và chi phí quảng cáo của các doanh nghiệp tham gia. Bấm vào tiêu đề cột để đổi thứ tự.",
+    "summary": "{{organizations}} doanh nghiệp / tổng số dư {{balance}} / tổng doanh thu {{revenue}}",
+    "supplyMismatch": "* Sổ MP không khớp",
+    "bonus": "(thưởng {{amount}})",
+    "empty": "Chưa có doanh nghiệp nào.",
+    "columns": {
+      "organizationName": "Tên doanh nghiệp",
+      "balanceTotal": "Số dư",
+      "revenue": "Doanh thu",
+      "expenses": "Chi phí",
+      "profit": "Lợi nhuận",
+      "profitMargin": "Tỷ suất lợi nhuận",
+      "listingCount": "Số sản phẩm",
+      "adSpend": "Chi phí quảng cáo",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "Độ lệch trong giao dịch",
+    "lead": "Hiển thị bằng con số việc mua qua mua lại và việc dồn vào một doanh nghiệp.",
+    "notice": "Đây không phải là kết luận gian lận.",
+    "detail": "Mua hàng của bạn thân vì thấy sản phẩm thật sự tốt và mua qua mua lại để lấy điểm nhìn giống hệt nhau trong dữ liệu. Thấy cặp nào đáng ngờ, hãy hỏi trực tiếp các em.",
+    "empty": "Chưa có giao dịch nào.",
+    "mutual": {
+      "title": "Tỷ lệ giao dịch qua lại",
+      "description": "Giá trị giao dịch giữa hai doanh nghiệp ÷ tổng giao dịch của hai doanh nghiệp đó. Cặp vượt {{threshold}}% được tô màu. Hai doanh nghiệp chỉ giao dịch với nhau sẽ là 50% (cùng một khoản được tính hai lần trong tổng).",
+      "columns": {
+        "company": "Doanh nghiệp",
+        "partner": "Đối tác",
+        "between": "Giữa hai bên",
+        "total": "Tổng của hai bên",
+        "rate": "Tỷ lệ giao dịch qua lại"
+      }
+    },
+    "concentration": {
+      "title": "Mức tập trung khi mua",
+      "lead": "Phần mà nơi bán nhiều nhất chiếm trong tổng số tiền đã mua.",
+      "notice": "Doanh nghiệp chỉ mua của một nơi luôn là 100%.",
+      "detail": "Doanh nghiệp chỉ mua vài lần cũng lên đầu bảng, nên hãy xem cùng lúc số đối tác và số tiền.",
+      "columns": {
+        "company": "Doanh nghiệp",
+        "topSeller": "Nơi mua nhiều nhất",
+        "topAmount": "Trả cho nơi đó",
+        "totalAmount": "Tổng đã mua",
+        "sellerCount": "Số đối tác",
+        "rate": "Mức tập trung khi mua"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "Nhật ký mua hàng của giáo viên",
+    "lead": "Việc giáo viên mua của ai và hết bao nhiêu",
+    "notice": "được các giáo viên khác nhìn thấy.",
+    "detail": "Màn hình này để mỗi giáo viên tự nhận ra thiên vị ngoài ý muốn của mình. Học sinh không xem được.",
+    "summary": "{{admins}} giáo viên / {{purchases}} lần mua / tổng {{amount}}",
+    "empty": "Giáo viên chưa mua gì.",
+    "byAdmin": {
+      "title": "Theo giáo viên",
+      "noPurchase": "Chưa mua gì",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}} lần)",
+      "columns": {
+        "admin": "Giáo viên",
+        "purchaseCount": "Số lần mua",
+        "totalAmount": "Số tiền đã mua",
+        "concentration": "Mức tập trung",
+        "sellers": "Nơi đã mua"
+      }
+    },
+    "bySeller": {
+      "title": "Theo doanh nghiệp (được giáo viên mua)",
+      "description": "Số giáo viên cũng được hiển thị, để phân biệt một giáo viên mua thật nhiều hay nhiều giáo viên mỗi người mua một ít.",
+      "columns": {
+        "company": "Doanh nghiệp",
+        "amount": "Số tiền được mua",
+        "count": "Số lần",
+        "adminCount": "Số giáo viên"
+      }
+    },
+    "recent": {
+      "title": "Mới nhất trước",
+      "columns": {
+        "when": "Thời điểm",
+        "admin": "Giáo viên",
+        "seller": "Nơi đã mua",
+        "amount": "Số tiền"
+      }
+    }
+  }
+}

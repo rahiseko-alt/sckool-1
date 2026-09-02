@@ -1,0 +1,104 @@
+{
+  "language": {
+    "label": "言語"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "管理者としてログインしてください",
+    "load": "読み込めません（{{status}}）",
+    "offline": "バックエンドにつながりません"
+  },
+  "organizations": {
+    "title": "企業一覧",
+    "description": "参加している企業の残高・売上・利益・商品数・広告費。列の見出しを押すと並べ替わります。",
+    "summary": "{{organizations}} 社／残高の合計 {{balance}}／売上の合計 {{revenue}}",
+    "supplyMismatch": "※ MP の勘定が合っていません",
+    "bonus": "（ボーナス {{amount}}）",
+    "empty": "まだ企業がありません。",
+    "columns": {
+      "organizationName": "企業名",
+      "balanceTotal": "残高",
+      "revenue": "売上",
+      "expenses": "支出",
+      "profit": "利益",
+      "profitMargin": "利益率",
+      "listingCount": "商品数",
+      "adSpend": "広告費",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "取引の偏り",
+    "lead": "買い合いや1社への偏りを数字で出します。",
+    "notice": "不正の判定ではありません。",
+    "detail": "仲の良い相手の商品を本当に良いと思って買うことと、点数のために買い合うことは、データからは区別できません。気になった組は本人に聞いてください。",
+    "empty": "まだ取引がありません。",
+    "mutual": {
+      "title": "相互取引率",
+      "description": "2社の間の取引額 ÷ その2社の総取引額。{{threshold}}% を超えた組を色で示します。互いとしか取引していない2社は 50% になります（総取引額に同じ額が2回入るため）。",
+      "columns": {
+        "company": "企業",
+        "partner": "相手",
+        "between": "2社の間",
+        "total": "2社の総取引",
+        "rate": "相互取引率"
+      }
+    },
+    "concentration": {
+      "title": "購入集中率",
+      "lead": "買った額のうち、一番多く買っている相手が占める割合。",
+      "notice": "1社からしか買っていなければ必ず 100% です。",
+      "detail": "買った回数が少ないだけの企業も上位に来るので、相手の数と金額を見てください。",
+      "columns": {
+        "company": "企業",
+        "topSeller": "一番多い購入先",
+        "topAmount": "その相手へ",
+        "totalAmount": "買った額",
+        "sellerCount": "相手の数",
+        "rate": "購入集中率"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "先生の購入ログ",
+    "lead": "先生が誰からいくら買ったかを、",
+    "notice": "先生どうしで見られるようにしています。",
+    "detail": "意図しない偏りに自分で気づけるようにするための画面です。生徒には見えません。",
+    "summary": "先生 {{admins}} 人／購入 {{purchases}} 件／合計 {{amount}}",
+    "empty": "まだ先生の購入がありません。",
+    "byAdmin": {
+      "title": "先生ごと",
+      "noPurchase": "まだ買っていません",
+      "separator": "、",
+      "seller": "{{name}}（{{amount}} / {{times}}回）",
+      "columns": {
+        "admin": "先生",
+        "purchaseCount": "購入回数",
+        "totalAmount": "買った額",
+        "concentration": "集中率",
+        "sellers": "買った先"
+      }
+    },
+    "bySeller": {
+      "title": "企業ごと（先生から買われた額）",
+      "description": "買った先生の人数も出しています。1人の先生がたくさん買ったのか、みんなが少しずつ買ったのかを見分けるためです。",
+      "columns": {
+        "company": "企業",
+        "amount": "買われた額",
+        "count": "回数",
+        "adminCount": "先生の人数"
+      }
+    },
+    "recent": {
+      "title": "新しい順",
+      "columns": {
+        "when": "いつ",
+        "admin": "先生",
+        "seller": "買った先",
+        "amount": "金額"
+      }
+    }
+  }
+}

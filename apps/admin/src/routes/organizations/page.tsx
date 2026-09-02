@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { PageShell } from '../../components/page-shell'
+import { adminI18n } from '../../i18n'
 
 /**
  * 管理者が全企業を1画面で見る（要件26、受け入れ基準 H1）。
@@ -8,6 +12,8 @@ import { useEffect, useState } from 'react'
  *
  * この経路は Medusa の管理者認証を通らないと呼べないので、生徒のアカウントで
  * 開いても中身は出ない。
+ *
+ * 文字列は辞書から引く（要件34、受け入れ基準 I1）。**画面に日本語を直接書かない。**
  *
  * 見た目は Mercur の管理画面のものに合わせる。`docs/design.md` の決まりは
  * **生徒に見せる画面**（要件39〜43）のためのもので、ここは対象外。
@@ -20,16 +26,16 @@ declare const __BACKEND_URL__: string
 const POSITIVE = '#15803d'
 const NEGATIVE = '#b91c1c'
 
-/** 並べ替えに使える列。API が受け付ける名前と同じにする。 */
+/** 並べ替えに使える列。`key` は API が受け付ける名前、`labelKey` は辞書のキー。 */
 const COLUMNS = [
-  { key: 'organization_name', label: '企業名', numeric: false },
-  { key: 'balance_total', label: '残高', numeric: true },
-  { key: 'revenue', label: '売上', numeric: true },
-  { key: 'expenses', label: '支出', numeric: true },
-  { key: 'profit', label: '利益', numeric: true },
-  { key: 'profit_margin', label: '利益率', numeric: true },
-  { key: 'listing_count', label: '商品数', numeric: true },
-  { key: 'ad_spend', label: '広告費', numeric: true },
+  { key: 'organization_name', labelKey: 'organizations.columns.organizationName', numeric: false },
+  { key: 'balance_total', labelKey: 'organizations.columns.balanceTotal', numeric: true },
+  { key: 'revenue', labelKey: 'organizations.columns.revenue', numeric: true },
+  { key: 'expenses', labelKey: 'organizations.columns.expenses', numeric: true },
+  { key: 'profit', labelKey: 'organizations.columns.profit', numeric: true },
+  { key: 'profit_margin', labelKey: 'organizations.columns.profitMargin', numeric: true },
+  { key: 'listing_count', labelKey: 'organizations.columns.listingCount', numeric: true },
+  { key: 'ad_spend', labelKey: 'organizations.columns.adSpend', numeric: true },
 ] as const
 
 type SortKey = (typeof COLUMNS)[number]['key']
@@ -62,8 +68,6 @@ interface Overview {
   supply: { matches: boolean; unassigned: number }
 }
 
-const mp = (value: number) => `${value.toLocaleString('ja-JP')} MP`
-
 const cell: React.CSSProperties = {
   padding: '12px',
   borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
@@ -78,9 +82,13 @@ const numericCell: React.CSSProperties = {
 }
 
 const OrganizationsPage = () => {
+  const { t } = useTranslation()
   const [sort, setSort] = useState<SortKey>('revenue')
   const [data, setData] = useState<Overview | undefined>()
   const [error, setError] = useState<string | undefined>()
+
+  // 単位（MP）だけは辞書から引く。数字の区切りは見る人のブラウザに任せる。
+  const mp = (value: number) => `${value.toLocaleString()} ${t('money.unit')}`
 
   useEffect(() => {
     let cancelled = false
@@ -95,15 +103,15 @@ const OrganizationsPage = () => {
           // 401 は「管理者として入っていない」。生徒のアカウントではここに来る。
           setError(
             response.status === 401
-              ? '管理者としてログインしてください'
-              : `読み込めません（${response.status}）`,
+              ? t('error.unauthorized')
+              : t('error.load', { status: response.status }),
           )
           return
         }
         setError(undefined)
         setData((await response.json()) as Overview)
       } catch {
-        if (!cancelled) setError('バックエンドにつながりません')
+        if (!cancelled) setError(t('error.offline'))
       }
     }
 
@@ -111,24 +119,25 @@ const OrganizationsPage = () => {
     return () => {
       cancelled = true
     }
-  }, [sort])
+    // 言語を変えたら、出しているエラーの文言も変える。
+  }, [sort, t])
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1200px' }}>
-      <h1 style={{ fontSize: '24px', margin: 0 }}>企業一覧</h1>
-      <p style={{ opacity: 0.7, marginTop: '8px' }}>
-        参加している企業の残高・売上・利益・商品数・広告費。列の見出しを押すと並べ替わります。
-      </p>
+    <>
+      <p style={{ opacity: 0.7, marginTop: '8px' }}>{t('organizations.description')}</p>
 
       {error && <p style={{ color: NEGATIVE }}>{error}</p>}
 
       {data && (
         <>
           <p style={{ opacity: 0.7, fontVariantNumeric: 'tabular-nums' }}>
-            {data.totals.organizations} 社／残高の合計 {mp(data.totals.balance_total)}／売上の合計{' '}
-            {mp(data.totals.revenue)}
+            {t('organizations.summary', {
+              organizations: data.totals.organizations.toLocaleString(),
+              balance: mp(data.totals.balance_total),
+              revenue: mp(data.totals.revenue),
+            })}
             {!data.supply.matches && (
-              <span style={{ color: NEGATIVE }}> ※ MP の勘定が合っていません</span>
+              <span style={{ color: NEGATIVE }}> {t('organizations.supplyMismatch')}</span>
             )}
           </p>
 
@@ -149,11 +158,11 @@ const OrganizationsPage = () => {
                         opacity: sort === column.key ? 1 : 0.7,
                       }}
                     >
-                      {column.label}
+                      {t(column.labelKey)}
                     </th>
                   ))}
                   <th style={{ ...cell, textAlign: 'left', fontWeight: 400, opacity: 0.7 }}>
-                    Market ID
+                    {t('organizations.columns.marketId')}
                   </th>
                 </tr>
               </thead>
@@ -166,7 +175,9 @@ const OrganizationsPage = () => {
                       {row.balance_bonus > 0 && (
                         <span style={{ opacity: 0.7 }}>
                           {' '}
-                          （ボーナス {row.balance_bonus.toLocaleString('ja-JP')}）
+                          {t('organizations.bonus', {
+                            amount: row.balance_bonus.toLocaleString(),
+                          })}
                         </span>
                       )}
                     </td>
@@ -194,16 +205,29 @@ const OrganizationsPage = () => {
             </table>
           </div>
 
-          {data.organizations.length === 0 && <p style={{ opacity: 0.7 }}>まだ企業がありません。</p>}
+          {data.organizations.length === 0 && (
+            <p style={{ opacity: 0.7 }}>{t('organizations.empty')}</p>
+          )}
         </>
       )}
-    </div>
+    </>
   )
 }
 
-/** 左のメニューに出す。 */
+const OrganizationsRoute = () => (
+  <PageShell titleKey="organizations.title">
+    <OrganizationsPage />
+  </PageShell>
+)
+
+/**
+ * 左のメニューに出す。
+ *
+ * **一覧は管理画面の起動時に1回だけ作られる**ので、ここは選んである言語で固定になる。
+ * 言語を変えたあとメニューの文字も変えるには、画面を開き直す必要がある。
+ */
 export const config = {
-  label: '企業一覧',
+  label: adminI18n.t('organizations.title'),
 }
 
-export default OrganizationsPage
+export default OrganizationsRoute

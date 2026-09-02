@@ -3,5 +3,107 @@
     "title": "Custom Fields",
     "description": "Manage your custom fields and configurations",
     "noFields": "No custom fields configured yet"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "Please log in as an administrator",
+    "load": "Could not load ({{status}})",
+    "offline": "Cannot reach the backend"
+  },
+  "organizations": {
+    "title": "Companies",
+    "description": "Balance, revenue, profit, listings and ad spend of every participating company. Click a column heading to sort.",
+    "summary": "{{organizations}} companies / total balance {{balance}} / total revenue {{revenue}}",
+    "supplyMismatch": "* The MP ledger does not add up",
+    "bonus": "(bonus {{amount}})",
+    "empty": "No companies yet.",
+    "columns": {
+      "organizationName": "Company",
+      "balanceTotal": "Balance",
+      "revenue": "Revenue",
+      "expenses": "Expenses",
+      "profit": "Profit",
+      "profitMargin": "Profit margin",
+      "listingCount": "Listings",
+      "adSpend": "Ad spend",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "Trading bias",
+    "lead": "Shows mutual buying and reliance on a single partner as numbers.",
+    "notice": "This is not a judgement of cheating.",
+    "detail": "Buying from a friend because the product is genuinely good and buying from each other to score points look the same in the data. If a pair looks odd, ask the students themselves.",
+    "empty": "No trades yet.",
+    "mutual": {
+      "title": "Mutual trade rate",
+      "description": "Trade between the two companies / total trade of those two companies. Pairs above {{threshold}}% are highlighted. Two companies that trade only with each other reach 50% (the same amount is counted twice in the total).",
+      "columns": {
+        "company": "Company",
+        "partner": "Partner",
+        "between": "Between the two",
+        "total": "Total of the two",
+        "rate": "Mutual trade rate"
+      }
+    },
+    "concentration": {
+      "title": "Purchase concentration",
+      "lead": "Share of everything a company bought that went to its biggest supplier.",
+      "notice": "A company that bought from only one supplier is always at 100%.",
+      "detail": "Companies that simply bought very few times also rise to the top, so read the number of suppliers and the amount together.",
+      "columns": {
+        "company": "Company",
+        "topSeller": "Biggest supplier",
+        "topAmount": "To that supplier",
+        "totalAmount": "Total bought",
+        "sellerCount": "Suppliers",
+        "rate": "Purchase concentration"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "Teacher purchase log",
+    "lead": "What each teacher bought and for how much is",
+    "notice": "visible to the other teachers.",
+    "detail": "It is here so that a teacher can notice their own unintended bias. Students cannot see this page.",
+    "summary": "{{admins}} teachers / {{purchases}} purchases / {{amount}} in total",
+    "empty": "No teacher purchases yet.",
+    "byAdmin": {
+      "title": "By teacher",
+      "noPurchase": "Nothing bought yet",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}}x)",
+      "columns": {
+        "admin": "Teacher",
+        "purchaseCount": "Purchases",
+        "totalAmount": "Amount spent",
+        "concentration": "Concentration",
+        "sellers": "Bought from"
+      }
+    },
+    "bySeller": {
+      "title": "By company (bought by teachers)",
+      "description": "The number of teachers is shown as well, so you can tell whether one teacher bought a lot or many teachers bought a little.",
+      "columns": {
+        "company": "Company",
+        "amount": "Amount received",
+        "count": "Purchases",
+        "adminCount": "Teachers"
+      }
+    },
+    "recent": {
+      "title": "Most recent",
+      "columns": {
+        "when": "When",
+        "admin": "Teacher",
+        "seller": "Bought from",
+        "amount": "Amount"
+      }
+    }
   }
 }

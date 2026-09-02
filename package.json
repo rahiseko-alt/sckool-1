@@ -47,7 +47,9 @@
     "check:i18n": "node scripts/check-i18n-keys.mjs",
     "storefront:dev": "pnpm --filter @sckool/storefront dev",
     "storefront:build": "pnpm --filter @sckool/storefront build",
-    "check:storefront": "node scripts/check-storefront-i18n.mjs"
+    "check:storefront": "node scripts/check-storefront-i18n.mjs",
+    "admin:dev": "pnpm --filter @sckool/admin dev",
+    "check:admin-i18n": "node scripts/check-admin-i18n.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

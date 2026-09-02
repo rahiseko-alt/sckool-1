@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { PageShell } from '../../components/page-shell'
+import { adminI18n } from '../../i18n'
 
 /**
  * 先生の購入ログ（要件10・22、受け入れ基準 H4）。
  *
  * **先生どうしが互いの購入を見る**ための画面。見られていると分かっていれば、
  * 特定の生徒に肩入れしにくくなる。仕組みが止めるのではなく、見えるようにして防ぐ。
+ *
+ * 文字列は辞書から引く（要件34、受け入れ基準 I1）。
  */
 
 declare const __BACKEND_URL__: string
@@ -40,8 +46,7 @@ interface Log {
   }[]
 }
 
-const mp = (value: number) => `${value.toLocaleString('ja-JP')} MP`
-const when = (iso: string) => new Date(iso).toLocaleString('ja-JP')
+const when = (iso: string) => new Date(iso).toLocaleString()
 
 const cell: React.CSSProperties = {
   padding: '12px',
@@ -58,8 +63,11 @@ const numericCell: React.CSSProperties = {
 const headCell: React.CSSProperties = { ...cell, textAlign: 'left', fontWeight: 400, opacity: 0.7 }
 
 const PurchaseLogPage = () => {
+  const { t } = useTranslation()
   const [data, setData] = useState<Log | undefined>()
   const [error, setError] = useState<string | undefined>()
+
+  const mp = (value: number) => `${value.toLocaleString()} ${t('money.unit')}`
 
   useEffect(() => {
     let cancelled = false
@@ -73,15 +81,15 @@ const PurchaseLogPage = () => {
         if (!response.ok) {
           setError(
             response.status === 401
-              ? '管理者としてログインしてください'
-              : `読み込めません（${response.status}）`,
+              ? t('error.unauthorized')
+              : t('error.load', { status: response.status }),
           )
           return
         }
         setError(undefined)
         setData((await response.json()) as Log)
       } catch {
-        if (!cancelled) setError('バックエンドにつながりません')
+        if (!cancelled) setError(t('error.offline'))
       }
     }
 
@@ -89,14 +97,14 @@ const PurchaseLogPage = () => {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [t])
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1200px' }}>
-      <h1 style={{ fontSize: '24px', margin: 0 }}>先生の購入ログ</h1>
+    <>
+      {/* 間の空白は JSX 側で入れる（辞書の端に空白を置くと消える）。 */}
       <p style={{ opacity: 0.7, marginTop: '8px' }}>
-        先生が誰からいくら買ったかを、<strong>先生どうしで見られるようにしています。</strong>
-        意図しない偏りに自分で気づけるようにするための画面です。生徒には見えません。
+        {t('purchaseLog.lead')} <strong>{t('purchaseLog.notice')}</strong>{' '}
+        {t('purchaseLog.detail')}
       </p>
 
       {error && <p style={{ color: ALERT }}>{error}</p>}
@@ -104,20 +112,29 @@ const PurchaseLogPage = () => {
       {data && (
         <>
           <p style={{ opacity: 0.7, fontVariantNumeric: 'tabular-nums' }}>
-            先生 {data.totals.administrators} 人／購入 {data.totals.purchase_count} 件／合計{' '}
-            {mp(data.totals.total_amount)}
+            {t('purchaseLog.summary', {
+              admins: data.totals.administrators.toLocaleString(),
+              purchases: data.totals.purchase_count.toLocaleString(),
+              amount: mp(data.totals.total_amount),
+            })}
           </p>
 
-          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>先生ごと</h2>
+          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>{t('purchaseLog.byAdmin.title')}</h2>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th style={headCell}>先生</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>購入回数</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>買った額</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>集中率</th>
-                  <th style={headCell}>買った先</th>
+                  <th style={headCell}>{t('purchaseLog.byAdmin.columns.admin')}</th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('purchaseLog.byAdmin.columns.purchaseCount')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('purchaseLog.byAdmin.columns.totalAmount')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('purchaseLog.byAdmin.columns.concentration')}
+                  </th>
+                  <th style={headCell}>{t('purchaseLog.byAdmin.columns.sellers')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -129,13 +146,18 @@ const PurchaseLogPage = () => {
                     <td style={numericCell}>{admin.concentration_rate}%</td>
                     <td style={{ ...cell, whiteSpace: 'normal' }}>
                       {admin.sellers.length === 0
-                        ? 'まだ買っていません'
+                        ? t('purchaseLog.byAdmin.noPurchase')
                         : admin.sellers
-                            .map(
-                              (seller) =>
-                                `${seller.organization_name ?? seller.market_id}（${mp(seller.amount)} / ${seller.count}回）`,
+                            .map((seller) =>
+                              t('purchaseLog.byAdmin.seller', {
+                                name: seller.organization_name ?? seller.market_id,
+                                amount: mp(seller.amount),
+                                times: seller.count,
+                              }),
                             )
-                            .join('、')}
+                            // 区切りの記号も言語で違う（日本語と中国語は読点、ほかは
+                            // コンマと空白）。ここを固定にすると英語やタイ語で読めなくなる。
+                            .join(t('purchaseLog.byAdmin.separator'))}
                     </td>
                   </tr>
                 ))}
@@ -143,19 +165,22 @@ const PurchaseLogPage = () => {
             </table>
           </div>
 
-          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>企業ごと（先生から買われた額）</h2>
-          <p style={{ opacity: 0.7 }}>
-            買った先生の人数も出しています。1人の先生がたくさん買ったのか、
-            みんなが少しずつ買ったのかを見分けるためです。
-          </p>
+          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>{t('purchaseLog.bySeller.title')}</h2>
+          <p style={{ opacity: 0.7 }}>{t('purchaseLog.bySeller.description')}</p>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th style={headCell}>企業</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>買われた額</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>回数</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>先生の人数</th>
+                  <th style={headCell}>{t('purchaseLog.bySeller.columns.company')}</th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('purchaseLog.bySeller.columns.amount')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('purchaseLog.bySeller.columns.count')}
+                  </th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('purchaseLog.bySeller.columns.adminCount')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -171,15 +196,17 @@ const PurchaseLogPage = () => {
             </table>
           </div>
 
-          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>新しい順</h2>
+          <h2 style={{ fontSize: '18px', marginTop: '32px' }}>{t('purchaseLog.recent.title')}</h2>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th style={headCell}>いつ</th>
-                  <th style={headCell}>先生</th>
-                  <th style={headCell}>買った先</th>
-                  <th style={{ ...headCell, textAlign: 'right' }}>金額</th>
+                  <th style={headCell}>{t('purchaseLog.recent.columns.when')}</th>
+                  <th style={headCell}>{t('purchaseLog.recent.columns.admin')}</th>
+                  <th style={headCell}>{t('purchaseLog.recent.columns.seller')}</th>
+                  <th style={{ ...headCell, textAlign: 'right' }}>
+                    {t('purchaseLog.recent.columns.amount')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -195,18 +222,22 @@ const PurchaseLogPage = () => {
             </table>
           </div>
 
-          {data.recent.length === 0 && (
-            <p style={{ opacity: 0.7 }}>まだ先生の購入がありません。</p>
-          )}
+          {data.recent.length === 0 && <p style={{ opacity: 0.7 }}>{t('purchaseLog.empty')}</p>}
         </>
       )}
-    </div>
+    </>
   )
 }
 
-/** 左のメニューに出す。 */
+const PurchaseLogRoute = () => (
+  <PageShell titleKey="purchaseLog.title">
+    <PurchaseLogPage />
+  </PageShell>
+)
+
+/** 左のメニューに出す。文言は起動時の言語で固定される（企業一覧のページと同じ）。 */
 export const config = {
-  label: '先生の購入ログ',
+  label: adminI18n.t('purchaseLog.title'),
 }
 
-export default PurchaseLogPage
+export default PurchaseLogRoute
