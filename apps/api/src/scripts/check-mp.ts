@@ -86,6 +86,30 @@ export default async function checkMp({ container }: ExecArgs) {
   expect('期限切れは残高に数えない', (await mp.getBalance(expiring)).bonus, 0)
   expect('失効の行を1件作る', await mp.expireBonuses(expiring), 1)
   expect('二度目は作らない', await mp.expireBonuses(expiring), 0)
+  // 失効の行を入れたあとに残高が狂わないこと。入れた分を二重に引くと
+  // ボーナスが −500 になり、「残高＝履歴の合計」（受け入れ基準 B3）が崩れる。
+  const afterExpiry = await mp.getBalance(expiring)
+  expect('失効させても通常残高は減らない', [afterExpiry.normal, afterExpiry.bonus], [1_000, 0])
+  const expiringEntries = await mp.listEntriesFor(expiring)
+  expect(
+    '残高が履歴の合計と一致する',
+    expiringEntries.reduce((sum, entry) => sum + entry.amount, 0),
+    afterExpiry.total,
+  )
+
+  console.log('\n=== 全社まとめての失効（定期実行が呼ぶ処理）===')
+  const sweepTarget = `org-sweep-${stamp}`
+  await mp.grantInitialFunds(sweepTarget, 1_000)
+  await mp.grantBonus({
+    organizationId: sweepTarget,
+    amount: 500,
+    expiresAt: new Date(Date.now() - 1_000),
+    reference: `quiz-sweep-${stamp}`,
+  })
+  const swept = await mp.expireAllBonuses()
+  expect('期限切れを持つ企業を拾う', swept.organizations >= 1, true)
+  expect('失効の行を作った', swept.entries >= 1, true)
+  expect('二度目は何も作らない', (await mp.expireAllBonuses()).entries, 0)
 
   console.log('\n=== 市場全体の MP の量 ===')
   const supply = await mp.getSupply()

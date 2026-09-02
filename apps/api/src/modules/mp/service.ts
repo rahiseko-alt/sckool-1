@@ -58,8 +58,10 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
   ): Promise<Balance> {
     await lockOrganization(manager, organizationId)
 
+    // `kind` も読む。ボーナスは「配布・使った分・失効」を突き合わせて数えるので、
+    // 種類が分からないと期限切れの扱いを間違える（ledger.ts の settleBonus）。
     const rows = await manager.execute(
-      `select "amount", "pocket", "expires_at"
+      `select "amount", "kind", "pocket", "expires_at"
          from "mp_ledger_entry"
         where "organization_id" = ? and "deleted_at" is null`,
       [organizationId],
@@ -68,6 +70,7 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     return calculateBalance(
       rows.map((row) => ({
         amount: Number(row.amount),
+        kind: row.kind as EntryKind,
         pocket: row.pocket as Pocket,
         ...(row.expires_at ? { expiresAt: new Date(row.expires_at as string) } : {}),
       })),
@@ -272,6 +275,42 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
       )
       return expired.length
     })
+  }
+
+  /**
+   * 期限が切れたボーナスを、**全社ぶん**まとめて失効させる（受け入れ基準 E2・B3）。
+   *
+   * 定期実行（`src/jobs/expire-bonuses.ts`）と管理者の手動実行の両方がここを呼ぶ。
+   * **入口を1つにしてある。** 別々に書くと、片方だけ直したときに
+   * 「手で押すと直るが、放っておくと直らない」状態になる。
+   */
+  async expireAllBonuses(now = new Date()): Promise<{ organizations: number; entries: number }> {
+    // 期限切れの配布を持つ企業だけを見る。全社を回すと、テストを受けていない
+    // 企業のぶんまで毎回鍵を取ることになる。
+    const candidates = await repositoryOf(this).transaction(async (manager) =>
+      manager.execute(
+        `select distinct "organization_id"
+           from "mp_ledger_entry"
+          where "kind" = 'bonus_grant'
+            and "deleted_at" is null
+            and "expires_at" is not null
+            and "expires_at" <= ?`,
+        [now],
+      ),
+    )
+
+    let organizations = 0
+    let entries = 0
+    for (const row of candidates) {
+      // 1社ずつ別の取引で行う。1つの取引にまとめると、途中で失敗したときに
+      // 成功していた会社ぶんまで巻き戻る。
+      const created = await this.expireBonuses(String(row.organization_id), now)
+      if (created === 0) continue
+      organizations += 1
+      entries += created
+    }
+
+    return { organizations, entries }
   }
 
   /** 市場全体で MP の総量が保たれているかを見る（受け入れ基準 K1 の検査に使う）。 */

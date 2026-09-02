@@ -71,8 +71,75 @@ export interface Balance {
  * 支払いの直前は「鍵を取ってから数え直す」ため、履歴を金額・種類・期限だけの
  * 軽い形で読む。1行まるごと読む必要がないので、必要な列だけを求める形にしてある。
  */
-export type BalancePart = Pick<LedgerEntry, 'amount' | 'pocket'> &
-  Partial<Pick<LedgerEntry, 'expiresAt'>>
+export type BalancePart = Pick<LedgerEntry, 'amount' | 'pocket' | 'kind'> &
+  Partial<Pick<LedgerEntry, 'id' | 'expiresAt'>>
+
+/** ボーナスを配布ごとに突き合わせた結果。 */
+interface BonusSettlement {
+  /** いま使えるボーナスの合計。 */
+  spendable: number;
+  /** 期限が切れていて、まだ失効の行を作っていない分。 */
+  unswept: { entryId: string; amount: number }[];
+}
+
+/** 期限の早い順に並べるための値。期限が無いものは最後に回す。 */
+function expiryOrder(expiresAt: Date | undefined): number {
+  return expiresAt ? expiresAt.getTime() : Number.POSITIVE_INFINITY;
+}
+
+/**
+ * ボーナスを「配布ごとの残り」に突き合わせる。残高と失効の両方がここを使う。
+ *
+ * **なぜ行ごとに足し引きするだけでは足りないか。**
+ * ボーナスの行は3種類ある——配布（正）・使った分（負）・失効（負）。
+ * 期限切れかどうかを行ごとに見て足し引きすると、次の2つが同時に狂う。
+ *
+ *   - 失効の行には期限が入っていないので、期限切れの配布は数えないのに
+ *     失効の行だけ数えてしまい、同じ 1,500 MP を二度引く
+ *     （実際に残高が「ボーナス −1,500」になった）
+ *   - 1,500 のうち 500 を使ったあとに期限が切れると、配布の 1,500 だけが
+ *     消えて、使った分の −500 が残る。使っていない通常残高から 500 が減る
+ *
+ * どちらも「使った分・失効した分が、どの配布を減らしたのか」を見ていないのが原因。
+ * ここでは配布を期限の早い順に並べ、負の行をその順に割り当てて「配布ごとの残り」を出す。
+ * 期限の早いものから使う並びは、支払いの振り分け（`planPayment`）の考え方と同じ。
+ */
+function settleBonus(entries: readonly BalancePart[], now: Date): BonusSettlement {
+  const grants = entries
+    .filter((entry) => entry.pocket === 'bonus' && entry.kind === 'bonus_grant' && entry.amount > 0)
+    .map((entry) => ({ id: entry.id, expiresAt: entry.expiresAt, remaining: entry.amount }))
+    .sort((a, b) => expiryOrder(a.expiresAt) - expiryOrder(b.expiresAt));
+
+  // 配布以外のボーナスの行（使った分・失効・取り消し）をまとめる。
+  // 取り消しは正の値なので、そのぶん割り当てる額が減る。
+  let unallocated = -entries
+    .filter((entry) => entry.pocket === 'bonus' && entry.kind !== 'bonus_grant')
+    .reduce((sum, entry) => sum + entry.amount, 0);
+
+  for (const grant of grants) {
+    if (unallocated <= 0) break;
+    const taken = Math.min(grant.remaining, unallocated);
+    grant.remaining -= taken;
+    unallocated -= taken;
+  }
+
+  // どの配布にも割り当てられなかった分は、そのまま残高に出す。
+  // 隠すと「残高＝履歴の合計」（受け入れ基準 B3）が崩れて、狂いに気づけなくなる。
+  // `0 -` から始めるのは `-0` を作らないため。画面に「-0 MP」と出る。
+  let spendable = 0 - unallocated;
+  const unswept: BonusSettlement['unswept'] = [];
+
+  for (const grant of grants) {
+    if (grant.remaining <= 0) continue;
+    if (expiryOrder(grant.expiresAt) > now.getTime()) {
+      spendable += grant.remaining;
+      continue;
+    }
+    if (grant.id !== undefined) unswept.push({ entryId: grant.id, amount: grant.remaining });
+  }
+
+  return { spendable, unswept };
+}
 
 /**
  * ある時点での残高を、取引履歴だけから数える。
@@ -82,18 +149,12 @@ export type BalancePart = Pick<LedgerEntry, 'amount' | 'pocket'> &
  */
 export function calculateBalance(entries: readonly BalancePart[], now: Date = new Date()): Balance {
   let normal = 0;
-  let bonus = 0;
 
   for (const entry of entries) {
-    if (entry.pocket === 'normal') {
-      normal += entry.amount;
-      continue;
-    }
-    // 期限切れのボーナスは数えない。失効の行（bonus_expired）は
-    // 履歴に残っているので、合計としてはここで引かれた形になる。
-    if (entry.expiresAt && entry.expiresAt.getTime() <= now.getTime()) continue;
-    bonus += entry.amount;
+    if (entry.pocket === 'normal') normal += entry.amount;
   }
+
+  const bonus = settleBonus(entries, now).spendable;
 
   return { normal, bonus, total: normal + bonus };
 }
@@ -125,26 +186,15 @@ export function planPayment(balance: Balance, amount: number): PaymentPlan | und
  *
  * 期限切れを「数えない」だけにすると履歴と残高が食い違って見えるので、
  * 失効も1行として残す（受け入れ基準 E2）。
+ *
+ * 返すのは**配布額ではなく使い残し**。すでに失効させた分は残りが 0 になるので、
+ * 二度呼んでも二度目は空になる（`settleBonus` が両方をまとめて面倒を見る）。
  */
 export function findExpiredBonuses(
-  entries: readonly LedgerEntry[],
+  entries: readonly BalancePart[],
   now: Date = new Date(),
 ): { entryId: string; amount: number }[] {
-  /** すでに失効させたものを二重に失効させないための目印。 */
-  const alreadyExpired = new Set(
-    entries.filter((e) => e.kind === 'bonus_expired' && e.reference).map((e) => e.reference!),
-  );
-
-  return entries
-    .filter(
-      (entry) =>
-        entry.pocket === 'bonus' &&
-        entry.amount > 0 &&
-        entry.expiresAt !== undefined &&
-        entry.expiresAt.getTime() <= now.getTime() &&
-        !alreadyExpired.has(entry.id),
-    )
-    .map((entry) => ({ entryId: entry.id, amount: entry.amount }));
+  return settleBonus(entries, now).unswept;
 }
 
 /**
