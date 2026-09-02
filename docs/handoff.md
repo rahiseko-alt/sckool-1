@@ -304,11 +304,11 @@ statement`）。フックの中で `node -e` を使うときは関数で包む�
 
 ## セッション終了時点の状態（自動記録）
 
-- 記録時刻: 2026-09-02 11:24 UTC
-- ブランチ: `docs/handoff-checkout-jb6vw4`
-- HEAD: `51c43ae`
+- 記録時刻: 2026-09-02 12:54 UTC
+- ブランチ: `claude/checkin-jb6vw4`
+- HEAD: `76bf9f2`
 - 未コミットの変更:
 
 ```
-?? apps/
+M docs/handoff.md
 ```
