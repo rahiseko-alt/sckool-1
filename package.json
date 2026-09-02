@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Claude Code と Codex で共用できる、AGENTS.md を正本とする公式準拠のリポジトリ雛形",
+  "description": "60人規模の生徒が匿名アカウントで仮想企業を経営する、6言語のビジネスシミュレーション・プラットフォーム",
   "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": ">=22"
@@ -14,17 +14,49 @@
     "plan:next": "node scripts/plan-cli.mjs next-item",
     "plan:next-id": "node scripts/plan-cli.mjs next-id",
     "plan:parallel": "node scripts/plan-cli.mjs parallel",
+    "services": "node scripts/dev-services.mjs start",
+    "services:stop": "node scripts/dev-services.mjs stop",
+    "services:status": "node scripts/dev-services.mjs status",
+    "api:dev": "node scripts/run-api.mjs develop",
+    "api:migrate": "node scripts/run-api.mjs db:migrate",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm run format:check && pnpm run typecheck && pnpm run test"
+    "check": "pnpm run format:check && pnpm run typecheck && pnpm run test",
+    "api:start": "node scripts/run-api.mjs start",
+    "api:build": "pnpm --filter @sckool/api build"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "5.4.0",
+    "@medusajs/icons": "2.18.0",
+    "@medusajs/ui": "4.1.19",
+    "@mercurjs/client": "2.3.3",
+    "@mercurjs/dashboard-sdk": "2.3.3",
+    "@mercurjs/dashboard-shared": "2.3.3",
+    "@tanstack/react-query": "5.64.2",
+    "@tanstack/react-table": "8.21.3",
+    "i18next": "^25.10.10",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-hook-form": "7.49.1",
+    "react-i18next": "17.0.8",
+    "react-jwt": "2.1.1",
+    "react-router-dom": "7.18.1",
+    "zod": "3.25.76"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/node": "^22.20.1",
+    "@types/react": "18.3.29",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "^5.2.0",
+    "esbuild": "^0.25.0",
     "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
+    "vite": "^6.4.3",
     "vitest": "^4.1.11"
   }
 }

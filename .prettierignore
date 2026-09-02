@@ -4,3 +4,7 @@ build/
 out/
 coverage/
 pnpm-lock.yaml
+
+# apps/ は Mercur のテンプレート由来。整形の作法が違うため、この雛形の整形対象にしない。
+# ここを外すと pnpm run check が上物の都合で落ちる（土台の検査が上物に引きずられる）。
+apps/
