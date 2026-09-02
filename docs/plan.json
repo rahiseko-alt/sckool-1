@@ -650,7 +650,7 @@
       "dependsOn": ["T039", "T040", "T041", "T042"],
       "files": ["docs/release-check.md"],
       "automation": "human",
-      "status": "awaiting_human",
+      "status": "done",
       "origin": "initial"
     },
     {
