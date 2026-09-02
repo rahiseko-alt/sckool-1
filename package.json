@@ -28,7 +28,8 @@
     "api:start": "node scripts/run-api.mjs start",
     "api:build": "pnpm --filter @sckool/api build",
     "api:smoke": "node scripts/api-smoke.mjs",
-    "check:no-personal-data": "node scripts/check-no-personal-data.mjs"
+    "check:no-personal-data": "node scripts/check-no-personal-data.mjs",
+    "check:mp": "node scripts/run-api.mjs exec ./src/scripts/check-mp.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

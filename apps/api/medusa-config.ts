@@ -38,6 +38,9 @@ module.exports = withMercur({
   // 顧客ひとりにつき1つしか作れないため。実験の記録は docs/decisions.md「33.」
   modules: [
     {
+      resolve: './src/modules/mp',
+    },
+    {
       resolve: '@mercurjs/core/modules/admin-ui',
       options: {
         appDir: dashboardAppDir('admin'),

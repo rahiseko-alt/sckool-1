@@ -75,5 +75,10 @@ jobs:
       - name: 個人情報が入っていないことの検査
         run: pnpm run check:no-personal-data
 
+      # MP 口座が受け入れ基準どおりに動くかを、実際のデータベースで確かめる。
+      # 純粋な計算は単体テストが見ているので、ここは保存と読み直しを見る。
+      - name: MP口座の確認
+        run: pnpm run check:mp
+
       - name: バックエンドの起動確認
         run: pnpm run api:smoke

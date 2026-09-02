@@ -208,7 +208,7 @@
       "dependsOn": ["T003"],
       "files": ["apps/api/src/modules/mp"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -253,7 +253,7 @@
       "dependsOn": ["T014"],
       "files": ["apps/api/src/scripts/check-balances.ts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

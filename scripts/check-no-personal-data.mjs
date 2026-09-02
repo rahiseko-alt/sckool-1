@@ -77,10 +77,15 @@ const INHERITED_TABLE_PREFIXES = [
 /**
  * 中身として許す値。
  *
- * `null` と空文字はもちろん、匿名アカウントに機械が振る値だけを通す。
- * 人が打ち込んだ値はこの形にならないので、混ざれば検査が落ちる。
+ * `null` と空文字のほかは、**`@anon.invalid` で終わるものだけ**を通す。
+ * `.invalid` は「絶対に実在しない」と決められた予約ドメイン（RFC 6761）なので、
+ * そこ宛の文字列は誰にも届かず、連絡先にも本人確認にも使えない。
+ *
+ * 生徒のアカウントは `MKT-XXXX-XXXX@anon.invalid`、運営者のアカウントも
+ * 同じドメインで作る。人が打ち込んだ本物のメールはこの形にならないので、
+ * 混ざれば検査が落ちる。
  */
-const ANONYMOUS_VALUE = /^(MKT-[A-Z0-9]{4}-[A-Z0-9]{4}@anon\.invalid|anon(ymous)?|-)$/i;
+const ANONYMOUS_VALUE = /^([A-Za-z0-9._%+-]+@anon\.invalid|anon(ymous)?|-)$/i;
 
 const connectionString =
   process.env.DATABASE_URL ?? 'postgres://medusa:medusa@localhost:5432/sckool';
