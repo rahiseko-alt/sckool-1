@@ -30,7 +30,7 @@
 
 - 要件の正本は **`docs/requirements.md`**。第1部がユーザーの原文44項目、第2部が
   **MVP 受け入れ基準 A〜K**（1つずつ確かめられる文にしてある）
-- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **12件が `done`**、
+- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **28件が `done`**、
   1件が人の確認待ち（`T006` デザイン）
 - **雛形自身の28項目は `docs/plan.from-0.json` に改名して保存した。**
   `docs/decisions.md`「28.」までの T 番号はそちらを指す
@@ -61,7 +61,13 @@
 - `T008` `T015` 匿名アカウントの作成と初期資金の配布
 - `T012` 個人情報の検査（`scripts/check-no-personal-data.mjs`）
 - `T014` `T016` `T017` MP 口座・ボーナス残高・整合性チェック
-- `docs/decisions.md`「30.」〜「33.」を追記
+- `T009` `T010` `T011` `T013` ログインと失敗ロック・Recovery Code・管理者による初期化・企業名
+- `T018` `T019` `T020` `T021` 商品登録・市場一覧・購入と MP 移動・取引履歴
+- `T022` `T023` テストの出題とサーバー採点・ボーナス付与
+- `T024` `T025` 広告枠の販売と効果の記録
+- `T026` `T027` `T028` 経営ダッシュボード・売上推移・ランキング
+- `T029` 管理者の全企業一覧（API と管理画面のページ）
+- `docs/decisions.md`「30.」〜「35.」を追記
 
 ### 前のセッションまで（雛形 `from-0` としての作業）
 
@@ -95,15 +101,16 @@
 | `T004` | 認証は**標準のまま使える**。Market ID をそのまま渡せる          |
 | `T005` | 多言語は**自前**。Translation Module は経路も読み出しも動かない |
 
-次は `pnpm run plan:next` が返す1件から。`T009`（ログイン画面）か `T013`（企業名）あたり。
+次は `pnpm run plan:next` が返す1件から（いまは `T030` 相互取引率・購入集中率）。
 
 **再開したらまず `pnpm run services` を実行すること。** コンテナが再起動すると
 PostgreSQL と Redis が止まっており、API もデータベースも動かない。
 そのあと `pnpm run seed`（公開鍵と販売channel）を実行すると Store API を呼べる。
 
 **Storefront（生徒が見る画面）はまだ無い。** いまあるのは `apps/api` の API と、
-Mercur が持ってきた管理画面・企業パネルだけ。`apps/storefront` にはデザインの
-トークンしか置いていない。
+Mercur が持ってきた管理画面・企業パネル、それに管理画面へ足した「企業一覧」
+（`apps/admin/src/routes/organizations/page.tsx`）だけ。`apps/storefront` には
+デザインのトークンしか置いていない。
 
 補足: 週次 Routine は無効化済み（`trig_01LVCzPzXcTxdyGFdxtFQZSw`）。進み具合は
 `pnpm run plan:progress` で見る。
@@ -132,7 +139,13 @@ Mercur が持ってきた管理画面・企業パネルだけ。`apps/storefront
 - **PR にコンフリクトがあると CI がそもそも起動しない**（`mergeable_state` が `dirty`）。
   「CI が動かない」ときは、まず PR の状態を確認する
 - **Playwright のブラウザは `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`。**
-  `chromium/` という名前のディレクトリは無い
+  `chromium/` という名前のディレクトリは無い。Playwright を使うスクリプトは
+  リポジトリ直下に置く（`/tmp` からだと `@playwright/test` を解決できない）
+- **管理画面をブラウザで開くときは `pnpm run api:dev` で起動する。**
+  `pnpm run api:start` では session cookie が発行されず、ログインが通らない。
+  検査スクリプトは合鍵で呼ぶので影響を受けない。詳細は `docs/decisions.md`「35.」
+- **管理画面と企業パネルの URL は `/dashboard` から始まる**（`http://localhost:7000/dashboard/login`）。
+  `/login` を開くと「public base URL is /dashboard」と出るだけで何も描画されない
 - **`apps/api/src/api/` に経路を足したら、サーバーを完全に落として起動し直す。**
   古いサーバーが残っていると新しい経路が 404 のままになる（`EADDRINUSE` は
   ログを見ないと気づけない）。落とすときは `pgrep -f "[m]edusa"` で残りを確認する

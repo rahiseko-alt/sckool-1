@@ -434,7 +434,7 @@
       "dependsOn": ["T026"],
       "files": ["apps/api/src/admin/routes/organizations", "apps/api/src/api/admin/organizations"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

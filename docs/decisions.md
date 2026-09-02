@@ -1299,3 +1299,26 @@ Medusa の Translation Module は、この組み合わせ（Medusa 2.18.0 + `@me
 ただし「誰が押したか」は持たない（生徒を識別しない）ため、**企業単位でしか
 正確にできない**。要件35を曲げてまで精度を上げる価値があるかは、実際に授業で
 使ってから決める。
+
+### 35. 管理画面のログインは `develop` でしか通らない（`docs/plan.json` T029、2026-09-02）
+
+**結論: 管理画面（`/dashboard`）を人が開いて確かめるときは、バックエンドを
+`pnpm run api:dev`（`medusa develop`）で動かす。`pnpm run api:start` では
+ログインできない。**
+
+T029 の画面を実際に開いて確かめようとして、ログインが通らずに気づいた。
+検査で分かったこと（いずれも `http://localhost:9000` に対して実行）:
+
+| 起動のしかた                    | `POST /auth/user/emailpass` | `POST /auth/session` の `Set-Cookie` | 画面のログイン |
+| ------------------------------- | --------------------------- | ------------------------------------ | -------------- |
+| `pnpm run api:start`（`start`） | 200（合鍵は返る）           | **無し**                             | 通らない       |
+| `pnpm run api:dev`（`develop`） | 200                         | `connect.sid=...; HttpOnly`          | 通る           |
+
+**理由の見立て `[曖昧]`**: `medusa start` は `NODE_ENV=production` で動く。
+この状態の session cookie は「暗号化された通信でのみ送る」設定になり、
+`http://` では**そもそも発行されない**。TLS を張れば `start` でも通るはずだが、
+この実行環境では確かめていない。
+
+**検査スクリプトへの影響は無い。** `scripts/check-*.mjs` は cookie ではなく
+合鍵（`Authorization: Bearer`）で呼ぶので、`start` のままで通る。
+影響を受けるのは**ブラウザで管理画面を開くときだけ**。

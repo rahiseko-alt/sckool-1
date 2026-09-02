@@ -513,6 +513,7 @@ export type Routes = {
             resetPassword: typeof import("../src/api/admin/accounts/reset-password/route");
         };
         custom: typeof import("../src/api/admin/custom/route");
+        organizations: typeof import("../src/api/admin/organizations/route");
     };
     auth: {
         $actorType: {
