@@ -101,6 +101,89 @@
       }
     }
   },
+  "passwordReset": {
+    "title": "重置密码",
+    "lead": "当$t(terms.participant)忘记密码时，在这里发放新的密码。",
+    "notice": "请先在教室里确认本人身份。",
+    "detail": "本系统不掌握哪个 Market ID 属于谁。下面的字符只显示这一次，请当场抄写并交给本人。",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "发放",
+    "submitting": "正在发放",
+    "result": {
+      "title": "已发放",
+      "warning": "离开这个画面后就再也看不到了。",
+      "temporaryPassword": "临时密码",
+      "recoveryCode": "新的补发码",
+      "next": "交给本人之后，请让本人自己修改密码。"
+    },
+    "error": {
+      "required": "请输入 Market ID。",
+      "notFound": "找不到这个 Market ID（{{marketId}}）。请确认是否输错。"
+    }
+  },
+  "marketSettings": {
+    "title": "设置",
+    "lead": "可以按照课程调整这些数字。",
+    "notice": "保存后立即对所有人生效。",
+    "detail": "想恢复原来的数字时，请按下面的“全部恢复默认值”。",
+    "defaultHint": "默认值 {{value}}",
+    "rangeHint": "{{min}} 到 {{max}} 之间的整数",
+    "save": "保存",
+    "saving": "正在保存",
+    "saved": "已保存。",
+    "reset": "全部恢复默认值",
+    "resetDone": "已恢复默认值。",
+    "unknownField": "未知项目",
+    "fields": {
+      "initialFunds": {
+        "label": "初始发放的资金",
+        "help": "新建$t(terms.organization)时只发放一次。已有的余额不会改变。"
+      },
+      "loginMaxAttempts": {
+        "label": "锁定登录前的失败次数",
+        "help": "连续失败这么多次后，一段时间内无法登录。"
+      },
+      "loginLockMinutes": {
+        "label": "锁定登录的时间（分钟）",
+        "help": "锁定期间，即使密码正确也无法登录。"
+      },
+      "mutualTradeThreshold": {
+        "label": "标色的互相交易率（%）",
+        "help": "在“交易的偏向”画面上，超过这个比例的组合会被标色。"
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}}请填写整数。",
+      "outOfRange": "{{field}}请填写 {{min}} 到 {{max}} 之间的数。",
+      "unknownKey": "{{field}} 无法修改。"
+    },
+    "quizzes": {
+      "title": "测验的奖励对照表",
+      "lead": "按分数发放的金额。每个测验可以有各自的表。",
+      "empty": "还没有测验。",
+      "topic": "题材",
+      "questionCount": "{{questions}} 题",
+      "open": "正在接受作答",
+      "closed": "已停止作答",
+      "columns": {
+        "minScore": "达到这个分数",
+        "amount": "发放的金额"
+      },
+      "addTier": "添加一行",
+      "removeTier": "删除",
+      "validDays": "奖励可以使用的天数",
+      "saved": "已保存对照表。",
+      "problem": {
+        "empty": "表是空的。请至少填写一行。",
+        "notAList": "填入的值无法使用。请只填写数字。",
+        "scoreOutOfRange": "分数请填写 0 到 100 的整数（{{value}}）。",
+        "amountNegative": "金额请填写 0 以上的整数（{{value}}）。",
+        "missingZero": "请决定 0 分时的金额。",
+        "duplicateScore": "同一个分数出现了两次（{{value}}）。",
+        "notMonotonic": "分数高的一方金额比分数低的一方还少。"
+      }
+    }
+  },
   "terms": {
     "participant": "学生",
     "organization": "企业",

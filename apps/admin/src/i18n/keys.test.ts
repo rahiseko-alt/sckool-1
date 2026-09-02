@@ -44,7 +44,7 @@ describe('先生が見る画面の辞書（受け入れ基準 I1・I2）', () =>
     expect(findPlaceholderProblems({ base, others })).toEqual([])
   })
 
-  it('3つの画面ぶんのキーが揃っている', () => {
+  it('5つの画面ぶんのキーが揃っている', () => {
     // 画面を足したのに辞書を足し忘れると、その画面だけ日本語のままになる。
     const keys = [...flattenKeys(base.dictionary).keys()]
     for (const key of [
@@ -54,6 +54,12 @@ describe('先生が見る画面の辞書（受け入れ基準 I1・I2）', () =>
       'tradeAnalysis.mutual.description',
       'purchaseLog.title',
       'purchaseLog.recent.columns.when',
+      'passwordReset.title',
+      'passwordReset.result.temporaryPassword',
+      'marketSettings.title',
+      'marketSettings.fields.initialFunds.label',
+      'marketSettings.quizzes.columns.minScore',
+      'marketSettings.quizzes.problem.notMonotonic',
     ]) {
       expect(keys).toContain(key)
     }

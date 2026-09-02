@@ -513,9 +513,13 @@ export type Routes = {
             resetPassword: typeof import("../src/api/admin/accounts/reset-password/route");
         };
         custom: typeof import("../src/api/admin/custom/route");
+        marketSettings: typeof import("../src/api/admin/market-settings/route");
         organizations: typeof import("../src/api/admin/organizations/route");
         purchaseLog: typeof import("../src/api/admin/purchase-log/route");
         purchases: typeof import("../src/api/admin/purchases/route");
+        quizzes: typeof import("../src/api/admin/quizzes/route") & {
+            $id: typeof import("../src/api/admin/quizzes/[id]/route");
+        };
         tradeAnalysis: typeof import("../src/api/admin/trade-analysis/route");
     };
     auth: {

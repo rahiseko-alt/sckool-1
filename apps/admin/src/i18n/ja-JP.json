@@ -101,6 +101,89 @@
       }
     }
   },
+  "passwordReset": {
+    "title": "パスワードの初期化",
+    "lead": "$t(terms.participant)がパスワードを忘れたときに、ここから新しいものを発行します。",
+    "notice": "本人かどうかは教室で確かめてください。",
+    "detail": "この仕組みは Market ID と人の対応を持っていません。発行した文字はこの画面にしか出ないので、その場で書き写して渡してください。",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "発行する",
+    "submitting": "発行しています",
+    "result": {
+      "title": "発行しました",
+      "warning": "この画面を閉じると二度と見られません。",
+      "temporaryPassword": "一時パスワード",
+      "recoveryCode": "新しい再発行コード",
+      "next": "渡したあとは、本人に自分でパスワードを変えてもらってください。"
+    },
+    "error": {
+      "required": "Market ID を入力してください。",
+      "notFound": "その Market ID は見つかりません（{{marketId}}）。打ち間違いがないか確かめてください。"
+    }
+  },
+  "marketSettings": {
+    "title": "設定",
+    "lead": "授業に合わせて数字を変えられます。",
+    "notice": "保存するとすぐに全員へ効きます。",
+    "detail": "元の数字に戻したいときは、下の「すべて既定値に戻す」を押してください。",
+    "defaultHint": "既定値 {{value}}",
+    "rangeHint": "{{min}} から {{max}} までの整数",
+    "save": "保存する",
+    "saving": "保存しています",
+    "saved": "保存しました。",
+    "reset": "すべて既定値に戻す",
+    "resetDone": "既定値に戻しました。",
+    "unknownField": "知らない項目",
+    "fields": {
+      "initialFunds": {
+        "label": "はじめに配る資金",
+        "help": "新しい$t(terms.organization)ができたときに1回だけ配ります。すでにある残高は変わりません。"
+      },
+      "loginMaxAttempts": {
+        "label": "ログインを止めるまでの失敗回数",
+        "help": "続けてこの回数だけ失敗すると、しばらくログインできなくなります。"
+      },
+      "loginLockMinutes": {
+        "label": "ログインを止めておく時間（分）",
+        "help": "止まっている間は、正しいパスワードでも入れません。"
+      },
+      "mutualTradeThreshold": {
+        "label": "相互取引率の色を付ける割合（%）",
+        "help": "「取引の偏り」の画面で、この割合を超えた組に色が付きます。"
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}}は整数で入れてください。",
+      "outOfRange": "{{field}}は {{min}} から {{max}} までにしてください。",
+      "unknownKey": "{{field}} は変えられません。"
+    },
+    "quizzes": {
+      "title": "テストのボーナス換算表",
+      "lead": "得点に応じて配る額です。テストごとに別の表を持てます。",
+      "empty": "まだテストがありません。",
+      "topic": "題材",
+      "questionCount": "{{questions}} 問",
+      "open": "受け付けています",
+      "closed": "受け付けを閉じています",
+      "columns": {
+        "minScore": "この点以上",
+        "amount": "配る額"
+      },
+      "addTier": "行を足す",
+      "removeTier": "消す",
+      "validDays": "ボーナスが使える日数",
+      "saved": "換算表を保存しました。",
+      "problem": {
+        "empty": "表が空です。1行以上入れてください。",
+        "notAList": "入れた値が使えません。数字だけを入れてください。",
+        "scoreOutOfRange": "得点は0から100の整数にしてください（{{value}}）。",
+        "amountNegative": "額は0以上の整数にしてください（{{value}}）。",
+        "missingZero": "0点のときの額を決めてください。",
+        "duplicateScore": "同じ得点が2回出てきます（{{value}}）。",
+        "notMonotonic": "得点が高いほうの額が、低いほうより少なくなっています。"
+      }
+    }
+  },
   "terms": {
     "participant": "生徒",
     "organization": "企業",

@@ -2,10 +2,11 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
 import {
   buildTrades,
-  DEFAULT_MUTUAL_THRESHOLD,
   mutualTradeRates,
   purchaseConcentrations,
 } from '../../../modules/admin-overview/trade-analysis'
+import { MARKET_SETTINGS_MODULE } from '../../../modules/market-settings'
+import type MarketSettingsService from '../../../modules/market-settings/service'
 import { MP_MODULE } from '../../../modules/mp'
 import type MpService from '../../../modules/mp/service'
 import { ORGANIZATION_MODULE } from '../../../modules/organization'
@@ -22,11 +23,16 @@ import type OrganizationService from '../../../modules/organization/service'
  */
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
+  /**
+   * しきい値は先生が設定の画面で変えられる（`docs/requirements.md` の前書き）。
+   * URL に書けばその場だけ別の値でも見られる（画面の入力欄がこれを使う）。
+   */
+  const settings = req.scope.resolve(MARKET_SETTINGS_MODULE) as MarketSettingsService
+  const saved = (await settings.read()).mutual_trade_threshold
+
   const requested = Number(req.query.threshold)
   const threshold =
-    Number.isFinite(requested) && requested > 0 && requested <= 100
-      ? requested
-      : DEFAULT_MUTUAL_THRESHOLD
+    Number.isFinite(requested) && requested > 0 && requested <= 100 ? requested : saved
 
   const organizations = req.scope.resolve(ORGANIZATION_MODULE) as OrganizationService
   const mp = req.scope.resolve(MP_MODULE) as MpService
