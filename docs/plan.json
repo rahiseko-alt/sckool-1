@@ -13,7 +13,7 @@
       "dependsOn": [],
       "files": ["apps/api", "package.json", "pnpm-workspace.yaml", "scripts/dev-services.mjs"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -28,7 +28,7 @@
       "dependsOn": ["T001"],
       "files": [".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -178,7 +178,7 @@
       "dependsOn": ["T001"],
       "files": ["scripts/check-no-personal-data.mjs", ".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

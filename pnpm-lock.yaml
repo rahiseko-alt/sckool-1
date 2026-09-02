@@ -50,6 +50,9 @@ importers:
       i18next:
         specifier: ^25.10.10
         version: 25.10.10(typescript@5.9.3)
+      pg:
+        specifier: ^8.23.0
+        version: 8.23.0
       react:
         specifier: 18.3.1
         version: 18.3.1

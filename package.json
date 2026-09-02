@@ -26,7 +26,9 @@
     "format:check": "prettier --check .",
     "check": "pnpm run format:check && pnpm run typecheck && pnpm run test",
     "api:start": "node scripts/run-api.mjs start",
-    "api:build": "pnpm --filter @sckool/api build"
+    "api:build": "pnpm --filter @sckool/api build",
+    "api:smoke": "node scripts/api-smoke.mjs",
+    "check:no-personal-data": "node scripts/check-no-personal-data.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",
@@ -38,6 +40,7 @@
     "@tanstack/react-query": "5.64.2",
     "@tanstack/react-table": "8.21.3",
     "i18next": "^25.10.10",
+    "pg": "^8.23.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "7.49.1",

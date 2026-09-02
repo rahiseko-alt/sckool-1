@@ -129,7 +129,17 @@ statement`）。フックの中で `node -e` を使うときは関数で包む�
 
 ## セッション終了時点の状態（自動記録）
 
-- 記録時刻: 2026-09-02 02:53 UTC
+- 記録時刻: 2026-09-02 03:35 UTC
 - ブランチ: `claude/checkin-jb6vw4`
-- HEAD: `1be3df1`
-- 未コミットの変更: なし
+- HEAD: `d591689`
+- 未コミットの変更:
+
+```
+M .github/workflows/ci.yml
+ M docs/handoff.md
+ M docs/plan.json
+ M package.json
+ M pnpm-lock.yaml
+?? scripts/api-smoke.mjs
+?? scripts/check-no-personal-data.mjs
+```

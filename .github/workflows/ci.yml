@@ -19,6 +19,37 @@ jobs:
   check:
     name: check
     runs-on: ubuntu-latest
+
+    # apps/api（Medusa）はデータベースが無いと起動もマイグレーションもできない。
+    # 実行環境にデーモンが無くても動くよう、Docker ではなく Actions のサービスを使う。
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: medusa
+          POSTGRES_PASSWORD: medusa
+          POSTGRES_DB: sckool
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://medusa:medusa@localhost:5432/sckool
+      REDIS_URL: redis://localhost:6379
+
     steps:
       - uses: actions/checkout@v7
 
@@ -36,3 +67,13 @@ jobs:
       - run: pnpm run check
 
       - run: pnpm run build
+
+      - name: マイグレーション
+        run: pnpm run api:migrate
+
+      # 生徒の個人情報がデータベースに入っていないことを機械で確かめる（受け入れ基準 A3）。
+      - name: 個人情報が入っていないことの検査
+        run: pnpm run check:no-personal-data
+
+      - name: バックエンドの起動確認
+        run: pnpm run api:smoke
