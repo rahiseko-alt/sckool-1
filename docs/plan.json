@@ -482,7 +482,7 @@
       "dependsOn": ["T005"],
       "files": ["apps/storefront/src/i18n", "scripts/check-i18n-keys.mjs"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

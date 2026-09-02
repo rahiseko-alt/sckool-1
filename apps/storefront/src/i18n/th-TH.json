@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "Market",
+    "tagline": "ตลาดที่ธุรกิจได้พบกัน"
+  },
+  "nav": {
+    "market": "ตลาด",
+    "dashboard": "การจัดการ",
+    "myListings": "สินค้าของฉัน",
+    "quizzes": "แบบทดสอบ",
+    "ranking": "อันดับ",
+    "rules": "กฎ",
+    "login": "เข้าสู่ระบบ",
+    "logout": "ออกจากระบบ",
+    "signUp": "สมัครสมาชิก"
+  },
+  "language": {
+    "label": "ภาษา"
+  },
+  "market": {
+    "title": "ตลาด",
+    "subtitle": "สินค้าที่กำลังขายอยู่",
+    "empty": "ยังไม่มีสินค้า",
+    "seller": "ผู้ขาย",
+    "price": "ราคา",
+    "remaining": "คงเหลือ",
+    "buy": "ซื้อ",
+    "detail": "ดูรายละเอียด",
+    "loading": "กำลังโหลด",
+    "loadError": "โหลดสินค้าไม่สำเร็จ",
+    "retry": "ลองอีกครั้ง",
+    "count": "{{count}} รายการ"
+  },
+  "unavailable": {
+    "not_started": "ยังไม่เปิดขาย",
+    "ended": "สิ้นสุดการขาย",
+    "sold_out": "สินค้าหมด"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "common": {
+    "cancel": "ยกเลิก",
+    "close": "ปิด",
+    "back": "ย้อนกลับ",
+    "required": "จำเป็น",
+    "error": "เกิดข้อผิดพลาด"
+  }
+}

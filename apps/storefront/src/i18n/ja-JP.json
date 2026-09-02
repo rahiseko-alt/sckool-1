@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "Market",
+    "tagline": "企業と企業がつながる市場"
+  },
+  "nav": {
+    "market": "市場",
+    "dashboard": "経営",
+    "myListings": "出品",
+    "quizzes": "テスト",
+    "ranking": "ランキング",
+    "rules": "ルール",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "signUp": "新規登録"
+  },
+  "language": {
+    "label": "言語"
+  },
+  "market": {
+    "title": "市場",
+    "subtitle": "いま出品されている商品",
+    "empty": "まだ商品がありません",
+    "seller": "出品企業",
+    "price": "価格",
+    "remaining": "残り",
+    "buy": "購入する",
+    "detail": "詳しく見る",
+    "loading": "読み込んでいます",
+    "loadError": "商品を読み込めませんでした",
+    "retry": "もう一度試す",
+    "count": "{{count}} 件"
+  },
+  "unavailable": {
+    "not_started": "販売開始前",
+    "ended": "販売終了",
+    "sold_out": "売り切れ"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "back": "戻る",
+    "required": "必須",
+    "error": "エラーが発生しました"
+  }
+}

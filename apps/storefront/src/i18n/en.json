@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "Market",
+    "tagline": "A marketplace where companies meet"
+  },
+  "nav": {
+    "market": "Market",
+    "dashboard": "Business",
+    "myListings": "My products",
+    "quizzes": "Quizzes",
+    "ranking": "Ranking",
+    "rules": "Rules",
+    "login": "Log in",
+    "logout": "Log out",
+    "signUp": "Sign up"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "market": {
+    "title": "Market",
+    "subtitle": "Products on sale now",
+    "empty": "No products yet",
+    "seller": "Seller",
+    "price": "Price",
+    "remaining": "Remaining",
+    "buy": "Buy",
+    "detail": "View details",
+    "loading": "Loading",
+    "loadError": "Could not load the products",
+    "retry": "Try again",
+    "count": "{{count}} items"
+  },
+  "unavailable": {
+    "not_started": "Not on sale yet",
+    "ended": "Sale ended",
+    "sold_out": "Sold out"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "required": "Required",
+    "error": "Something went wrong"
+  }
+}

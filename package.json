@@ -43,7 +43,10 @@
     "check:dashboard": "node scripts/check-dashboard.mjs",
     "check:admin": "node scripts/check-admin.mjs",
     "check:trade-analysis": "node scripts/check-trade-analysis.mjs",
-    "check:purchase-log": "node scripts/check-purchase-log.mjs"
+    "check:purchase-log": "node scripts/check-purchase-log.mjs",
+    "check:i18n": "node scripts/check-i18n-keys.mjs",
+    "storefront:dev": "pnpm --filter @sckool/storefront dev",
+    "storefront:build": "pnpm --filter @sckool/storefront build"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "Market",
+    "tagline": "Nơi các doanh nghiệp gặp nhau"
+  },
+  "nav": {
+    "market": "Thị trường",
+    "dashboard": "Kinh doanh",
+    "myListings": "Sản phẩm của tôi",
+    "quizzes": "Bài kiểm tra",
+    "ranking": "Xếp hạng",
+    "rules": "Quy tắc",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "signUp": "Đăng ký"
+  },
+  "language": {
+    "label": "Ngôn ngữ"
+  },
+  "market": {
+    "title": "Thị trường",
+    "subtitle": "Sản phẩm đang được bán",
+    "empty": "Chưa có sản phẩm nào",
+    "seller": "Người bán",
+    "price": "Giá",
+    "remaining": "Còn lại",
+    "buy": "Mua",
+    "detail": "Xem chi tiết",
+    "loading": "Đang tải",
+    "loadError": "Không tải được sản phẩm",
+    "retry": "Thử lại",
+    "count": "{{count}} sản phẩm"
+  },
+  "unavailable": {
+    "not_started": "Chưa mở bán",
+    "ended": "Đã kết thúc bán",
+    "sold_out": "Đã bán hết"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "common": {
+    "cancel": "Hủy",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "required": "Bắt buộc",
+    "error": "Đã xảy ra lỗi"
+  }
+}

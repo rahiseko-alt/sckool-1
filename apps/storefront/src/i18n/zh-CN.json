@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "Market",
+    "tagline": "企业与企业相遇的市场"
+  },
+  "nav": {
+    "market": "市场",
+    "dashboard": "经营",
+    "myListings": "我的商品",
+    "quizzes": "测验",
+    "ranking": "排行榜",
+    "rules": "规则",
+    "login": "登录",
+    "logout": "退出登录",
+    "signUp": "注册"
+  },
+  "language": {
+    "label": "语言"
+  },
+  "market": {
+    "title": "市场",
+    "subtitle": "正在销售的商品",
+    "empty": "还没有商品",
+    "seller": "卖家",
+    "price": "价格",
+    "remaining": "剩余",
+    "buy": "购买",
+    "detail": "查看详情",
+    "loading": "正在加载",
+    "loadError": "无法加载商品",
+    "retry": "重试",
+    "count": "共 {{count}} 件商品"
+  },
+  "unavailable": {
+    "not_started": "尚未开售",
+    "ended": "销售结束",
+    "sold_out": "已售罄"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "common": {
+    "cancel": "取消",
+    "close": "关闭",
+    "back": "返回",
+    "required": "必填",
+    "error": "发生了错误"
+  }
+}

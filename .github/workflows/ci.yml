@@ -68,6 +68,14 @@ jobs:
 
       - run: pnpm run build
 
+      # 生徒が見る画面。型と組み立てが通ることを見る。
+      - name: 生徒の画面のビルド
+        run: pnpm run storefront:build
+
+      # 6言語の辞書に過不足が無いか（受け入れ基準 I2）。サーバーは要らない。
+      - name: 翻訳の過不足の検査
+        run: pnpm run check:i18n
+
       - name: マイグレーション
         run: pnpm run api:migrate
 

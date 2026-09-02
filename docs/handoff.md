@@ -30,7 +30,7 @@
 
 - 要件の正本は **`docs/requirements.md`**。第1部がユーザーの原文44項目、第2部が
   **MVP 受け入れ基準 A〜K**（1つずつ確かめられる文にしてある）
-- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **30件が `done`**、
+- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **31件が `done`**、
   1件が人の確認待ち（`T006` デザイン）
 - **雛形自身の28項目は `docs/plan.from-0.json` に改名して保存した。**
   `docs/decisions.md`「28.」までの T 番号はそちらを指す
@@ -69,7 +69,8 @@
 - `T029` 管理者の全企業一覧（API と管理画面のページ）
 - `T030` 相互取引率・購入集中率（同上）
 - `T031` 先生の購入と購入ログ（先生も MP 口座を持つ）
-- `docs/decisions.md`「30.」〜「35.」を追記
+- `T032` 6言語の辞書・右上の言語切替・未翻訳キーの機械検査。**生徒が見る画面を作り始めた**
+- `docs/decisions.md`「30.」〜「36.」を追記
 
 ### 前のセッションまで（雛形 `from-0` としての作業）
 
@@ -103,7 +104,7 @@
 | `T004` | 認証は**標準のまま使える**。Market ID をそのまま渡せる          |
 | `T005` | 多言語は**自前**。Translation Module は経路も読み出しも動かない |
 
-次は `pnpm run plan:next` が返す1件から（いまは `T032` 6言語の翻訳の仕組み）。
+次は `pnpm run plan:next` が返す1件から（いまは `T033` Storefront 全画面の翻訳投入）。
 **ここから先は多言語（受け入れ基準 I）が中心**で、`docs/decisions.md`「32.」の結論どおり
 Medusa の Translation Module は使わず自前で作る。
 
@@ -111,10 +112,14 @@ Medusa の Translation Module は使わず自前で作る。
 PostgreSQL と Redis が止まっており、API もデータベースも動かない。
 そのあと `pnpm run seed`（公開鍵と販売channel）を実行すると Store API を呼べる。
 
-**Storefront（生徒が見る画面）はまだ無い。** いまあるのは `apps/api` の API と、
-Mercur が持ってきた管理画面・企業パネル、それに管理画面へ足した3ページ
-（企業一覧・取引の偏り・先生の購入ログ、`apps/admin/src/routes/`）だけ。
-`apps/storefront` にはデザインのトークンしか置いていない。
+**Storefront（生徒が見る画面）は市場一覧だけできている。** `pnpm run storefront:dev` で
+`http://localhost:8000`。**公開鍵を環境変数で渡す必要がある**（無いと商品が0件になる）:
+
+```bash
+VITE_PUBLISHABLE_KEY=$(psql "$DATABASE_URL" -tAc "SELECT token FROM api_key WHERE type='publishable' AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1") pnpm run storefront:dev
+```
+
+管理画面には3ページ足してある（企業一覧・取引の偏り・先生の購入ログ、`apps/admin/src/routes/`）。
 
 **先生（管理者）も MP 口座を持つ。** 口座の id には利用者 id をそのまま使う
 （企業ではないので Market ID を持たない）。初めて買うときに 50,000 MP を1回だけ配る。
