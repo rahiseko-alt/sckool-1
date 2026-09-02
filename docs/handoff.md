@@ -30,7 +30,7 @@
 
 - 要件の正本は **`docs/requirements.md`**。第1部がユーザーの原文44項目、第2部が
   **MVP 受け入れ基準 A〜K**（1つずつ確かめられる文にしてある）
-- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **29件が `done`**、
+- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **30件が `done`**、
   1件が人の確認待ち（`T006` デザイン）
 - **雛形自身の28項目は `docs/plan.from-0.json` に改名して保存した。**
   `docs/decisions.md`「28.」までの T 番号はそちらを指す
@@ -68,6 +68,7 @@
 - `T026` `T027` `T028` 経営ダッシュボード・売上推移・ランキング
 - `T029` 管理者の全企業一覧（API と管理画面のページ）
 - `T030` 相互取引率・購入集中率（同上）
+- `T031` 先生の購入と購入ログ（先生も MP 口座を持つ）
 - `docs/decisions.md`「30.」〜「35.」を追記
 
 ### 前のセッションまで（雛形 `from-0` としての作業）
@@ -102,16 +103,22 @@
 | `T004` | 認証は**標準のまま使える**。Market ID をそのまま渡せる          |
 | `T005` | 多言語は**自前**。Translation Module は経路も読み出しも動かない |
 
-次は `pnpm run plan:next` が返す1件から（いまは `T031` 管理者の購入ログ）。
+次は `pnpm run plan:next` が返す1件から（いまは `T032` 6言語の翻訳の仕組み）。
+**ここから先は多言語（受け入れ基準 I）が中心**で、`docs/decisions.md`「32.」の結論どおり
+Medusa の Translation Module は使わず自前で作る。
 
 **再開したらまず `pnpm run services` を実行すること。** コンテナが再起動すると
 PostgreSQL と Redis が止まっており、API もデータベースも動かない。
 そのあと `pnpm run seed`（公開鍵と販売channel）を実行すると Store API を呼べる。
 
 **Storefront（生徒が見る画面）はまだ無い。** いまあるのは `apps/api` の API と、
-Mercur が持ってきた管理画面・企業パネル、それに管理画面へ足した「企業一覧」と
-「取引の偏り」（`apps/admin/src/routes/`）だけ。`apps/storefront` には
-デザインのトークンしか置いていない。
+Mercur が持ってきた管理画面・企業パネル、それに管理画面へ足した3ページ
+（企業一覧・取引の偏り・先生の購入ログ、`apps/admin/src/routes/`）だけ。
+`apps/storefront` にはデザインのトークンしか置いていない。
+
+**先生（管理者）も MP 口座を持つ。** 口座の id には利用者 id をそのまま使う
+（企業ではないので Market ID を持たない）。初めて買うときに 50,000 MP を1回だけ配る。
+定期的に予算を配る仕組み（要件11）は MVP から外してある。
 
 補足: 週次 Routine は無効化済み（`trig_01LVCzPzXcTxdyGFdxtFQZSw`）。進み具合は
 `pnpm run plan:progress` で見る。

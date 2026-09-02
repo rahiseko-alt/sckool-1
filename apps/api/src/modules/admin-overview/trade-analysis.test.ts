@@ -35,7 +35,7 @@ function transfer(buyer: string, seller: string, amount: number, groupId: string
 describe('取引履歴から売買の組を戻す', () => {
   it('買う側と売る側を印で結び直す', () => {
     expect(buildTrades(transfer('A', 'B', 2_500, 'g1'))).toEqual([
-      { buyerId: 'A', sellerId: 'B', amount: 2_500 },
+      { buyerId: 'A', sellerId: 'B', amount: 2_500, at: NOW },
     ])
   })
 
@@ -45,7 +45,7 @@ describe('取引履歴から売買の組を戻す', () => {
       entry({ organizationId: 'A', amount: -500, kind: 'purchase', groupId: 'g1' }),
       entry({ organizationId: 'B', amount: 2_000, kind: 'sale', groupId: 'g1' }),
     ]
-    expect(buildTrades(entries)).toEqual([{ buyerId: 'A', sellerId: 'B', amount: 2_000 }])
+    expect(buildTrades(entries)).toEqual([{ buyerId: 'A', sellerId: 'B', amount: 2_000, at: NOW }])
   })
 
   it('相手のいない支払い（広告費）は取り出さない', () => {
@@ -53,7 +53,7 @@ describe('取引履歴から売買の組を戻す', () => {
       entry({ organizationId: 'A', amount: -1_500, kind: 'ad_spend', groupId: 'g9' }),
       ...transfer('A', 'B', 1_000, 'g1'),
     ]
-    expect(buildTrades(entries)).toEqual([{ buyerId: 'A', sellerId: 'B', amount: 1_000 }])
+    expect(buildTrades(entries)).toEqual([{ buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW }])
   })
 
   it('印の無い行は組に戻さない', () => {
@@ -76,8 +76,8 @@ describe('相互取引率（受け入れ基準 H2）', () => {
     // 両社の総取引額に同じ額が2回入るため、100%にはならない。
     // しきい値30%はこの前提で置いてある。
     const trades: Trade[] = [
-      { buyerId: 'A', sellerId: 'B', amount: 3_000 },
-      { buyerId: 'B', sellerId: 'A', amount: 3_000 },
+      { buyerId: 'A', sellerId: 'B', amount: 3_000, at: NOW },
+      { buyerId: 'B', sellerId: 'A', amount: 3_000, at: NOW },
     ]
     const [pair] = mutualTradeRates(trades)
     expect(pair).toMatchObject({ a: 'A', b: 'B', between: 6_000, total: 12_000, rate: 50 })
@@ -87,11 +87,11 @@ describe('相互取引率（受け入れ基準 H2）', () => {
   it('買い合っている組はしきい値を超える', () => {
     const trades: Trade[] = [
       // A と B が互いに買い合う
-      { buyerId: 'A', sellerId: 'B', amount: 5_000 },
-      { buyerId: 'B', sellerId: 'A', amount: 5_000 },
+      { buyerId: 'A', sellerId: 'B', amount: 5_000, at: NOW },
+      { buyerId: 'B', sellerId: 'A', amount: 5_000, at: NOW },
       // それぞれ他社とも少し取引する
-      { buyerId: 'A', sellerId: 'C', amount: 1_000 },
-      { buyerId: 'C', sellerId: 'B', amount: 1_000 },
+      { buyerId: 'A', sellerId: 'C', amount: 1_000, at: NOW },
+      { buyerId: 'C', sellerId: 'B', amount: 1_000, at: NOW },
     ]
     const flagged = mutualTradeRates(trades).filter((pair) => pair.flagged)
     expect(flagged).toHaveLength(1)
@@ -100,36 +100,36 @@ describe('相互取引率（受け入れ基準 H2）', () => {
 
   it('広く取引している組はしきい値を超えない', () => {
     const trades: Trade[] = [
-      { buyerId: 'A', sellerId: 'B', amount: 1_000 },
-      { buyerId: 'A', sellerId: 'C', amount: 1_000 },
-      { buyerId: 'A', sellerId: 'D', amount: 1_000 },
-      { buyerId: 'B', sellerId: 'C', amount: 1_000 },
-      { buyerId: 'B', sellerId: 'D', amount: 1_000 },
-      { buyerId: 'C', sellerId: 'D', amount: 1_000 },
+      { buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW },
+      { buyerId: 'A', sellerId: 'C', amount: 1_000, at: NOW },
+      { buyerId: 'A', sellerId: 'D', amount: 1_000, at: NOW },
+      { buyerId: 'B', sellerId: 'C', amount: 1_000, at: NOW },
+      { buyerId: 'B', sellerId: 'D', amount: 1_000, at: NOW },
+      { buyerId: 'C', sellerId: 'D', amount: 1_000, at: NOW },
     ]
     expect(mutualTradeRates(trades).every((pair) => !pair.flagged)).toBe(true)
   })
 
   it('同じ組が向きの違いで2つに分かれない', () => {
     const trades: Trade[] = [
-      { buyerId: 'B', sellerId: 'A', amount: 1_000 },
-      { buyerId: 'A', sellerId: 'B', amount: 1_000 },
+      { buyerId: 'B', sellerId: 'A', amount: 1_000, at: NOW },
+      { buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW },
     ]
     expect(mutualTradeRates(trades)).toHaveLength(1)
   })
 
   it('率の高い順に並ぶ', () => {
     const trades: Trade[] = [
-      { buyerId: 'A', sellerId: 'B', amount: 10_000 },
-      { buyerId: 'C', sellerId: 'D', amount: 1_000 },
-      { buyerId: 'C', sellerId: 'E', amount: 9_000 },
+      { buyerId: 'A', sellerId: 'B', amount: 10_000, at: NOW },
+      { buyerId: 'C', sellerId: 'D', amount: 1_000, at: NOW },
+      { buyerId: 'C', sellerId: 'E', amount: 9_000, at: NOW },
     ]
     const rates = mutualTradeRates(trades).map((pair) => pair.rate)
     expect(rates).toEqual([...rates].sort((x, y) => y - x))
   })
 
   it('しきい値は変えられる', () => {
-    const trades: Trade[] = [{ buyerId: 'A', sellerId: 'B', amount: 1_000 }]
+    const trades: Trade[] = [{ buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW }]
     expect(mutualTradeRates(trades, 60)[0]!.flagged).toBe(false)
     expect(mutualTradeRates(trades, 40)[0]!.flagged).toBe(true)
   })
@@ -142,8 +142,8 @@ describe('相互取引率（受け入れ基準 H2）', () => {
 describe('購入集中率（受け入れ基準 H3）', () => {
   it('1社に偏った企業は率が高く出る', () => {
     const trades: Trade[] = [
-      { buyerId: 'A', sellerId: 'B', amount: 9_000 },
-      { buyerId: 'A', sellerId: 'C', amount: 1_000 },
+      { buyerId: 'A', sellerId: 'B', amount: 9_000, at: NOW },
+      { buyerId: 'A', sellerId: 'C', amount: 1_000, at: NOW },
     ]
     expect(purchaseConcentrations(trades)[0]).toEqual({
       organizationId: 'A',
@@ -156,7 +156,7 @@ describe('購入集中率（受け入れ基準 H3）', () => {
   })
 
   it('1社からしか買っていなければ100%', () => {
-    const result = purchaseConcentrations([{ buyerId: 'A', sellerId: 'B', amount: 1_000 }])
+    const result = purchaseConcentrations([{ buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW }])
     expect(result[0]!.rate).toBe(100)
     // 「まだ1回しか買っていないだけ」を見分けられるように数も返す。
     expect(result[0]!.sellerCount).toBe(1)
@@ -165,23 +165,23 @@ describe('購入集中率（受け入れ基準 H3）', () => {
 
   it('同じ相手から複数回買った分はまとめる', () => {
     const trades: Trade[] = [
-      { buyerId: 'A', sellerId: 'B', amount: 1_000 },
-      { buyerId: 'A', sellerId: 'B', amount: 1_000 },
-      { buyerId: 'A', sellerId: 'C', amount: 1_000 },
+      { buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW },
+      { buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW },
+      { buyerId: 'A', sellerId: 'C', amount: 1_000, at: NOW },
     ]
     expect(purchaseConcentrations(trades)[0]).toMatchObject({ topAmount: 2_000, rate: 66.7 })
   })
 
   it('買っていない企業は出てこない', () => {
-    const trades: Trade[] = [{ buyerId: 'A', sellerId: 'B', amount: 1_000 }]
+    const trades: Trade[] = [{ buyerId: 'A', sellerId: 'B', amount: 1_000, at: NOW }]
     expect(purchaseConcentrations(trades).map((row) => row.organizationId)).toEqual(['A'])
   })
 
   it('率の高い順に並ぶ', () => {
     const trades: Trade[] = [
-      { buyerId: 'A', sellerId: 'B', amount: 5_000 },
-      { buyerId: 'A', sellerId: 'C', amount: 5_000 },
-      { buyerId: 'D', sellerId: 'B', amount: 5_000 },
+      { buyerId: 'A', sellerId: 'B', amount: 5_000, at: NOW },
+      { buyerId: 'A', sellerId: 'C', amount: 5_000, at: NOW },
+      { buyerId: 'D', sellerId: 'B', amount: 5_000, at: NOW },
     ]
     expect(purchaseConcentrations(trades).map((row) => row.organizationId)).toEqual(['D', 'A'])
   })

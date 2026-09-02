@@ -467,7 +467,7 @@
       "dependsOn": ["T020"],
       "files": ["apps/api/src/api/admin/purchase-log", "apps/api/src/admin/routes/purchase-log"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

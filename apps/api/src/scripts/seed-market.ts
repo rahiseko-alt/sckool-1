@@ -56,20 +56,30 @@ export default async function seedMarket({ container }: ExecArgs) {
   const userService = container.resolve(Modules.USER)
   const authService = container.resolve(Modules.AUTH)
 
-  const [existingUser] = await userService.listUsers({ email: adminIdentifier })
-  if (!existingUser) {
+  /**
+   * 運営者は2人用意する。要件10で先生は4人程度を想定しており、
+   * **購入ログを先生どうしで見せ合う**（受け入れ基準 H4）ので、
+   * 1人だけだと「他の先生の購入が見えるか」を確かめられない。
+   */
+  const secondAdminIdentifier =
+    process.env.SEED_ADMIN_2_IDENTIFIER ?? 'probe-admin-2@anon.invalid'
+
+  for (const identifier of [adminIdentifier, secondAdminIdentifier]) {
+    const [existingUser] = await userService.listUsers({ email: identifier })
+    if (existingUser) continue
+
     const registered = await authService.register('emailpass', {
-      body: { email: adminIdentifier, password: adminPassword },
+      body: { email: identifier, password: adminPassword },
     } as never)
 
-    const user = await userService.createUsers({ email: adminIdentifier })
+    const user = await userService.createUsers({ email: identifier })
     if (registered.authIdentity) {
       await authService.updateAuthIdentities({
         id: registered.authIdentity.id,
         app_metadata: { user_id: user.id },
       })
     }
-    logger.info(`運営者のアカウントを作りました: ${adminIdentifier}`)
+    logger.info(`運営者のアカウントを作りました: ${identifier}`)
   }
 
   // 授業で使うテストを1つ用意する（要件18・32）。独占禁止法を題材にしたのは、
@@ -127,7 +137,7 @@ export default async function seedMarket({ container }: ExecArgs) {
   console.log('\n=== 用意できたもの ===')
   console.log(`販売channel: ${channel.id}`)
   console.log(`公開鍵: ${key.token}`)
-  console.log(`運営者: ${adminIdentifier}`)
+  console.log(`運営者: ${adminIdentifier} / ${secondAdminIdentifier}`)
   console.log('\nStore API を呼ぶときは、この鍵を x-publishable-api-key に入れてください。')
   console.log('※ 運営者のパスワードは開発用の既定値です。本番では環境変数で与えてください。')
 }
