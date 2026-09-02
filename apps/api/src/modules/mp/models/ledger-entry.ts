@@ -40,8 +40,18 @@ export const MpLedgerEntry = model.define('mp_ledger_entry', {
   expires_at: model.dateTime().nullable(),
 
   /**
-   * 何によるものか。注文の id、テストの id、取り消しなら元の行の id。
+   * 何によるものか。商品の id、テストの id、取り消しなら元の行の id。
    * 相手の企業名は入れない（表示のたびに企業の表から引く）。
    */
   reference: model.text().nullable(),
+
+  /**
+   * ひとつの出来事を指す印。
+   *
+   * 1回の購入が「ボーナスから」「通常から」の2行に分かれることがあるので、
+   * **行を数えても購入の件数にはならない**。かといって商品の id で数えると、
+   * 同じ商品を2回買ったときに1件に潰れる（実際にそう間違えた）。
+   * 出来事ごとに別の値を入れて、これで数える。
+   */
+  group_id: model.text().nullable(),
 })

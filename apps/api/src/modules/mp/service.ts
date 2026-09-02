@@ -32,6 +32,7 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
       pocket: row.pocket as Pocket,
       ...(row.expires_at ? { expiresAt: new Date(row.expires_at) } : {}),
       ...(row.reference ? { reference: row.reference } : {}),
+      ...(row.group_id ? { groupId: row.group_id } : {}),
       createdAt: new Date(row.created_at),
     }
   }
@@ -59,6 +60,7 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
         kind: 'initial_grant',
         pocket: 'normal',
         reference: null,
+        group_id: null,
         expires_at: null,
       },
     ])
@@ -82,6 +84,8 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
         pocket: 'bonus',
         expires_at: input.expiresAt,
         reference: input.reference,
+        // ボーナスは1行なので、その行自身がひとつの出来事。
+        group_id: null,
       },
     ])
   }
@@ -97,6 +101,8 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     sellerId: string
     amount: number
     reference: string
+    /** この購入ひとつを指す印。省くと自動で作る。 */
+    groupId?: string
     now?: Date
   }): Promise<boolean> {
     const now = input.now ?? new Date()
@@ -105,11 +111,15 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     if (!plan) return false
 
     // id は保存側が振るので、ここでは並び順だけを決める。
+    // 1回の購入がボーナスと通常の2行に分かれるので、まとめて数えるための印を作る。
+    const groupId = input.groupId ?? `grp_${now.getTime()}_${Math.random().toString(36).slice(2, 10)}`
+
     const entries = buildTransfer({
       buyerId: input.buyerId,
       sellerId: input.sellerId,
       plan,
       reference: input.reference,
+      groupId,
       idFor: () => '',
       now,
     })
@@ -122,6 +132,7 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
         pocket: entry.pocket,
         expires_at: entry.expiresAt ?? null,
         reference: entry.reference ?? null,
+        group_id: entry.groupId ?? null,
       })),
     )
     return true
@@ -140,6 +151,9 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     const plan = planPayment(balance, input.amount)
     if (!plan) return false
 
+    // 広告費もボーナスと通常に分かれることがあるので、同じ印を付ける。
+    const spendGroupId = `grp_${now.getTime()}_${Math.random().toString(36).slice(2, 10)}`
+
     const rows = []
     if (plan.fromBonus > 0) {
       rows.push({
@@ -149,6 +163,7 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
         pocket: 'bonus' as const,
         expires_at: null,
         reference: input.reference,
+        group_id: spendGroupId,
       })
     }
     if (plan.fromNormal > 0) {
@@ -159,6 +174,7 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
         pocket: 'normal' as const,
         expires_at: null,
         reference: input.reference,
+        group_id: spendGroupId,
       })
     }
     await this.createMpLedgerEntries(rows)
@@ -182,6 +198,7 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
         pocket: 'bonus' as const,
         expires_at: null,
         reference: item.entryId,
+        group_id: null,
       })),
     )
     return expired.length

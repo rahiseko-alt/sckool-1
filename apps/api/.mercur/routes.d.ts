@@ -645,9 +645,11 @@ export type Routes = {
         ads: typeof import("../src/api/store/ads/route") & {
             $id: {
                 click: typeof import("../src/api/store/ads/[id]/click/route");
+                metrics: typeof import("../src/api/store/ads/[id]/metrics/route");
             };
         };
         custom: typeof import("../src/api/store/custom/route");
+        dashboard: typeof import("../src/api/store/dashboard/route");
         listings: typeof import("../src/api/store/listings/route") & {
             $id: typeof import("../src/api/store/listings/[id]/route");
         };
@@ -657,6 +659,7 @@ export type Routes = {
                 submit: typeof import("../src/api/store/quizzes/[id]/submit/route");
             };
         };
+        ranking: typeof import("../src/api/store/ranking/route");
         recovery: typeof import("../src/api/store/recovery/route");
         transactions: typeof import("../src/api/store/transactions/route");
     };

@@ -129,6 +129,22 @@
           "enumItems": [],
           "mappedType": "text"
         },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
         "raw_amount": {
           "name": "raw_amount",
           "type": "jsonb",

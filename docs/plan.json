@@ -389,7 +389,7 @@
       "dependsOn": ["T021", "T025"],
       "files": ["apps/storefront/src/app/dashboard", "apps/api/src/api/vendor/stats"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -404,7 +404,7 @@
       "dependsOn": ["T026"],
       "files": ["apps/storefront/src/app/dashboard/chart"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -419,7 +419,7 @@
       "dependsOn": ["T026"],
       "files": ["apps/storefront/src/app/ranking", "apps/api/src/api/store/ranking"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

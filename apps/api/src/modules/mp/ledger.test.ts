@@ -179,6 +179,7 @@ describe('企業から企業への移動（受け入れ基準 D1・E6）', () =>
       sellerId: 'org-b',
       plan: { fromBonus: 1_500, fromNormal: 500 },
       reference: 'order-1',
+      groupId: 'g1',
       idFor,
       now: NOW,
     })
@@ -202,6 +203,7 @@ describe('企業から企業への移動（受け入れ基準 D1・E6）', () =>
       sellerId: 'org-b',
       plan: { fromBonus: 2_000, fromNormal: 0 },
       reference: 'order-2',
+      groupId: 'g2',
       idFor,
       now: NOW,
     })
@@ -217,6 +219,7 @@ describe('企業から企業への移動（受け入れ基準 D1・E6）', () =>
       sellerId: 'org-b',
       plan: { fromBonus: 0, fromNormal: 3_000 },
       reference: 'order-3',
+      groupId: 'g3',
       idFor,
       now: NOW,
     })
@@ -235,6 +238,7 @@ describe('市場全体の MP の量', () => {
         sellerId: 'org-b',
         plan: { fromBonus: 0, fromNormal: 2_500 },
         reference: 'order-1',
+        groupId: 'gs',
         idFor: (i) => `s${i}`,
         now: NOW,
       }),
@@ -279,6 +283,7 @@ describe('60社が一斉に売り買いしても総量が保たれる（受け�
           sellerId: seller,
           plan,
           reference: `order-${i}`,
+          groupId: `g-${i}`,
           idFor: (n) => `x${i}-${n}`,
           now: NOW,
         }),

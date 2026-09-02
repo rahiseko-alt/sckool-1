@@ -46,8 +46,13 @@ export interface LedgerEntry {
    * 期限を過ぎた行は残高に数えない（受け入れ基準 E2）。
    */
   expiresAt?: Date;
-  /** どの注文・どのテストによるものか。画面に出す相手の企業名などはここから引く。 */
+  /** どの商品・どのテストによるものか。画面に出す相手の企業名などはここから引く。 */
   reference?: string;
+  /**
+   * ひとつの出来事を指す印。1回の購入がボーナスと通常の2行に分かれるため、
+   * 件数を数えるときは行ではなくこれで数える。
+   */
+  groupId?: string;
   createdAt: Date;
 }
 
@@ -169,6 +174,8 @@ export function buildTransfer(input: {
   sellerId: string;
   plan: PaymentPlan;
   reference: string;
+  /** この購入ひとつを指す印。買う側の行と売る側の行に同じ値を入れる。 */
+  groupId: string;
   idFor: (index: number) => string;
   now?: Date;
 }): LedgerEntry[] {
@@ -184,6 +191,7 @@ export function buildTransfer(input: {
       kind: 'purchase',
       pocket: 'bonus',
       reference: input.reference,
+      groupId: input.groupId,
       createdAt: now,
     });
   }
@@ -195,6 +203,7 @@ export function buildTransfer(input: {
       kind: 'purchase',
       pocket: 'normal',
       reference: input.reference,
+      groupId: input.groupId,
       createdAt: now,
     });
   }
@@ -206,6 +215,7 @@ export function buildTransfer(input: {
     kind: 'sale',
     pocket: 'normal',
     reference: input.reference,
+    groupId: input.groupId,
     createdAt: now,
   });
 
