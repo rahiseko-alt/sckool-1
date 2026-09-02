@@ -2,6 +2,7 @@ import { MedusaService } from '@medusajs/framework/utils'
 
 import { lockOrganization, repositoryOf, type SqlManager } from '../db/serialize'
 import {
+  buildReversal,
   buildTransfer,
   calculateBalance,
   calculateSupply,
@@ -278,6 +279,60 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
   }
 
   /**
+   * ひとつの売買を**取り消す**（受け入れ基準 K3）。
+   *
+   * **元の行は消さない。反対向きの行を足す。** 消してしまうと「何が起きて、
+   * 何を取り消したか」が履歴から読めなくなり、先生が調べられない。
+   *
+   * 印（`group_id`）でまとめて反転するので、買った側と売った側が必ず両方戻る。
+   * 片側だけ戻すと市場全体の MP の量が合わなくなる（`getSupply`）。
+   *
+   * すでに取り消してある売買は何もしない（二重に戻さない）。
+   */
+  async reverseTransfer(groupId: string, now = new Date()): Promise<number> {
+    return repositoryOf(this).transaction(async (manager) => {
+      const rows = await this.listMpLedgerEntries(
+        { group_id: groupId },
+        {},
+        { transactionManager: manager },
+      )
+      const entries = rows.map((row) => this.toLedgerEntry(row))
+      /**
+       * 戻すのは企業どうしの売買だけ。広告費（`ad_spend`）は市場の外へ出た
+       * お金なので、ここで戻すと `getSupply` の「配った − 失効 − 外へ出た額」が
+       * 合わなくなる。
+       */
+      const originals = entries.filter(
+        (entry) => entry.kind === 'purchase' || entry.kind === 'sale',
+      )
+      if (originals.length === 0) return 0
+
+      // 反転済みの行は `reference` に元の行の id を持つ（buildReversal）。
+      const alreadyReversed = new Set(
+        entries.filter((entry) => entry.kind === 'reversal').map((entry) => entry.reference),
+      )
+      const todo = originals.filter((entry) => !alreadyReversed.has(entry.id))
+      if (todo.length === 0) return 0
+
+      // id は保存側が振るので、buildReversal には空を渡す。
+      const reversals = todo.map((entry) => buildReversal(entry, '', now))
+      await this.createMpLedgerEntries(
+        reversals.map((entry) => ({
+          organization_id: entry.organizationId,
+          amount: entry.amount,
+          kind: entry.kind,
+          pocket: entry.pocket,
+          expires_at: entry.expiresAt ?? null,
+          reference: entry.reference ?? null,
+          group_id: entry.groupId ?? null,
+        })),
+        { transactionManager: manager },
+      )
+      return reversals.length
+    })
+  }
+
+  /**
    * 「この売買を誰が買ったか」を印（`group_id`）から引く（受け入れ基準 D5）。
    *
    * 売れた側の履歴に相手の企業名を出すために使う。買った側の行を探し、
@@ -335,6 +390,62 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     }
 
     return { organizations, entries }
+  }
+
+  /**
+   * **全企業**の口座を1社ずつ数え直して、狂っていないかを見る（受け入れ基準 B3）。
+   *
+   * 判定役に「`check:mp` は架空の企業を1組作って見ているだけで、実在する企業を
+   * 1社も走査していない」と指摘されて足した。実際、残高 −54,500 MP の企業が
+   * 居るのに検査は「すべて通りました」と表示していた。
+   *
+   * **「残高＝履歴の合計」だけを見ても壊れは見つからない。** 残高はそのつど
+   * 履歴から数える作りなので、この等式は構造上つねに成り立つ。狂いが表に出るのは
+   * **負の残高**（払えないはずの支払いが通った跡）なので、そちらを見る。
+   */
+  async auditAllAccounts(now = new Date()): Promise<{
+    organizations: number
+    problems: { organizationId: string; reason: string; balance: Balance; ledgerSum: number }[]
+  }> {
+    const rows = await this.listMpLedgerEntries({})
+
+    const byOrganization = new Map<string, LedgerEntry[]>()
+    for (const row of rows) {
+      const entry = this.toLedgerEntry(row)
+      const list = byOrganization.get(entry.organizationId)
+      if (list) list.push(entry)
+      else byOrganization.set(entry.organizationId, [entry])
+    }
+
+    const problems: {
+      organizationId: string
+      reason: string
+      balance: Balance
+      ledgerSum: number
+    }[] = []
+
+    for (const [organizationId, entries] of byOrganization) {
+      const balance = calculateBalance(entries, now)
+      const ledgerSum = entries.reduce((sum, entry) => sum + entry.amount, 0)
+      const add = (reason: string) =>
+        problems.push({ organizationId, reason, balance, ledgerSum })
+
+      if (balance.normal < 0) add('通常残高が負')
+      if (balance.bonus < 0) add('ボーナス残高が負')
+      if (balance.total < 0) add('残高の合計が負')
+
+      // 未失効の期限切れボーナスを除けば、履歴の合計は残高と一致する。
+      // 一致しないのは、失効の行を二重に入れたときなど。
+      const pendingExpiry = findExpiredBonuses(entries, now).reduce(
+        (sum, expired) => sum + expired.amount,
+        0,
+      )
+      if (ledgerSum - pendingExpiry !== balance.total) {
+        add(`履歴の合計と残高が食い違う（未失効ぶん ${pendingExpiry} を差し引いても不一致）`)
+      }
+    }
+
+    return { organizations: byOrganization.size, problems }
   }
 
   /** 市場全体で MP の総量が保たれているかを見る（受け入れ基準 K1 の検査に使う）。 */

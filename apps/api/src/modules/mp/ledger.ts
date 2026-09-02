@@ -216,6 +216,9 @@ export function buildReversal(
     pocket: entry.pocket,
     ...(entry.expiresAt ? { expiresAt: entry.expiresAt } : {}),
     reference: entry.id,
+    // 元の売買と同じ印を引き継ぐ。**引き継がないと、買った側と売った側の
+    // 取り消しが別々の出来事に見え、二重に取り消したかどうかも分からなくなる。**
+    ...(entry.groupId ? { groupId: entry.groupId } : {}),
     createdAt: now,
   };
 }

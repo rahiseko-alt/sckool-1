@@ -159,6 +159,29 @@ expect('商品を出せた', afterList.includes('Your product is listed'), true)
 expect('自社の商品一覧に並んだ', afterList.includes(productTitle), true);
 await seller.screenshot({ path: 'tmp/e2e/1-listed.png' });
 
+console.log('\n=== 2-b. 自社の商品は買えない（受け入れ基準 D2）===');
+
+/**
+ * **押してから断るのでは基準を満たさない。** 基準は「購入ボタンが押せない」。
+ * API は自社購入を 400 で拒んでいたが、画面のボタンは押せたままだった
+ * （判定役が発見）。売った側の画面で、ボタンが無いことを見る。
+ */
+await seller.reload({ waitUntil: 'domcontentloaded' });
+await cardOf(seller, productTitle).waitFor({ timeout: 30_000 });
+await cardOf(seller, productTitle).getByRole('button', { name: 'View details' }).click();
+await seller.getByRole('heading', { name: productTitle }).waitFor({ timeout: 20_000 });
+expect(
+  '自社の商品には購入ボタンが無い',
+  await seller.getByRole('button', { name: 'Buy', exact: true }).count(),
+  0,
+);
+expect(
+  '代わりに理由が出ている',
+  (await seller.locator('main').innerText()).includes('This is your own product'),
+  true,
+);
+await seller.screenshot({ path: 'tmp/e2e/2b-own-listing.png' });
+
 console.log('\n=== 3. 他社の商品を買う（受け入れ基準 C2・D1〜D3）===');
 
 await buyer.reload({ waitUntil: 'domcontentloaded' });

@@ -84,6 +84,59 @@ expect(
   404,
 );
 
+/**
+ * **運営者側の入口も塞ぐ。** 生徒の画面を塞いでも、先生が管理画面から
+ * 生徒の氏名・電話番号を打ち込めるなら、DB に個人情報が入る。
+ * 判定役が実際に `POST /admin/customers` で「山田 花子 / 080-9999-8888」を
+ * 保存できることを見つけたため足した。
+ *
+ * 生徒側と違い、**合鍵を持った運営者として**叩かないと意味がない。
+ * 合鍵なしで 401 が返るのを見て「塞がっている」と誤判定するため。
+ */
+console.log('\n=== 運営者の入口も塞がっている（受け入れ基準 A3）===');
+const adminLogin = await call('POST', '/auth/user/emailpass', {
+  email: 'probe-admin@anon.invalid',
+  password: 'probe-password-1234',
+});
+const adminToken = adminLogin.b?.token;
+expect('運営者の合鍵を取れた', typeof adminToken, 'string');
+expect(
+  '運営者でも顧客を作れない',
+  (
+    await call(
+      'POST',
+      '/admin/customers',
+      { email: 'probe@example.com', first_name: '花子', last_name: '山田', phone: '080-0000-0000' },
+      adminToken,
+    )
+  ).s,
+  404,
+);
+expect(
+  '運営者でも顧客の一覧を見られない',
+  (await call('GET', '/admin/customers', undefined, adminToken)).s,
+  404,
+);
+expect(
+  '運営者でも顧客の住所を作れない',
+  (
+    await call(
+      'POST',
+      '/admin/customers/cus_x/addresses',
+      { first_name: '花子', address_1: '東京都千代田区1-1' },
+      adminToken,
+    )
+  ).s,
+  404,
+);
+
+console.log('\n=== 運営者にできることは今までどおり動く ===');
+expect(
+  '企業の一覧は見られる',
+  (await call('GET', '/admin/organizations', undefined, adminToken)).s,
+  200,
+);
+
 console.log('\n=== アカウント作成とログインは今までどおり動く ===');
 const made = await call('POST', '/store/accounts', {
   password: 'good-password-1234',

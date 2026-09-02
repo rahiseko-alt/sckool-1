@@ -27,6 +27,23 @@
       "listingCount": "จำนวนสินค้า",
       "adSpend": "ค่าโฆษณา",
       "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "ปิด",
+      "listings": "สินค้า ({{count}})",
+      "noListings": "ไม่มีสินค้า",
+      "remaining": "เหลือ {{count}}",
+      "transactions": "ธุรกรรม ({{count}} รายการล่าสุด 50)",
+      "noTransactions": "ไม่มีธุรกรรม",
+      "kind": {
+        "initial_grant": "เงินทุนตั้งต้น",
+        "bonus_grant": "โบนัส",
+        "bonus_expired": "โบนัสหมดอายุ",
+        "purchase": "ซื้อ",
+        "sale": "ขาย",
+        "ad_spend": "ค่าโฆษณา",
+        "reversal": "ยกเลิก"
+      }
     }
   },
   "tradeAnalysis": {

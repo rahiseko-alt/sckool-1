@@ -51,6 +51,7 @@ const label = {
   missing: '訳が無い',
   empty: '空になっている',
   untranslated: '日本語のまま',
+  extra: '基準の言語に無いキーが余っている',
 };
 
 let failed = 0;

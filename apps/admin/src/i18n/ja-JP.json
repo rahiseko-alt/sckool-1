@@ -27,6 +27,23 @@
       "listingCount": "商品数",
       "adSpend": "広告費",
       "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "閉じる",
+      "listings": "商品（{{count}}件）",
+      "noListings": "商品はありません",
+      "remaining": "残り{{count}}",
+      "transactions": "取引（{{count}}件・新しい順に50件まで）",
+      "noTransactions": "取引はありません",
+      "kind": {
+        "initial_grant": "初期資金",
+        "bonus_grant": "ボーナス",
+        "bonus_expired": "ボーナス失効",
+        "purchase": "購入",
+        "sale": "売上",
+        "ad_spend": "広告費",
+        "reversal": "取り消し"
+      }
     }
   },
   "tradeAnalysis": {

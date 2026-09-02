@@ -36,7 +36,7 @@
     "check:auth": "node scripts/check-accounts.mjs && node scripts/check-login-lock.mjs && node scripts/check-recovery.mjs",
     "check:recovery": "node scripts/check-recovery.mjs",
     "check:listings": "node scripts/check-listings.mjs",
-    "check:market:ci": "pnpm run seed && MP_BONUS_EXPIRY_CRON=\"* * * * *\" node scripts/with-api.mjs node scripts/check-personal-data-routes.mjs -- node scripts/check-accounts.mjs -- node scripts/check-login-lock.mjs -- node scripts/check-recovery.mjs -- node scripts/check-listings.mjs -- node scripts/check-purchases.mjs -- node scripts/check-quizzes.mjs -- node scripts/check-ads.mjs -- node scripts/check-dashboard.mjs -- node scripts/check-admin.mjs -- node scripts/check-trade-analysis.mjs -- node scripts/check-purchase-log.mjs -- node scripts/check-translations.mjs -- node scripts/check-bonus-expiry.mjs -- node scripts/check-load.mjs -- node scripts/check-settings.mjs",
+    "check:market:ci": "pnpm run seed && MP_BONUS_EXPIRY_CRON=\"* * * * *\" node scripts/with-api.mjs node scripts/check-personal-data-routes.mjs -- node scripts/check-accounts.mjs -- node scripts/check-login-lock.mjs -- node scripts/check-recovery.mjs -- node scripts/check-listings.mjs -- node scripts/check-purchases.mjs -- node scripts/check-quizzes.mjs -- node scripts/check-ads.mjs -- node scripts/check-dashboard.mjs -- node scripts/check-admin.mjs -- node scripts/check-trade-analysis.mjs -- node scripts/check-purchase-log.mjs -- node scripts/check-translations.mjs -- node scripts/check-bonus-expiry.mjs -- node scripts/check-load.mjs -- node scripts/check-settings.mjs -- node scripts/check-append-only.mjs",
     "check:bonus-expiry": "node scripts/check-bonus-expiry.mjs",
     "check:load": "node scripts/check-load.mjs",
     "check:purchases": "node scripts/check-purchases.mjs",
@@ -56,7 +56,8 @@
     "check:admin-i18n": "node scripts/check-admin-i18n.mjs",
     "check:e2e": "node scripts/check-e2e.mjs",
     "check:e2e:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/with-storefront.mjs node scripts/check-e2e.mjs",
-    "check:personal-data-routes": "node scripts/check-personal-data-routes.mjs"
+    "check:personal-data-routes": "node scripts/check-personal-data-routes.mjs",
+    "check:append-only": "node scripts/check-append-only.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

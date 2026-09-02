@@ -46,16 +46,26 @@ export function flattenKeys(value: unknown, prefix = ''): Map<string, string> {
 export interface KeyProblem {
   locale: string
   key: string
-  /** `missing` = そのキーが無い／`empty` = 空文字／`untranslated` = 元の言語と同じ文字列 */
-  kind: 'missing' | 'empty' | 'untranslated'
+  /**
+   * `missing` = そのキーが無い／`empty` = 空文字／
+   * `untranslated` = 元の言語と同じ文字列／`extra` = 基準に無いキーが余っている
+   */
+  kind: 'missing' | 'empty' | 'untranslated' | 'extra'
 }
 
 /**
  * 各言語の辞書を突き合わせる。
  *
- * 基準は `base`（日本語）。**基準に無いキーは問題にしない。**
- * 翻訳側だけに余分なキーがあっても画面は壊れないし、削除の途中である場合もある。
- * 困るのは「基準にあるのに翻訳が無い」ときだけ。
+ * 基準は `base`（日本語）。**両方向に見る。** 基準にあって翻訳に無いキー
+ * （`missing`）と、翻訳だけにあって基準に無いキー（`extra`）の両方を挙げる。
+ *
+ * 以前は片方向だけを見ていた。余分なキーは画面を壊さないので放っておいたが、
+ * 受け入れ基準 I2 は「6ロケールのキー集合が**一致**し」と書いてある。
+ * 判定役が管理画面の `en.json` に、コードから一度も参照されていない
+ * 雛形の残り3キーを見つけ、片方向の検査では構造的に捕まらないと指摘した。
+ *
+ * 余分なキーは、消し忘れか綴りの間違いのどちらか。どちらも**その言語だけ
+ * 画面が原文のまま**になる原因になる。
  *
  * `untranslated`（基準と同じ文字列）は**警告であって誤りではない**。
  * `MP` や `Market` のように、どの言語でもそのままで正しいものがある。
@@ -96,6 +106,10 @@ export function findKeyProblems(input: {
       ) {
         problems.push({ locale: other.locale, key, kind: 'untranslated' })
       }
+    }
+
+    for (const key of keys.keys()) {
+      if (!baseKeys.has(key)) problems.push({ locale: other.locale, key, kind: 'extra' })
     }
   }
 

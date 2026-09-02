@@ -27,6 +27,23 @@
       "listingCount": "商品数量",
       "adSpend": "广告费",
       "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "关闭",
+      "listings": "商品（共{{count}}项）",
+      "noListings": "没有商品",
+      "remaining": "剩余{{count}}",
+      "transactions": "交易（{{count}}笔，最新50笔）",
+      "noTransactions": "没有交易",
+      "kind": {
+        "initial_grant": "初始资金",
+        "bonus_grant": "奖励",
+        "bonus_expired": "奖励过期",
+        "purchase": "购买",
+        "sale": "销售",
+        "ad_spend": "广告费",
+        "reversal": "撤销"
+      }
     }
   },
   "tradeAnalysis": {

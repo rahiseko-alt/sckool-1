@@ -1,9 +1,4 @@
 {
-  "customFields": {
-    "title": "Custom Fields",
-    "description": "Manage your custom fields and configurations",
-    "noFields": "No custom fields configured yet"
-  },
   "language": {
     "label": "Language"
   },
@@ -32,6 +27,23 @@
       "listingCount": "Listings",
       "adSpend": "Ad spend",
       "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "Close",
+      "listings": "Products ({{count}})",
+      "noListings": "No products",
+      "remaining": "{{count}} left",
+      "transactions": "Transactions ({{count}}, newest 50)",
+      "noTransactions": "No transactions",
+      "kind": {
+        "initial_grant": "Initial funds",
+        "bonus_grant": "Bonus",
+        "bonus_expired": "Bonus expired",
+        "purchase": "Purchase",
+        "sale": "Sale",
+        "ad_spend": "Ad spend",
+        "reversal": "Reversal"
+      }
     }
   },
   "tradeAnalysis": {

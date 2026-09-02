@@ -3,6 +3,7 @@ import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 import { ADS_MODULE } from '../../../modules/ads'
 import type AdsService from '../../../modules/ads/service'
 import { CATALOG_MODULE } from '../../../modules/catalog'
+import { localeOf } from '../../../modules/catalog/locales'
 import { marketIdOf } from '../../../modules/market-auth/token'
 import type CatalogService from '../../../modules/catalog/service'
 import { MP_MODULE } from '../../../modules/mp'
@@ -43,7 +44,9 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   }
 
   const catalog = req.scope.resolve(CATALOG_MODULE) as CatalogService
-  const listing = await catalog.findListing(listingId)
+  // 買った直後の画面に出す商品名も、閲覧者の言語で返す（受け入れ基準 I3）。
+  // 市場一覧は英語なのに完了画面だけ日本語、という状態になっていた。
+  const listing = await catalog.findListing(listingId, new Date(), localeOf(req))
   if (!listing) {
     res.status(404).json({ code: 'listing_not_found' })
     return

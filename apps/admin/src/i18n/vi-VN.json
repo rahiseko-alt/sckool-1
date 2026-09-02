@@ -27,6 +27,23 @@
       "listingCount": "Số sản phẩm",
       "adSpend": "Chi phí quảng cáo",
       "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "Đóng",
+      "listings": "Sản phẩm ({{count}})",
+      "noListings": "Không có sản phẩm",
+      "remaining": "Còn {{count}}",
+      "transactions": "Giao dịch ({{count}}, 50 mới nhất)",
+      "noTransactions": "Không có giao dịch",
+      "kind": {
+        "initial_grant": "Vốn ban đầu",
+        "bonus_grant": "Thưởng",
+        "bonus_expired": "Thưởng hết hạn",
+        "purchase": "Mua",
+        "sale": "Bán",
+        "ad_spend": "Chi phí quảng cáo",
+        "reversal": "Hoàn tác"
+      }
     }
   },
   "tradeAnalysis": {

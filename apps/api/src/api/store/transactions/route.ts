@@ -1,6 +1,7 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
 import { CATALOG_MODULE } from '../../../modules/catalog'
+import { localeOf } from '../../../modules/catalog/locales'
 import type CatalogService from '../../../modules/catalog/service'
 import { marketIdOf } from '../../../modules/market-auth/token'
 import { MP_MODULE } from '../../../modules/mp'
@@ -47,7 +48,15 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
         .filter((reference): reference is string => typeof reference === 'string'),
     ),
   ]
-  const listings = await Promise.all(listingIds.map((id) => catalog.findListing(id)))
+  /**
+   * 商品名は**閲覧者の言語で**引く（受け入れ基準 I3）。
+   *
+   * 訳が無ければ原文が返る。ここで言語を渡し忘れると、市場一覧は英語なのに
+   * 取引履歴だけ日本語の商品名、という画面になる（実際にそうなっていた）。
+   */
+  const locale = localeOf(req)
+  const now = new Date()
+  const listings = await Promise.all(listingIds.map((id) => catalog.findListing(id, now, locale)))
   const listingById = new Map(
     listings.filter((listing) => listing !== undefined).map((listing) => [listing!.id, listing!]),
   )

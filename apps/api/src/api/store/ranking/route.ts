@@ -34,21 +34,42 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 
   const all = await organizations.listOrganizations({})
 
+  const entriesByOrganization = new Map(
+    await Promise.all(
+      all.map(
+        async (organization) =>
+          [organization.market_id, await mp.listEntriesFor(organization.market_id)] as const,
+      ),
+    ),
+  )
+
+  /**
+   * 顧客数は「**何社に**売れたか」（要件25）。
+   *
+   * 売れた行の `reference` は商品なので、それを数えると**商品の種類数**になる。
+   * 1社が2商品を買えば2、2社が同じ商品を買えば1と、両方向に外れる。
+   * 買い手は印（`group_id`）から引く。
+   *
+   * 全社ぶんの印をまとめて1回で引く。企業ごとに引くと社数だけ問い合わせが要る。
+   */
+  const saleGroupIds = [...entriesByOrganization.values()]
+    .flat()
+    .filter((entry) => entry.kind === 'sale' && entry.groupId)
+    .map((entry) => entry.groupId as string)
+  const buyerOf = await mp.findBuyersForGroups(saleGroupIds)
+
   const rows = await Promise.all(
     all.map(async (organization) => {
-      const entries = await mp.listEntriesFor(organization.market_id)
+      const entries = entriesByOrganization.get(organization.market_id) ?? []
       const stats = calculateStats(entries)
       const adMetrics = await ads.metricsForOrganization(organization.market_id)
 
-      /**
-       * 顧客数は「何社に売れたか」。履歴からは買い手が分からないので、
-       * 売れた商品の数で近似せず、売れた件数のうち異なる商品の数を数える。
-       * ここは T030（取引分析）で買い手まで見えるようになったら差し替える。
-       */
+      // 印の無い古い行は買い手が分からない。数に入れない（水増ししない）。
       const customers = new Set(
         entries
-          .filter((entry) => entry.kind === 'sale' && entry.reference)
-          .map((entry) => entry.reference),
+          .filter((entry) => entry.kind === 'sale' && entry.groupId)
+          .map((entry) => buyerOf.get(entry.groupId as string))
+          .filter((buyer): buyer is string => Boolean(buyer)),
       ).size
 
       return {

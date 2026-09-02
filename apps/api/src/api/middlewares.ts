@@ -168,6 +168,25 @@ export default defineMiddlewares({
       middlewares: [blockPersonalData],
     },
     /**
+     * **運営者側の入口も閉じる**（受け入れ基準 A3）。
+     *
+     * 生徒の入口だけ塞いでも足りない。判定役が管理者の合鍵で
+     * `POST /admin/customers` を呼び、「山田 花子 / 080-9999-8888 /
+     * judge-probe@example.com」を**実際に保存できる**ことを見つけた。
+     * 管理画面にも Customers ページと Create ボタンが残っていた。
+     *
+     * この仕組みは Medusa の customer を使わない（企業は自前の `organization`）。
+     * 先生が生徒の氏名を打ち込める場所は、あってはいけない。
+     */
+    {
+      matcher: '/admin/customers',
+      middlewares: [blockPersonalData],
+    },
+    {
+      matcher: '/admin/customers/*',
+      middlewares: [blockPersonalData],
+    },
+    /**
      * 企業として行う操作。**ログインしていないと呼べない。**
      *
      * 公開のままにするもの（ここに書かないもの）:

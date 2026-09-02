@@ -61,12 +61,14 @@ describe('辞書の突き合わせ', () => {
     expect(problems).toEqual([])
   })
 
-  it('翻訳側だけにある余分なキーは問題にしない', () => {
+  it('翻訳側だけにある余分なキーを見つける', () => {
+    // 受け入れ基準 I2 は「6ロケールのキー集合が**一致**し」と書いてある。
+    // 余分なキーは消し忘れか綴りの間違いで、どちらもその言語だけ原文が出る原因になる。
     const problems = findKeyProblems({
       base: { locale: 'ja-JP', dictionary: { nav: { market: '市場' } } },
       others: [{ locale: 'en', dictionary: { nav: { market: 'Market', extra: 'Extra' } } }],
     })
-    expect(problems).toEqual([])
+    expect(problems).toEqual([{ locale: 'en', key: 'nav.extra', kind: 'extra' }])
   })
 })
 

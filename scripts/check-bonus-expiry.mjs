@@ -124,13 +124,25 @@ async function bonusGrantOf(marketId) {
  *
  * 本当に7日待つわけにいかないので、配った行の期限だけを過去にずらす。
  * ずらすのは期限の列だけで、金額にも種類にも触らない。
+ *
+ * **台帳は追記しかできない**（受け入れ基準 K3、データベースの引き金で止めてある）。
+ * ここは時計を進める代わりの操作なので、**この1文のあいだだけ引き金を外す**。
+ * 外しっぱなしになると守りが消えるので、必ず戻す（`finally`）。そのうえで
+ * `scripts/check-append-only.mjs` が、検査の最後に**外れていないこと自体**を確かめる。
+ *
+ * 仕組みを緩めているのはここだけ。アプリ側には更新の経路を1つも作っていない。
  */
 async function makeBonusExpired(marketId) {
-  await client.query(
-    `UPDATE mp_ledger_entry SET expires_at = now() - interval '1 day'
-      WHERE organization_id = $1 AND kind = 'bonus_grant' AND deleted_at IS NULL`,
-    [marketId],
-  );
+  await client.query(`ALTER TABLE mp_ledger_entry DISABLE TRIGGER mp_ledger_entry_no_update`);
+  try {
+    await client.query(
+      `UPDATE mp_ledger_entry SET expires_at = now() - interval '1 day'
+        WHERE organization_id = $1 AND kind = 'bonus_grant' AND deleted_at IS NULL`,
+      [marketId],
+    );
+  } finally {
+    await client.query(`ALTER TABLE mp_ledger_entry ENABLE TRIGGER mp_ledger_entry_no_update`);
+  }
 }
 
 async function balanceOf(token) {

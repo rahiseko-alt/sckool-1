@@ -27,6 +27,23 @@
       "listingCount": "सामान संख्या",
       "adSpend": "विज्ञापन खर्च",
       "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "बन्द गर्नुहोस्",
+      "listings": "सामान ({{count}})",
+      "noListings": "सामान छैन",
+      "remaining": "{{count}} बाँकी",
+      "transactions": "कारोबार ({{count}}, नयाँ ५०)",
+      "noTransactions": "कारोबार छैन",
+      "kind": {
+        "initial_grant": "सुरुको रकम",
+        "bonus_grant": "बोनस",
+        "bonus_expired": "बोनस सकियो",
+        "purchase": "किनेको",
+        "sale": "बेचेको",
+        "ad_spend": "विज्ञापन खर्च",
+        "reversal": "रद्द"
+      }
     }
   },
   "tradeAnalysis": {

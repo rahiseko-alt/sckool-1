@@ -39,6 +39,16 @@ interface Purchased {
 
 const day = (iso: string) => new Date(iso).toLocaleDateString()
 
+/** 買えないときに理由を出す箱。押せるボタンと同じ場所に、同じ大きさで置く。 */
+const unavailableBox = {
+  marginTop: 'var(--sp-4)',
+  padding: 'var(--sp-3)',
+  textAlign: 'center' as const,
+  borderRadius: 'var(--radius-sm)',
+  background: 'var(--bg-subtle)',
+  color: 'var(--text-muted)',
+}
+
 export function ListingDetailScreen(props: {
   listingId: string
   session?: Session
@@ -70,6 +80,19 @@ export function ListingDetailScreen(props: {
     }
     // 言語を変えたら読み直す。訳が入っていればそちらに変わる（受け入れ基準 I3）。
   }, [props.listingId, i18n.language])
+
+  /**
+   * 自社の商品かどうか（受け入れ基準 D2）。
+   *
+   * **押せてから断るのでは基準を満たさない。** 基準は「購入ボタンが押せない」。
+   * API は自社購入を 400 で拒むが、画面のボタンは押せたままだった。
+   *
+   * 企業名で見分ける。企業名は他社と重複できない（受け入れ基準 B1）ので、
+   * 一致すれば自社。商品の応答は企業名しか返さない（Market ID を出さないため）。
+   */
+  const isOwnListing = Boolean(
+    props.session && listing && listing.organization_name === props.session.organizationName,
+  )
 
   const buy = async () => {
     if (!props.session) {
@@ -172,7 +195,9 @@ export function ListingDetailScreen(props: {
 
           {errorKey && <p style={errorText}>{t(`errors.${errorKey}`)}</p>}
 
-          {listing.can_buy ? (
+          {isOwnListing ? (
+            <div style={unavailableBox}>{t('detail.ownListing')}</div>
+          ) : listing.can_buy ? (
             <button
               type="button"
               onClick={buy}
@@ -182,16 +207,7 @@ export function ListingDetailScreen(props: {
               {t('market.buy')}
             </button>
           ) : (
-            <div
-              style={{
-                marginTop: 'var(--sp-4)',
-                padding: 'var(--sp-3)',
-                textAlign: 'center',
-                borderRadius: 'var(--radius-sm)',
-                background: 'var(--bg-subtle)',
-                color: 'var(--text-muted)',
-              }}
-            >
+            <div style={unavailableBox}>
               {t(`unavailable.${listing.unavailable_reason ?? 'sold_out'}`)}
             </div>
           )}

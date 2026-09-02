@@ -245,6 +245,18 @@ describe('取り消し（受け入れ基準 K3）', () => {
     expect(calculateBalance([original, reversal], NOW).total).toBe(0)
   })
 
+  it('売買の印を引き継ぐ', () => {
+    // 引き継がないと、買った側と売った側の取り消しが別々の出来事に見え、
+    // 二重に取り消したかどうかも分からなくなる。
+    const original = entry({
+      id: 'x3',
+      amount: -2_500,
+      kind: 'purchase',
+      groupId: 'grp_1',
+    })
+    expect(buildReversal(original, 'r3', NOW).groupId).toBe('grp_1')
+  })
+
   it('ボーナスの取り消しは期限も引き継ぐ', () => {
     const original = entry({
       id: 'x2',

@@ -111,6 +111,26 @@ export default async function checkMp({ container }: ExecArgs) {
   expect('失効の行を作った', swept.entries >= 1, true)
   expect('二度目は何も作らない', (await mp.expireAllBonuses()).entries, 0)
 
+  /**
+   * ここまでは**この検査が自分で作った企業**しか見ていない。
+   * 基準 B3 が求めているのは「**全企業について**差分0件」なので、
+   * 実在する企業を1社ずつ数え直す。
+   */
+  console.log('\n=== 全企業の口座を数え直す（受け入れ基準 B3）===')
+  const audit = await mp.auditAllAccounts()
+  console.log(`  ${audit.organizations} 社を走査しました。`)
+  if (audit.problems.length === 0) {
+    console.log('  差分0件。')
+  } else {
+    for (const problem of audit.problems) {
+      console.log(
+        `  差分: ${problem.organizationId} — ${problem.reason}` +
+          `（通常 ${problem.balance.normal} / ボーナス ${problem.balance.bonus} / 履歴の合計 ${problem.ledgerSum}）`,
+      )
+    }
+  }
+  expect('差分0件', audit.problems.length, 0)
+
   console.log('\n=== 市場全体の MP の量 ===')
   const supply = await mp.getSupply()
   console.log(
