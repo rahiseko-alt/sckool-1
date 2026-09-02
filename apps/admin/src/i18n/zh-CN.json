@@ -1,0 +1,109 @@
+{
+  "language": {
+    "label": "语言"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "请以管理员身份登录",
+    "load": "无法读取（{{status}}）",
+    "offline": "连接不上后台服务"
+  },
+  "organizations": {
+    "title": "$t(terms.organization)一览",
+    "description": "参加的$t(terms.organization)的余额、销售额、利润、商品数和广告费。点击列标题可以改变排序。",
+    "summary": "{{organizations}} 家$t(terms.organization)／余额合计 {{balance}}／销售额合计 {{revenue}}",
+    "supplyMismatch": "※ MP 的账目对不上",
+    "bonus": "（奖励 {{amount}}）",
+    "empty": "还没有$t(terms.organization)。",
+    "columns": {
+      "organizationName": "$t(terms.organization)名称",
+      "balanceTotal": "余额",
+      "revenue": "销售额",
+      "expenses": "支出额",
+      "profit": "利润",
+      "profitMargin": "利润率",
+      "listingCount": "商品数量",
+      "adSpend": "广告费",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "交易的偏向",
+    "lead": "用数字显示互相购买以及集中在一家$t(terms.organization)的情况。",
+    "notice": "这不是作弊的判定。",
+    "detail": "真心觉得好而购买要好朋友的商品，和为了分数互相购买，在数据上是分不出来的。看到在意的组合，请直接问本人。",
+    "empty": "还没有交易。",
+    "mutual": {
+      "title": "相互交易率",
+      "description": "两家$t(terms.organization)之间的交易额 ÷ 这两家$t(terms.organization)的交易总额。超过 {{threshold}}% 的组合会用颜色标出。只和对方交易的两家$t(terms.organization)会是 50%（同一笔金额在总额里算了两次）。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "对方",
+        "between": "两家之间",
+        "total": "两家的总交易",
+        "rate": "相互交易率"
+      }
+    },
+    "concentration": {
+      "title": "购买集中率",
+      "lead": "买入总额之中，买得最多的那一家所占的比例。",
+      "notice": "只从一家买过的$t(terms.organization)一定是 100%。",
+      "detail": "只是购买次数很少的$t(terms.organization)也会排在前面，请连同对方的数量和金额一起看。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "买得最多的一家",
+        "topAmount": "给这一家",
+        "totalAmount": "买入总额",
+        "sellerCount": "对方的数量",
+        "rate": "购买集中率"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "$t(terms.administrator)的购买记录",
+    "lead": "$t(terms.administrator)从谁那里买了多少，",
+    "notice": "$t(terms.administrator)之间可以互相查看。",
+    "detail": "这个画面是为了让$t(terms.administrator)自己察觉无意中的偏向。$t(terms.participant)看不到。",
+    "summary": "$t(terms.administrator) {{admins}} 人／购买 {{purchases}} 笔／合计 {{amount}}",
+    "empty": "$t(terms.administrator)还没有购买过。",
+    "byAdmin": {
+      "title": "按$t(terms.administrator)",
+      "noPurchase": "还没有买过",
+      "separator": "、",
+      "seller": "{{name}}（{{amount}} / {{times}}次）",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "购买次数",
+        "totalAmount": "买入金额",
+        "concentration": "集中度",
+        "sellers": "买入对象"
+      }
+    },
+    "bySeller": {
+      "title": "按$t(terms.organization)（被$t(terms.administrator)买走的金额）",
+      "description": "也显示购买的$t(terms.administrator)人数，用来分辨是一位$t(terms.administrator)买了很多，还是大家各买了一点。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "被买走的金额",
+        "count": "次数",
+        "adminCount": "$t(terms.administrator)人数"
+      }
+    },
+    "recent": {
+      "title": "按时间从新到旧",
+      "columns": {
+        "when": "时间",
+        "admin": "$t(terms.administrator)",
+        "seller": "买入对象",
+        "amount": "金额"
+      }
+    }
+  },
+  "terms": {
+    "participant": "学生",
+    "organization": "企业",
+    "administrator": "老师"
+  }
+}

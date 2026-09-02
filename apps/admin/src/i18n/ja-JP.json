@@ -1,0 +1,109 @@
+{
+  "language": {
+    "label": "言語"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "管理者としてログインしてください",
+    "load": "読み込めません（{{status}}）",
+    "offline": "バックエンドにつながりません"
+  },
+  "organizations": {
+    "title": "$t(terms.organization)一覧",
+    "description": "参加している$t(terms.organization)の残高・売上・利益・商品数・広告費。列の見出しを押すと並べ替わります。",
+    "summary": "{{organizations}} 社／残高の合計 {{balance}}／売上の合計 {{revenue}}",
+    "supplyMismatch": "※ MP の勘定が合っていません",
+    "bonus": "（ボーナス {{amount}}）",
+    "empty": "まだ$t(terms.organization)がありません。",
+    "columns": {
+      "organizationName": "$t(terms.organization)名",
+      "balanceTotal": "残高",
+      "revenue": "売上",
+      "expenses": "支出",
+      "profit": "利益",
+      "profitMargin": "利益率",
+      "listingCount": "商品数",
+      "adSpend": "広告費",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "取引の偏り",
+    "lead": "買い合いや1社への偏りを数字で出します。",
+    "notice": "不正の判定ではありません。",
+    "detail": "仲の良い相手の商品を本当に良いと思って買うことと、点数のために買い合うことは、データからは区別できません。気になった組は本人に聞いてください。",
+    "empty": "まだ取引がありません。",
+    "mutual": {
+      "title": "相互取引率",
+      "description": "2社の間の取引額 ÷ その2社の総取引額。{{threshold}}% を超えた組を色で示します。互いとしか取引していない2社は 50% になります（総取引額に同じ額が2回入るため）。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "相手",
+        "between": "2社の間",
+        "total": "2社の総取引",
+        "rate": "相互取引率"
+      }
+    },
+    "concentration": {
+      "title": "購入集中率",
+      "lead": "買った額のうち、一番多く買っている相手が占める割合。",
+      "notice": "1社からしか買っていなければ必ず 100% です。",
+      "detail": "買った回数が少ないだけの$t(terms.organization)も上位に来るので、相手の数と金額を見てください。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "一番多い購入先",
+        "topAmount": "その相手へ",
+        "totalAmount": "買った額",
+        "sellerCount": "相手の数",
+        "rate": "購入集中率"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "$t(terms.administrator)の購入ログ",
+    "lead": "$t(terms.administrator)が誰からいくら買ったかを、",
+    "notice": "$t(terms.administrator)どうしで見られるようにしています。",
+    "detail": "意図しない偏りに自分で気づけるようにするための画面です。$t(terms.participant)には見えません。",
+    "summary": "$t(terms.administrator) {{admins}} 人／購入 {{purchases}} 件／合計 {{amount}}",
+    "empty": "まだ$t(terms.administrator)の購入がありません。",
+    "byAdmin": {
+      "title": "$t(terms.administrator)ごと",
+      "noPurchase": "まだ買っていません",
+      "separator": "、",
+      "seller": "{{name}}（{{amount}} / {{times}}回）",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "購入回数",
+        "totalAmount": "買った額",
+        "concentration": "集中率",
+        "sellers": "買った先"
+      }
+    },
+    "bySeller": {
+      "title": "$t(terms.organization)ごと（$t(terms.administrator)から買われた額）",
+      "description": "買った$t(terms.administrator)の人数も出しています。1人の$t(terms.administrator)がたくさん買ったのか、みんなが少しずつ買ったのかを見分けるためです。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "買われた額",
+        "count": "回数",
+        "adminCount": "$t(terms.administrator)の人数"
+      }
+    },
+    "recent": {
+      "title": "新しい順",
+      "columns": {
+        "when": "いつ",
+        "admin": "$t(terms.administrator)",
+        "seller": "買った先",
+        "amount": "金額"
+      }
+    }
+  },
+  "terms": {
+    "participant": "生徒",
+    "organization": "企業",
+    "administrator": "先生"
+  }
+}

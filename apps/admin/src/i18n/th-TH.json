@@ -1,0 +1,109 @@
+{
+  "language": {
+    "label": "ภาษา"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "กรุณาเข้าสู่ระบบในฐานะผู้ดูแล",
+    "load": "อ่านข้อมูลไม่ได้ ({{status}})",
+    "offline": "เชื่อมต่อกับเซิร์ฟเวอร์ไม่ได้"
+  },
+  "organizations": {
+    "title": "รายชื่อ$t(terms.organization)",
+    "description": "ยอดคงเหลือ ยอดขาย กำไร จำนวนสินค้า และค่าโฆษณาของ$t(terms.organization)ที่เข้าร่วม กดหัวตารางเพื่อเรียงลำดับใหม่",
+    "summary": "{{organizations}} $t(terms.organization) / ยอดคงเหลือรวม {{balance}} / ยอดขายรวม {{revenue}}",
+    "supplyMismatch": "* บัญชี MP ไม่ตรงกัน",
+    "bonus": "(โบนัส {{amount}})",
+    "empty": "ยังไม่มี$t(terms.organization)",
+    "columns": {
+      "organizationName": "ชื่อ$t(terms.organization)",
+      "balanceTotal": "ยอดคงเหลือ",
+      "revenue": "ยอดขาย",
+      "expenses": "รายจ่าย",
+      "profit": "กำไร",
+      "profitMargin": "อัตรากำไร",
+      "listingCount": "จำนวนสินค้า",
+      "adSpend": "ค่าโฆษณา",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "ความเอนเอียงของการซื้อขาย",
+    "lead": "แสดงเป็นตัวเลขว่ามีการซื้อขายกันไปมา หรือกระจุกอยู่กับ$t(terms.organization)เดียวมากแค่ไหน",
+    "notice": "นี่ไม่ใช่การตัดสินว่าโกง",
+    "detail": "การซื้อสินค้าของเพื่อนเพราะคิดว่าดีจริง กับการซื้อขายกันไปมาเพื่อคะแนน ดูจากข้อมูลแล้วแยกกันไม่ออก ถ้าเห็นคู่ไหนน่าสงสัย ให้ถาม$t(terms.participant)โดยตรง",
+    "empty": "ยังไม่มีการซื้อขาย",
+    "mutual": {
+      "title": "อัตราการซื้อขายระหว่างกัน",
+      "description": "มูลค่าการซื้อขายระหว่างสอง$t(terms.organization) ÷ มูลค่าการซื้อขายทั้งหมดของสอง$t(terms.organization)นั้น คู่ที่เกิน {{threshold}}% จะถูกเน้นด้วยสี สอง$t(terms.organization)ที่ซื้อขายกันเองเท่านั้นจะได้ 50% (เพราะยอดเดียวกันถูกนับสองครั้งในยอดรวม)",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "คู่ค้า",
+        "between": "ระหว่างสอง$t(terms.organization)",
+        "total": "ยอดรวมของสอง$t(terms.organization)",
+        "rate": "อัตราการซื้อขายระหว่างกัน"
+      }
+    },
+    "concentration": {
+      "title": "อัตราการกระจุกตัวของการซื้อ",
+      "lead": "สัดส่วนของยอดที่ซื้อทั้งหมดที่ตกอยู่กับผู้ขายรายที่ซื้อมากที่สุด",
+      "notice": "$t(terms.organization)ที่ซื้อจากผู้ขายรายเดียวจะได้ 100% เสมอ",
+      "detail": "$t(terms.organization)ที่ซื้อเพียงไม่กี่ครั้งก็ขึ้นมาอยู่อันดับต้นได้ จึงควรดูจำนวนผู้ขายและจำนวนเงินประกอบกัน",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "ผู้ขายที่ซื้อมากที่สุด",
+        "topAmount": "จ่ายให้รายนั้น",
+        "totalAmount": "ยอดที่ซื้อทั้งหมด",
+        "sellerCount": "จำนวนผู้ขาย",
+        "rate": "อัตราการกระจุกตัวของการซื้อ"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "บันทึกการซื้อของ$t(terms.administrator)",
+    "lead": "$t(terms.administrator)ซื้อจากใครเป็นเงินเท่าไร",
+    "notice": "$t(terms.administrator)คนอื่นก็มองเห็นได้",
+    "detail": "หน้านี้มีไว้ให้$t(terms.administrator)สังเกตความเอนเอียงที่ไม่ได้ตั้งใจของตัวเอง $t(terms.participant)มองไม่เห็น",
+    "summary": "$t(terms.administrator) {{admins}} คน / ซื้อ {{purchases}} ครั้ง / รวม {{amount}}",
+    "empty": "$t(terms.administrator)ยังไม่ได้ซื้ออะไร",
+    "byAdmin": {
+      "title": "แยกตาม$t(terms.administrator)",
+      "noPurchase": "ยังไม่ได้ซื้ออะไร",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}} ครั้ง)",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "จำนวนครั้งที่ซื้อ",
+        "totalAmount": "ยอดที่ซื้อ",
+        "concentration": "อัตราการกระจุกตัว",
+        "sellers": "ซื้อจาก"
+      }
+    },
+    "bySeller": {
+      "title": "แยกตาม$t(terms.organization) (ยอดที่$t(terms.administrator)ซื้อ)",
+      "description": "แสดงจำนวน$t(terms.administrator)ที่ซื้อด้วย เพื่อแยกว่า$t(terms.administrator)คนเดียวซื้อเยอะ หรือ$t(terms.administrator)หลายคนซื้อคนละนิดหน่อย",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "ยอดที่ขายได้",
+        "count": "จำนวนครั้ง",
+        "adminCount": "จำนวน$t(terms.administrator)"
+      }
+    },
+    "recent": {
+      "title": "ใหม่ล่าสุดก่อน",
+      "columns": {
+        "when": "เมื่อไร",
+        "admin": "$t(terms.administrator)",
+        "seller": "ซื้อจาก",
+        "amount": "จำนวนเงิน"
+      }
+    }
+  },
+  "terms": {
+    "participant": "นักเรียน",
+    "organization": "บริษัท",
+    "administrator": "ครู"
+  }
+}

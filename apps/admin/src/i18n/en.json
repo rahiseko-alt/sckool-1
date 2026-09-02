@@ -3,5 +3,112 @@
     "title": "Custom Fields",
     "description": "Manage your custom fields and configurations",
     "noFields": "No custom fields configured yet"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "Please log in as an administrator",
+    "load": "Could not load ({{status}})",
+    "offline": "Cannot reach the backend"
+  },
+  "organizations": {
+    "title": "$t(terms.organization)",
+    "description": "Balance, revenue, profit, listings and ad spend of every participating $t(terms.organization). Click a column heading to sort.",
+    "summary": "{{organizations}} $t(terms.organization) / total balance {{balance}} / total revenue {{revenue}}",
+    "supplyMismatch": "* The MP ledger does not add up",
+    "bonus": "(bonus {{amount}})",
+    "empty": "No $t(terms.organization) yet.",
+    "columns": {
+      "organizationName": "$t(terms.organization)",
+      "balanceTotal": "Balance",
+      "revenue": "Revenue",
+      "expenses": "Expenses",
+      "profit": "Profit",
+      "profitMargin": "Profit margin",
+      "listingCount": "Listings",
+      "adSpend": "Ad spend",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "Trading bias",
+    "lead": "Shows mutual buying and reliance on a single partner as numbers.",
+    "notice": "This is not a judgement of cheating.",
+    "detail": "Buying from a friend because the product is genuinely good and buying from each other to score points look the same in the data. If a pair looks odd, ask the $t(terms.participant) themselves.",
+    "empty": "No trades yet.",
+    "mutual": {
+      "title": "Mutual trade rate",
+      "description": "Trade between the two $t(terms.organization) / total trade of those two $t(terms.organization). Pairs above {{threshold}}% are highlighted. Two $t(terms.organization) that trade only with each other reach 50% (the same amount is counted twice in the total).",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "Partner",
+        "between": "Between the two",
+        "total": "Total of the two",
+        "rate": "Mutual trade rate"
+      }
+    },
+    "concentration": {
+      "title": "Purchase concentration",
+      "lead": "Share of everything a $t(terms.organization) bought that went to its biggest supplier.",
+      "notice": "A $t(terms.organization) that bought from only one supplier is always at 100%.",
+      "detail": "$t(terms.organization) that simply bought very few times also rise to the top, so read the number of suppliers and the amount together.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "Biggest supplier",
+        "topAmount": "To that supplier",
+        "totalAmount": "Total bought",
+        "sellerCount": "Suppliers",
+        "rate": "Purchase concentration"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "$t(terms.administrator) purchase log",
+    "lead": "What each $t(terms.administrator) bought and for how much is",
+    "notice": "visible to the other $t(terms.administrator).",
+    "detail": "It is here so that a $t(terms.administrator) can notice their own unintended bias. $t(terms.participant) cannot see this page.",
+    "summary": "{{admins}} $t(terms.administrator) / {{purchases}} purchases / {{amount}} in total",
+    "empty": "No $t(terms.administrator) purchases yet.",
+    "byAdmin": {
+      "title": "By $t(terms.administrator)",
+      "noPurchase": "Nothing bought yet",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}}x)",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "Purchases",
+        "totalAmount": "Amount spent",
+        "concentration": "Concentration",
+        "sellers": "Bought from"
+      }
+    },
+    "bySeller": {
+      "title": "By $t(terms.organization) (bought by $t(terms.administrator))",
+      "description": "The number of $t(terms.administrator) is shown as well, so you can tell whether one $t(terms.administrator) bought a lot or many $t(terms.administrator) bought a little.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "Amount received",
+        "count": "Purchases",
+        "adminCount": "$t(terms.administrator)"
+      }
+    },
+    "recent": {
+      "title": "Most recent",
+      "columns": {
+        "when": "When",
+        "admin": "$t(terms.administrator)",
+        "seller": "Bought from",
+        "amount": "Amount"
+      }
+    }
+  },
+  "terms": {
+    "participant": "student",
+    "organization": "company",
+    "administrator": "teacher"
   }
 }

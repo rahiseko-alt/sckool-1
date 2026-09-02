@@ -527,7 +527,7 @@
       "dependsOn": ["T032", "T029"],
       "files": ["apps/api/src/admin/i18n"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

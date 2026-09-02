@@ -1,0 +1,109 @@
+{
+  "language": {
+    "label": "Ngôn ngữ"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "Vui lòng đăng nhập với tư cách quản trị viên",
+    "load": "Không đọc được ({{status}})",
+    "offline": "Không kết nối được với máy chủ"
+  },
+  "organizations": {
+    "title": "Danh sách $t(terms.organization)",
+    "description": "Số dư, doanh thu, lợi nhuận, số sản phẩm và chi phí quảng cáo của các $t(terms.organization) tham gia. Bấm vào tiêu đề cột để đổi thứ tự.",
+    "summary": "{{organizations}} $t(terms.organization) / tổng số dư {{balance}} / tổng doanh thu {{revenue}}",
+    "supplyMismatch": "* Sổ MP không khớp",
+    "bonus": "(thưởng {{amount}})",
+    "empty": "Chưa có $t(terms.organization) nào.",
+    "columns": {
+      "organizationName": "Tên $t(terms.organization)",
+      "balanceTotal": "Số dư",
+      "revenue": "Doanh thu",
+      "expenses": "Chi phí",
+      "profit": "Lợi nhuận",
+      "profitMargin": "Tỷ suất lợi nhuận",
+      "listingCount": "Số sản phẩm",
+      "adSpend": "Chi phí quảng cáo",
+      "marketId": "Market ID"
+    }
+  },
+  "tradeAnalysis": {
+    "title": "Độ lệch trong giao dịch",
+    "lead": "Hiển thị bằng con số việc mua qua mua lại và việc dồn vào một $t(terms.organization).",
+    "notice": "Đây không phải là kết luận gian lận.",
+    "detail": "Mua hàng của bạn thân vì thấy sản phẩm thật sự tốt và mua qua mua lại để lấy điểm nhìn giống hệt nhau trong dữ liệu. Thấy cặp nào đáng ngờ, hãy hỏi trực tiếp các em.",
+    "empty": "Chưa có giao dịch nào.",
+    "mutual": {
+      "title": "Tỷ lệ giao dịch qua lại",
+      "description": "Giá trị giao dịch giữa hai $t(terms.organization) ÷ tổng giao dịch của hai $t(terms.organization) đó. Cặp vượt {{threshold}}% được tô màu. Hai $t(terms.organization) chỉ giao dịch với nhau sẽ là 50% (cùng một khoản được tính hai lần trong tổng).",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "Đối tác",
+        "between": "Giữa hai bên",
+        "total": "Tổng của hai bên",
+        "rate": "Tỷ lệ giao dịch qua lại"
+      }
+    },
+    "concentration": {
+      "title": "Mức tập trung khi mua",
+      "lead": "Phần mà nơi bán nhiều nhất chiếm trong tổng số tiền đã mua.",
+      "notice": "$t(terms.organization) chỉ mua của một nơi luôn là 100%.",
+      "detail": "$t(terms.organization) chỉ mua vài lần cũng lên đầu bảng, nên hãy xem cùng lúc số đối tác và số tiền.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "Nơi mua nhiều nhất",
+        "topAmount": "Trả cho nơi đó",
+        "totalAmount": "Tổng đã mua",
+        "sellerCount": "Số đối tác",
+        "rate": "Mức tập trung khi mua"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "Nhật ký mua hàng của $t(terms.administrator)",
+    "lead": "Việc $t(terms.administrator) mua của ai và hết bao nhiêu",
+    "notice": "được các $t(terms.administrator) khác nhìn thấy.",
+    "detail": "Màn hình này để mỗi $t(terms.administrator) tự nhận ra thiên vị ngoài ý muốn của mình. $t(terms.participant) không xem được.",
+    "summary": "{{admins}} $t(terms.administrator) / {{purchases}} lần mua / tổng {{amount}}",
+    "empty": "$t(terms.administrator) chưa mua gì.",
+    "byAdmin": {
+      "title": "Theo $t(terms.administrator)",
+      "noPurchase": "Chưa mua gì",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}} lần)",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "Số lần mua",
+        "totalAmount": "Số tiền đã mua",
+        "concentration": "Mức tập trung",
+        "sellers": "Nơi đã mua"
+      }
+    },
+    "bySeller": {
+      "title": "Theo $t(terms.organization) (được $t(terms.administrator) mua)",
+      "description": "Số $t(terms.administrator) cũng được hiển thị, để phân biệt một $t(terms.administrator) mua thật nhiều hay nhiều $t(terms.administrator) mỗi người mua một ít.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "Số tiền được mua",
+        "count": "Số lần",
+        "adminCount": "Số $t(terms.administrator)"
+      }
+    },
+    "recent": {
+      "title": "Mới nhất trước",
+      "columns": {
+        "when": "Thời điểm",
+        "admin": "$t(terms.administrator)",
+        "seller": "Nơi đã mua",
+        "amount": "Số tiền"
+      }
+    }
+  },
+  "terms": {
+    "participant": "học sinh",
+    "organization": "doanh nghiệp",
+    "administrator": "giáo viên"
+  }
+}
