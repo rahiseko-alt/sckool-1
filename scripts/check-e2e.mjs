@@ -251,6 +251,39 @@ expect('商品ごとの売上にその商品が出た', bySellerProduct.includes
 expect('その商品の売上が代金と同じ', digits(bySellerProduct.split(productTitle)[1]), PRICE);
 await seller.screenshot({ path: 'tmp/e2e/5-seller-dashboard.png' });
 
+console.log('\n=== 4-c. 売った側の履歴にも相手が出る（受け入れ基準 D5）===');
+
+// 判定役が「売った側の相手欄が空のまま」と指摘した箇所。買う側だけでなく
+// 売る側からも「誰が買ったか」が見えることを、画面で確かめる。
+await seller.getByRole('button', { name: 'History' }).first().click();
+await seller.waitForTimeout(1_200);
+const sellerHistory = await seller.locator('main tbody').innerText();
+expect('取引履歴に販売が残った', sellerHistory.includes('Sold a product'), true);
+expect('売った側にも相手の企業名が出る', sellerHistory.includes(buyerName), true);
+expect('相手の Market ID は出ていない', sellerHistory.includes(buyerId), false);
+
+console.log('\n=== 5. 企業名を後から変えられる（受け入れ基準 B1）===');
+
+// 打ち間違えたまま作った生徒が直せないと、その名前で1つの授業を過ごすことになる。
+const renamed = `${sellerName} RENAMED`;
+// 上の並びの見出しは「company settings」。company は用語辞書（terms.organization）
+// から来るので、辞書を変えるとこの文字列も変わる。
+await seller.getByRole('button', { name: 'company settings' }).first().click();
+await seller.locator('#new-organization-name').waitFor({ timeout: 20_000 });
+await seller.fill('#new-organization-name', renamed);
+await seller.locator('#new-organization-name').press('Enter');
+await seller.getByText(`Logged in as: ${renamed}`).waitFor({ timeout: 20_000 });
+expect('新しい名前で名乗るようになった', true, true);
+await seller.screenshot({ path: 'tmp/e2e/6-seller-account.png' });
+
+// 買った側から見た相手の名前も、次に開いたときには新しい名前になる。
+// 読み込み直しても入ったままなら、控えを見ずに続けられる（ログインは localStorage に残る）。
+await buyer.reload();
+await buyer.getByRole('button', { name: 'History' }).first().click();
+await buyer.waitForTimeout(2_000);
+const historyAfterRename = await buyer.locator('main tbody').innerText();
+expect('相手の企業名が新しいものに変わった', historyAfterRename.includes(renamed), true);
+
 console.log('');
 console.log(`売った企業: ${sellerName} / ${sellerId}`);
 console.log(`買った企業: ${buyerName} / ${buyerId}`);
