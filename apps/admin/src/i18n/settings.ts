@@ -20,4 +20,6 @@ export const ALLOW_SAME_AS_BASE = [
   'organizations.columns.marketId',
   // 並びの区切り記号。中国語の読点は日本語と同じ「、」を使う。
   'purchaseLog.byAdmin.separator',
+  // Market ID の入力例。どの言語でも同じ形（MKT-XXXX-XXXX）で発行される。
+  'passwordReset.marketIdPlaceholder',
 ] as const

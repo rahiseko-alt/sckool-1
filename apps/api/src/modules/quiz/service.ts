@@ -30,6 +30,20 @@ export interface PublicQuiz {
   questions: PublicQuestion[]
 }
 
+/**
+ * 先生に見せるテスト（受け入れ基準 E5）。
+ * **問題文と正解は含めない。** 換算表を直すのに要らない。
+ */
+export interface AdminQuiz {
+  id: string
+  title: string
+  topic: string
+  question_count: number
+  reward_tiers: RewardTier[]
+  bonus_valid_days: number
+  is_open: boolean
+}
+
 export interface SubmitResult {
   score: number
   correct_count: number
@@ -84,6 +98,57 @@ class QuizService extends MedusaService({ Quiz, QuizAttempt }) {
   async findPublicQuiz(id: string): Promise<PublicQuiz | undefined> {
     const [row] = await this.listQuizzes({ id })
     return row ? this.toPublic(row) : undefined
+  }
+
+  /**
+   * 先生の画面に出す一覧（受け入れ基準 E5）。
+   *
+   * **問題文と正解は出さない。** 換算表を直すのに要らないうえ、
+   * 先生の画面から漏れれば生徒の画面から漏れたのと変わらない。
+   */
+  async listForAdmin(): Promise<AdminQuiz[]> {
+    const rows = await this.listQuizzes({})
+    return rows.map((row) => ({
+      id: row.id,
+      title: row.title,
+      topic: row.topic,
+      question_count: this.storedQuestions(row).length,
+      reward_tiers: this.tiersOf(row),
+      bonus_valid_days: Number(row.bonus_valid_days),
+      is_open: Boolean(row.is_open),
+    }))
+  }
+
+  /**
+   * 換算表などを書き換える（受け入れ基準 E5）。
+   *
+   * **検査を通した値だけを渡すこと**（`findRewardTierProblems`）。
+   * ここは保存するだけで、形の判定はしない。
+   */
+  async updateSettings(
+    id: string,
+    patch: {
+      reward_tiers?: RewardTier[]
+      bonus_valid_days?: number
+      is_open?: boolean
+    },
+  ): Promise<AdminQuiz | undefined> {
+    const [row] = await this.listQuizzes({ id })
+    if (!row) return undefined
+
+    await this.updateQuizzes({ id, ...patch })
+    const [updated] = await this.listQuizzes({ id })
+    if (!updated) return undefined
+
+    return {
+      id: updated.id,
+      title: updated.title,
+      topic: updated.topic,
+      question_count: this.storedQuestions(updated).length,
+      reward_tiers: this.tiersOf(updated),
+      bonus_valid_days: Number(updated.bonus_valid_days),
+      is_open: Boolean(updated.is_open),
+    }
   }
 
   /** その企業がすでにボーナスを受け取っているか（受け入れ基準 E3）。 */

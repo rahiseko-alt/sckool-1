@@ -1,6 +1,8 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
 
+import { MARKET_SETTINGS_MODULE } from '../../../modules/market-settings'
+import type MarketSettingsService from '../../../modules/market-settings/service'
 import {
   anonymousEmail,
   generateMarketId,
@@ -23,9 +25,6 @@ import type OrganizationService from '../../../modules/organization/service'
  * 生徒がこの画面以外で個人情報を入れる経路は作らない。列は Medusa の都合で
  * 残っているが、入る値は機械が作ったものだけになる（docs/decisions.md「30.」）。
  */
-
-/** 初期資金の既定値（要件3）。管理者が変えられるようにするのは T015 の続きで行う。 */
-const DEFAULT_INITIAL_FUNDS = 100_000
 
 /** パスワードの最低の長さ（受け入れ基準 A6）。 */
 const MIN_PASSWORD_LENGTH = 8
@@ -118,7 +117,14 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     return
   }
 
-  await mp.grantInitialFunds(marketId, DEFAULT_INITIAL_FUNDS)
+  /**
+   * 初期資金は先生が画面から変えられる（要件3、`docs/requirements.md` の前書き）。
+   * 保存が無ければ既定の 100,000 MP になる。
+   */
+  const settings = req.scope.resolve(MARKET_SETTINGS_MODULE) as MarketSettingsService
+  const { initial_funds: initialFunds } = await settings.read()
+
+  await mp.grantInitialFunds(marketId, initialFunds)
 
   res.status(201).json({
     market_id: marketId,

@@ -106,6 +106,89 @@
       }
     }
   },
+  "passwordReset": {
+    "title": "Password reset",
+    "lead": "Use this when a $t(terms.participant) has lost their password.",
+    "notice": "Check who they are in the classroom first.",
+    "detail": "This system does not know which Market ID belongs to whom. The characters below are shown only once, so write them down and hand them over on the spot.",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "Issue",
+    "submitting": "Issuing",
+    "result": {
+      "title": "Issued",
+      "warning": "Once you leave this screen you can never see these again.",
+      "temporaryPassword": "Temporary password",
+      "recoveryCode": "New recovery code",
+      "next": "After handing them over, ask them to change the password themselves."
+    },
+    "error": {
+      "required": "Please enter a Market ID.",
+      "notFound": "No account has that Market ID ({{marketId}}). Please check for typing mistakes."
+    }
+  },
+  "marketSettings": {
+    "title": "Settings",
+    "lead": "Numbers you can change to fit your class.",
+    "notice": "Saving takes effect for everyone straight away.",
+    "detail": "To go back to the original numbers, press \"Reset everything to the defaults\" below.",
+    "defaultHint": "Default {{value}}",
+    "rangeHint": "A whole number from {{min}} to {{max}}",
+    "save": "Save",
+    "saving": "Saving",
+    "saved": "Saved.",
+    "reset": "Reset everything to the defaults",
+    "resetDone": "Reset to the defaults.",
+    "unknownField": "Unknown item",
+    "fields": {
+      "initialFunds": {
+        "label": "Starting funds",
+        "help": "Given once when a new $t(terms.organization) is created. Balances that already exist do not change."
+      },
+      "loginMaxAttempts": {
+        "label": "Failed logins before locking",
+        "help": "After this many failures in a row, logging in is blocked for a while."
+      },
+      "loginLockMinutes": {
+        "label": "How long logging in stays blocked (minutes)",
+        "help": "While it is blocked, even the correct password will not work."
+      },
+      "mutualTradeThreshold": {
+        "label": "Mutual trading rate to highlight (%)",
+        "help": "Pairs above this rate are coloured on the \"Trading bias\" screen."
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}} must be a whole number.",
+      "outOfRange": "{{field}} must be between {{min}} and {{max}}.",
+      "unknownKey": "{{field}} cannot be changed."
+    },
+    "quizzes": {
+      "title": "Quiz bonus table",
+      "lead": "How much is given for each score. Each quiz can have its own table.",
+      "empty": "There are no quizzes yet.",
+      "topic": "Topic",
+      "questionCount": "{{questions}} questions",
+      "open": "Open",
+      "closed": "Closed",
+      "columns": {
+        "minScore": "Score or above",
+        "amount": "Amount given"
+      },
+      "addTier": "Add a row",
+      "removeTier": "Remove",
+      "validDays": "Days the bonus can be used",
+      "saved": "Bonus table saved.",
+      "problem": {
+        "empty": "The table is empty. Add at least one row.",
+        "notAList": "That value cannot be used. Please enter numbers only.",
+        "scoreOutOfRange": "Scores must be whole numbers from 0 to 100 ({{value}}).",
+        "amountNegative": "Amounts must be whole numbers of 0 or more ({{value}}).",
+        "missingZero": "Please decide the amount for a score of 0.",
+        "duplicateScore": "The same score appears twice ({{value}}).",
+        "notMonotonic": "A higher score gives less than a lower one."
+      }
+    }
+  },
   "terms": {
     "participant": "student",
     "organization": "company",

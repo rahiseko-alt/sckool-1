@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest'
 import {
   checkRewardTiers,
   DEFAULT_REWARD_TIERS,
+  findRewardTierProblems,
   grade,
+  isValidBonusValidDays,
   rewardFor,
   toPublicQuestion,
   type Question,
@@ -120,6 +122,99 @@ describe('換算表の検査', () => {
 
   it('負のボーナスは断る', () => {
     expect(checkRewardTiers([{ minScore: 0, amount: -100 }]).length).toBeGreaterThan(0)
+  })
+})
+
+describe('画面から送られてくる換算表の検査（受け入れ基準 E5）', () => {
+  const codes = (input: unknown) => findRewardTierProblems(input).map((problem) => problem.code)
+
+  it('既定の表は問題ない', () => {
+    expect(findRewardTierProblems(DEFAULT_REWARD_TIERS)).toEqual([])
+  })
+
+  it('配列でないものは断る', () => {
+    expect(codes(null)).toEqual(['not_a_list'])
+    expect(codes({ minScore: 0, amount: 0 })).toEqual(['not_a_list'])
+    expect(codes('60点で500MP')).toEqual(['not_a_list'])
+  })
+
+  it('空の表は断る', () => {
+    expect(codes([])).toEqual(['empty'])
+  })
+
+  it('行が数の組でなければ断る', () => {
+    expect(codes([1, 2])).toEqual(['not_an_object', 'not_an_object'])
+    expect(codes([{ minScore: '60', amount: '500' }])).toEqual([
+      'score_out_of_range',
+      'amount_negative',
+    ])
+  })
+
+  it('得点が0から100の外なら断る', () => {
+    expect(codes([{ minScore: 101, amount: 100 }])).toEqual(['score_out_of_range'])
+    expect(codes([{ minScore: -1, amount: 100 }])).toEqual(['score_out_of_range'])
+    expect(codes([{ minScore: 60.5, amount: 100 }])).toEqual(['score_out_of_range'])
+    expect(findRewardTierProblems([{ minScore: 101, amount: 100 }])[0]?.value).toBe(101)
+  })
+
+  it('ボーナスが負なら断る', () => {
+    expect(codes([{ minScore: 0, amount: -100 }])).toEqual(['amount_negative'])
+    expect(codes([{ minScore: 0, amount: 1.5 }])).toEqual(['amount_negative'])
+  })
+
+  it('0点の行が無ければ断る', () => {
+    expect(codes([{ minScore: 60, amount: 500 }])).toEqual(['missing_zero'])
+  })
+
+  it('同じ得点が2回あれば断る', () => {
+    expect(
+      codes([
+        { minScore: 0, amount: 0 },
+        { minScore: 60, amount: 500 },
+        { minScore: 60, amount: 800 },
+      ]),
+    ).toEqual(['duplicate_score'])
+  })
+
+  it('点が高いほうのボーナスが少ない表は断る', () => {
+    // 頑張るほど損をする表になる。作れてしまうと授業の狙いが崩れる。
+    expect(
+      codes([
+        { minScore: 0, amount: 0 },
+        { minScore: 60, amount: 1_000 },
+        { minScore: 90, amount: 500 },
+      ]),
+    ).toEqual(['not_monotonic'])
+  })
+
+  it('同じ額が続く表は認める', () => {
+    expect(
+      codes([
+        { minScore: 0, amount: 0 },
+        { minScore: 60, amount: 500 },
+        { minScore: 90, amount: 500 },
+      ]),
+    ).toEqual([])
+  })
+
+  it('行が多すぎる表は断る', () => {
+    const many = Array.from({ length: 21 }, (_, index) => ({ minScore: index, amount: index }))
+    expect(codes(many)).toEqual(['not_a_list'])
+  })
+})
+
+describe('ボーナスが使える日数', () => {
+  it('1日から365日までを認める', () => {
+    expect(isValidBonusValidDays(1)).toBe(true)
+    expect(isValidBonusValidDays(7)).toBe(true)
+    expect(isValidBonusValidDays(365)).toBe(true)
+  })
+
+  it('0日・366日・小数・数でないものは断る', () => {
+    expect(isValidBonusValidDays(0)).toBe(false)
+    expect(isValidBonusValidDays(366)).toBe(false)
+    expect(isValidBonusValidDays(1.5)).toBe(false)
+    expect(isValidBonusValidDays('7')).toBe(false)
   })
 })
 

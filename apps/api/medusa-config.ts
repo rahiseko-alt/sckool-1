@@ -52,6 +52,11 @@ module.exports = withMercur({
     {
       resolve: './src/modules/ads',
     },
+    // 先生が画面から変えられる数字（初期資金・ログインを止める決まり・
+    // 相互取引率のしきい値）。既定値はコードに持ち、保存された値があればそれを使う。
+    {
+      resolve: './src/modules/market-settings',
+    },
     {
       resolve: '@mercurjs/core/modules/admin-ui',
       options: {
