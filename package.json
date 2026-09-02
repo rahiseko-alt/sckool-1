@@ -36,8 +36,9 @@
     "check:auth": "node scripts/check-accounts.mjs && node scripts/check-login-lock.mjs && node scripts/check-recovery.mjs",
     "check:recovery": "node scripts/check-recovery.mjs",
     "check:listings": "node scripts/check-listings.mjs",
-    "check:market:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/check-accounts.mjs -- node scripts/check-login-lock.mjs -- node scripts/check-recovery.mjs -- node scripts/check-listings.mjs -- node scripts/check-purchases.mjs",
-    "check:purchases": "node scripts/check-purchases.mjs"
+    "check:market:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/check-accounts.mjs -- node scripts/check-login-lock.mjs -- node scripts/check-recovery.mjs -- node scripts/check-listings.mjs -- node scripts/check-purchases.mjs -- node scripts/check-quizzes.mjs",
+    "check:purchases": "node scripts/check-purchases.mjs",
+    "check:quizzes": "node scripts/check-quizzes.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

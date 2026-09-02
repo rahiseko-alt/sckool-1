@@ -329,7 +329,7 @@
       "dependsOn": ["T001"],
       "files": ["apps/api/src/modules/quiz", "apps/storefront/src/app/quiz"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -344,7 +344,7 @@
       "dependsOn": ["T016", "T022"],
       "files": ["apps/api/src/workflows/grade-quiz"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

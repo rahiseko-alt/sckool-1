@@ -643,8 +643,17 @@ export type Routes = {
         };
         accounts: typeof import("../src/api/store/accounts/route");
         custom: typeof import("../src/api/store/custom/route");
-        listings: typeof import("../src/api/store/listings/route");
+        listings: typeof import("../src/api/store/listings/route") & {
+            $id: typeof import("../src/api/store/listings/[id]/route");
+        };
+        purchases: typeof import("../src/api/store/purchases/route");
+        quizzes: typeof import("../src/api/store/quizzes/route") & {
+            $id: typeof import("../src/api/store/quizzes/[id]/route") & {
+                submit: typeof import("../src/api/store/quizzes/[id]/submit/route");
+            };
+        };
         recovery: typeof import("../src/api/store/recovery/route");
+        transactions: typeof import("../src/api/store/transactions/route");
     };
     vendor: {
         campaigns: typeof import("@mercurjs/core/api/vendor/campaigns/route") & {

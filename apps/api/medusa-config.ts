@@ -47,6 +47,9 @@ module.exports = withMercur({
       resolve: './src/modules/catalog',
     },
     {
+      resolve: './src/modules/quiz',
+    },
+    {
       resolve: '@mercurjs/core/modules/admin-ui',
       options: {
         appDir: dashboardAppDir('admin'),

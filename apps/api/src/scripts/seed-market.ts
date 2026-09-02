@@ -72,6 +72,58 @@ export default async function seedMarket({ container }: ExecArgs) {
     logger.info(`運営者のアカウントを作りました: ${adminIdentifier}`)
   }
 
+  // 授業で使うテストを1つ用意する（要件18・32）。独占禁止法を題材にしたのは、
+  // 要件18が私的独占・不当な取引制限・不公正な取引方法を中心に扱うとしているため。
+  const quizService = container.resolve('quiz') as any
+  const [existingQuiz] = await quizService.listQuizzes({ topic: '独占禁止法' })
+  if (!existingQuiz) {
+    await quizService.createQuizzes({
+      title: 'Knowledge Challenge',
+      topic: '独占禁止法',
+      questions: [
+        {
+          id: 'q1',
+          prompt: '複数の企業が話し合って売値をそろえる行為を何といいますか',
+          choices: ['カルテル', '値引き', '市場調査', '広告'],
+          correctIndex: 0,
+        },
+        {
+          id: 'q2',
+          prompt: 'A社がB社から買い、B社がC社から買い、C社がA社から買う。実体のない取引を回す行為は',
+          choices: ['共同購入', '循環取引', '相互扶助', '共同開発'],
+          correctIndex: 1,
+        },
+        {
+          id: 'q3',
+          prompt: '「この市場ではA社だけが売る」と企業どうしで決める行為は',
+          choices: ['販売提携', '市場分割', '専門化', '委託販売'],
+          correctIndex: 1,
+        },
+        {
+          id: 'q4',
+          prompt: '一社の市場シェアが高いこと自体は',
+          choices: ['ただちに違法', '違法ではない', '常に罰則の対象', '報告が必要'],
+          correctIndex: 1,
+        },
+        {
+          id: 'q5',
+          prompt: '独占禁止法が守ろうとしているものは',
+          choices: ['特定企業の利益', '公正で自由な競争', '価格の統一', '売上の平等'],
+          correctIndex: 1,
+        },
+      ],
+      reward_tiers: [
+        { minScore: 90, amount: 1500 },
+        { minScore: 80, amount: 1000 },
+        { minScore: 60, amount: 500 },
+        { minScore: 0, amount: 0 },
+      ],
+      bonus_valid_days: 7,
+      is_open: true,
+    })
+    logger.info('テストを1つ用意しました（独占禁止法）')
+  }
+
   console.log('\n=== 用意できたもの ===')
   console.log(`販売channel: ${channel.id}`)
   console.log(`公開鍵: ${key.token}`)
