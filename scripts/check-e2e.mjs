@@ -289,9 +289,9 @@ console.log('\n=== 5. 企業名を後から変えられる（受け入れ基準 
 
 // 打ち間違えたまま作った生徒が直せないと、その名前で1つの授業を過ごすことになる。
 const renamed = `${sellerName} RENAMED`;
-// 上の並びの見出しは「company settings」。company は用語辞書（terms.organization）
-// から来るので、辞書を変えるとこの文字列も変わる。
-await seller.getByRole('button', { name: 'company settings' }).first().click();
+// 上の並びは `nav.account`（英語で「Settings」）。呼び名の辞書（terms.organization）
+// を含まない短い語なので、呼び名を変えてもこの文字列は変わらない。
+await seller.getByRole('button', { name: 'Settings' }).first().click();
 await seller.locator('#new-organization-name').waitFor({ timeout: 20_000 });
 await seller.fill('#new-organization-name', renamed);
 await seller.locator('#new-organization-name').press('Enter');
