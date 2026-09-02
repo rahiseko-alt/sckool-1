@@ -259,6 +259,20 @@ describe('市場全体の MP の量', () => {
     expect(supply.expired).toBe(1_500)
     expect(supply.circulating).toBe(100_000)
   })
+
+  it('広告費は市場の外へ出た額として数える', () => {
+    // 広告費を数え忘れると「MP が消えた」ように見え、
+    // どこかで片側だけの行を書いた場合と区別がつかなくなる。
+    const entries = [
+      entry({ amount: 100_000, kind: 'initial_grant' }),
+      entry({ amount: -3_000, kind: 'ad_spend' }),
+    ]
+    const supply = calculateSupply(entries)
+    expect(supply.granted).toBe(100_000)
+    expect(supply.spentOutside).toBe(3_000)
+    expect(supply.circulating).toBe(97_000)
+    expect(supply.granted - supply.expired - supply.spentOutside).toBe(supply.circulating)
+  })
 })
 
 describe('60社が一斉に売り買いしても総量が保たれる（受け入れ基準 K1 の土台）', () => {

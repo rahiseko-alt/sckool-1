@@ -1,5 +1,6 @@
 import { MedusaService } from '@medusajs/framework/utils'
 
+import { lockOrganization, repositoryOf, type SqlManager } from '../db/serialize'
 import {
   buildTransfer,
   calculateBalance,
@@ -41,6 +42,37 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
   async listEntriesFor(organizationId: string): Promise<LedgerEntry[]> {
     const rows = await this.listMpLedgerEntries({ organization_id: organizationId })
     return rows.map((row) => this.toLedgerEntry(row))
+  }
+
+  /**
+   * 支払いの前に、鍵を取ってから残高を数える。
+   *
+   * **鍵を取ったあとに数え直すことが肝。** 順番待ちで先に進んだ購入が
+   * すでに書き終えているので、待たされた側は「減ったあとの残高」を見る。
+   * 鍵の前に数えると、待った意味が無くなる。
+   */
+  private async balanceUnderLock(
+    manager: SqlManager,
+    organizationId: string,
+    now: Date,
+  ): Promise<Balance> {
+    await lockOrganization(manager, organizationId)
+
+    const rows = await manager.execute(
+      `select "amount", "pocket", "expires_at"
+         from "mp_ledger_entry"
+        where "organization_id" = ? and "deleted_at" is null`,
+      [organizationId],
+    )
+
+    return calculateBalance(
+      rows.map((row) => ({
+        amount: Number(row.amount),
+        pocket: row.pocket as Pocket,
+        ...(row.expires_at ? { expiresAt: new Date(row.expires_at as string) } : {}),
+      })),
+      now,
+    )
   }
 
   /**
@@ -95,6 +127,12 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
    *
    * 残高が足りなければ `false` を返し、**1行も書かない**。
    * 買った側と売った側の行は必ず同じ呼び出しで作る。
+   *
+   * **「数える → 足りるか見る → 書く」を、払う企業ごとに順番待ちにしてある。**
+   * 順番待ちにしないと、同じ企業の購入が同時に来たときに両方とも「足りる」と
+   * 判断してしまう。60社で同時に試したとき、残高が -57,000 MP になった
+   * （`scripts/check-load.mjs` が見つけた）。鍵は払う側だけで足りる。
+   * 受け取る側は増えるだけなので、負にはならない。
    */
   async transfer(input: {
     buyerId: string
@@ -106,39 +144,51 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     now?: Date
   }): Promise<boolean> {
     const now = input.now ?? new Date()
-    const balance = await this.getBalance(input.buyerId, now)
-    const plan = planPayment(balance, input.amount)
-    if (!plan) return false
 
-    // id は保存側が振るので、ここでは並び順だけを決める。
-    // 1回の購入がボーナスと通常の2行に分かれるので、まとめて数えるための印を作る。
-    const groupId = input.groupId ?? `grp_${now.getTime()}_${Math.random().toString(36).slice(2, 10)}`
+    return repositoryOf(this).transaction(async (manager) => {
+      const balance = await this.balanceUnderLock(manager, input.buyerId, now)
+      const plan = planPayment(balance, input.amount)
+      if (!plan) return false
 
-    const entries = buildTransfer({
-      buyerId: input.buyerId,
-      sellerId: input.sellerId,
-      plan,
-      reference: input.reference,
-      groupId,
-      idFor: () => '',
-      now,
+      // id は保存側が振るので、ここでは並び順だけを決める。
+      // 1回の購入がボーナスと通常の2行に分かれるので、まとめて数えるための印を作る。
+      const groupId =
+        input.groupId ?? `grp_${now.getTime()}_${Math.random().toString(36).slice(2, 10)}`
+
+      const entries = buildTransfer({
+        buyerId: input.buyerId,
+        sellerId: input.sellerId,
+        plan,
+        reference: input.reference,
+        groupId,
+        idFor: () => '',
+        now,
+      })
+
+      // 鍵と同じ取引（トランザクション）の中で書く。別にすると、
+      // 書き終える前に鍵が外れて、また同時に判断されてしまう。
+      await this.createMpLedgerEntries(
+        entries.map((entry) => ({
+          organization_id: entry.organizationId,
+          amount: entry.amount,
+          kind: entry.kind,
+          pocket: entry.pocket,
+          expires_at: entry.expiresAt ?? null,
+          reference: entry.reference ?? null,
+          group_id: entry.groupId ?? null,
+        })),
+        { transactionManager: manager },
+      )
+      return true
     })
-
-    await this.createMpLedgerEntries(
-      entries.map((entry) => ({
-        organization_id: entry.organizationId,
-        amount: entry.amount,
-        kind: entry.kind,
-        pocket: entry.pocket,
-        expires_at: entry.expiresAt ?? null,
-        reference: entry.reference ?? null,
-        group_id: entry.groupId ?? null,
-      })),
-    )
-    return true
   }
 
-  /** 広告費など、企業から市場の外へ出ていく支払い。 */
+  /**
+   * 広告費など、企業から市場の外へ出ていく支払い。
+   *
+   * 購入と同じく、払う企業ごとの順番待ちにする。広告と購入が同時に来ても、
+   * 同じ鍵を取り合うので、合わせて残高を超えることはない。
+   */
   async spend(input: {
     organizationId: string
     amount: number
@@ -147,38 +197,41 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
     now?: Date
   }): Promise<boolean> {
     const now = input.now ?? new Date()
-    const balance = await this.getBalance(input.organizationId, now)
-    const plan = planPayment(balance, input.amount)
-    if (!plan) return false
 
-    // 広告費もボーナスと通常に分かれることがあるので、同じ印を付ける。
-    const spendGroupId = `grp_${now.getTime()}_${Math.random().toString(36).slice(2, 10)}`
+    return repositoryOf(this).transaction(async (manager) => {
+      const balance = await this.balanceUnderLock(manager, input.organizationId, now)
+      const plan = planPayment(balance, input.amount)
+      if (!plan) return false
 
-    const rows = []
-    if (plan.fromBonus > 0) {
-      rows.push({
-        organization_id: input.organizationId,
-        amount: -plan.fromBonus,
-        kind: input.kind,
-        pocket: 'bonus' as const,
-        expires_at: null,
-        reference: input.reference,
-        group_id: spendGroupId,
-      })
-    }
-    if (plan.fromNormal > 0) {
-      rows.push({
-        organization_id: input.organizationId,
-        amount: -plan.fromNormal,
-        kind: input.kind,
-        pocket: 'normal' as const,
-        expires_at: null,
-        reference: input.reference,
-        group_id: spendGroupId,
-      })
-    }
-    await this.createMpLedgerEntries(rows)
-    return true
+      // 広告費もボーナスと通常に分かれることがあるので、同じ印を付ける。
+      const spendGroupId = `grp_${now.getTime()}_${Math.random().toString(36).slice(2, 10)}`
+
+      const rows = []
+      if (plan.fromBonus > 0) {
+        rows.push({
+          organization_id: input.organizationId,
+          amount: -plan.fromBonus,
+          kind: input.kind,
+          pocket: 'bonus' as const,
+          expires_at: null,
+          reference: input.reference,
+          group_id: spendGroupId,
+        })
+      }
+      if (plan.fromNormal > 0) {
+        rows.push({
+          organization_id: input.organizationId,
+          amount: -plan.fromNormal,
+          kind: input.kind,
+          pocket: 'normal' as const,
+          expires_at: null,
+          reference: input.reference,
+          group_id: spendGroupId,
+        })
+      }
+      await this.createMpLedgerEntries(rows, { transactionManager: manager })
+      return true
+    })
   }
 
   /**
@@ -186,26 +239,48 @@ class MpService extends MedusaService({ MpLedgerEntry }) {
    * 失効も履歴に1行として残すので、あとから「いつ消えたか」を追える。
    */
   async expireBonuses(organizationId: string, now = new Date()): Promise<number> {
-    const entries = await this.listEntriesFor(organizationId)
-    const expired = findExpiredBonuses(entries, now)
-    if (expired.length === 0) return 0
+    // 支払いと同じ鍵を取る。取らないと、同時に呼ばれたときに同じボーナスを
+    // 二度失効させ、残高が実際より減ってしまう。
+    return repositoryOf(this).transaction(async (manager) => {
+      await lockOrganization(manager, organizationId)
 
-    await this.createMpLedgerEntries(
-      expired.map((item) => ({
-        organization_id: organizationId,
-        amount: -item.amount,
-        kind: 'bonus_expired' as const,
-        pocket: 'bonus' as const,
-        expires_at: null,
-        reference: item.entryId,
-        group_id: null,
-      })),
-    )
-    return expired.length
+      // 読みも同じ取引の中で行う。別に読むと接続をもう1本使うので、
+      // 同時に多くの企業が失効させたときに接続が足りなくなる。
+      const rows = await manager.execute(
+        `select "id", "amount", "kind", "pocket", "expires_at", "reference", "created_at"
+           from "mp_ledger_entry"
+          where "organization_id" = ? and "deleted_at" is null`,
+        [organizationId],
+      )
+      const expired = findExpiredBonuses(
+        rows.map((row) => this.toLedgerEntry({ ...row, organization_id: organizationId })),
+        now,
+      )
+      if (expired.length === 0) return 0
+
+      await this.createMpLedgerEntries(
+        expired.map((item) => ({
+          organization_id: organizationId,
+          amount: -item.amount,
+          kind: 'bonus_expired' as const,
+          pocket: 'bonus' as const,
+          expires_at: null,
+          reference: item.entryId,
+          group_id: null,
+        })),
+        { transactionManager: manager },
+      )
+      return expired.length
+    })
   }
 
   /** 市場全体で MP の総量が保たれているかを見る（受け入れ基準 K1 の検査に使う）。 */
-  async getSupply(): Promise<{ granted: number; expired: number; circulating: number }> {
+  async getSupply(): Promise<{
+    granted: number
+    expired: number
+    spentOutside: number
+    circulating: number
+  }> {
     const rows = await this.listMpLedgerEntries({})
     return calculateSupply(rows.map((row) => this.toLedgerEntry(row)))
   }
