@@ -359,7 +359,7 @@
       "dependsOn": ["T016", "T019"],
       "files": ["apps/api/src/modules/ads", "apps/storefront/src/app/ads"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -374,7 +374,7 @@
       "dependsOn": ["T024"],
       "files": ["apps/api/src/modules/ads-metrics", "apps/storefront/src/app/ads/report"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

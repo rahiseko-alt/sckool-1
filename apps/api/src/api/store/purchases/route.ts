@@ -1,5 +1,7 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
+import { ADS_MODULE } from '../../../modules/ads'
+import type AdsService from '../../../modules/ads/service'
 import { CATALOG_MODULE } from '../../../modules/catalog'
 import type CatalogService from '../../../modules/catalog/service'
 import { MP_MODULE } from '../../../modules/mp'
@@ -79,6 +81,15 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     await catalog.increaseQuantity(listing.id, 1)
     res.status(402).json({ code: 'insufficient_balance', price: listing.price })
     return
+  }
+
+  // 広告が出ている商品の購入は、広告経由として数える（要件13）。
+  // 厳密には「押してから買ったか」を見るべきだが、MVP ではここまでにする。
+  // 割り切りの記録は docs/decisions.md「34.」。
+  const ads = req.scope.resolve(ADS_MODULE) as AdsService
+  const placement = await ads.findActiveForListing(listing.id)
+  if (placement) {
+    await ads.record(placement.id, 'conversion', listing.price)
   }
 
   const seller = await organizations.findByMarketId(listing.organization_id)

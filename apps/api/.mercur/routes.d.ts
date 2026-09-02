@@ -642,6 +642,11 @@ export type Routes = {
             };
         };
         accounts: typeof import("../src/api/store/accounts/route");
+        ads: typeof import("../src/api/store/ads/route") & {
+            $id: {
+                click: typeof import("../src/api/store/ads/[id]/click/route");
+            };
+        };
         custom: typeof import("../src/api/store/custom/route");
         listings: typeof import("../src/api/store/listings/route") & {
             $id: typeof import("../src/api/store/listings/[id]/route");
