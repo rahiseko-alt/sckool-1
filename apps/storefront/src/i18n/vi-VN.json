@@ -228,5 +228,53 @@
     "organizations": "các doanh nghiệp",
     "administrator": "quản trị viên",
     "administrators": "quản trị viên"
+  },
+  "rules": {
+    "title": "Quy tắc của thị trường này",
+    "lead": "Đây là các quy tắc thương mại thật, được rút gọn cho lớp học. Vi phạm sẽ bị ban tổ chức nhắc nhở.",
+    "cartel": {
+      "title": "Không bàn nhau để định giá (cấm thỏa thuận giá)",
+      "body": "Bàn với $t(terms.organization) khác để đặt cùng một giá là không được phép. Hãy tự quyết định giá của bạn.",
+      "example": "Ví dụ: cùng quyết định \"tất cả bán 1.000 MP\""
+    },
+    "marketSplit": {
+      "title": "Không chia nhau thị trường",
+      "body": "Các $t(terms.organizations) thỏa thuận \"chỗ này chỉ chúng ta bán\" cũng không được phép.",
+      "example": "Ví dụ: quyết định \"lĩnh vực này chỉ công ty A được bán\""
+    },
+    "circular": {
+      "title": "Không giao dịch chỉ để chuyển tiền vòng quanh",
+      "body": "Mua bán mà không có gì thật phía sau là không được phép. Chỉ có con số tăng lên, thực tế không bán được gì.",
+      "example": "Ví dụ: A mua của B, B mua của C, C lại mua của A"
+    },
+    "favoritism": {
+      "title": "Đừng mua chỉ vì là bạn bè",
+      "body": "Không thể cấm việc mua của bạn bè. Nhưng sự thiên lệch sẽ hiện ra trong các con số. Hãy sẵn sàng giải thích sản phẩm đó có ích gì cho bạn."
+    },
+    "watching": {
+      "title": "Những gì được nhìn thấy",
+      "body": "Tỷ lệ giao dịch qua lại giữa các $t(terms.organizations) và mức độ tập trung khi mua sẽ hiện trên màn hình của $t(terms.administrator). Việc mua của $t(terms.administrators) cũng được chia sẻ giữa các $t(terms.administrators)."
+    },
+    "penalty": "Khi một giao dịch có vẻ đáng ngờ, chúng tôi sẽ hỏi người liên quan trước. Hệ thống không bao giờ tự phạt ai."
+  },
+  "tutorial": {
+    "title": "Bắt đầu thế nào",
+    "lead": "Bốn bước, và bạn có thể vừa bán vừa mua.",
+    "step1": {
+      "title": "1. Tạo $t(terms.organization) của bạn",
+      "body": "Chỉ cần tên và mật khẩu. Hãy ghi lại ID và mã khôi phục hiện ra. Chúng sẽ không hiện lại lần nữa."
+    },
+    "step2": {
+      "title": "2. Đăng bán sản phẩm",
+      "body": "Hãy viết sản phẩm dành cho ai và giải quyết vấn đề gì. Nếu điều đó không truyền đạt được thì sẽ không bán được."
+    },
+    "step3": {
+      "title": "3. Mua từ $t(terms.organization) khác",
+      "body": "Chọn một sản phẩm trên thị trường. Bạn không thể mua sản phẩm của chính mình. Số MP bạn trả sẽ vào $t(terms.organization) kia."
+    },
+    "step4": {
+      "title": "4. Xem tình hình kinh doanh",
+      "body": "Doanh thu, chi phí, lợi nhuận và mức bán của từng sản phẩm. Nếu không bán được, hãy thử đổi cách viết, giá, hoặc cách trình bày."
+    }
   }
 }

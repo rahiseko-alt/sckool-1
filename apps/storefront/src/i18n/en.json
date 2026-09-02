@@ -228,5 +228,53 @@
     "organizations": "companies",
     "administrator": "administrator",
     "administrators": "administrators"
+  },
+  "rules": {
+    "title": "Rules of this market",
+    "lead": "These are real trading rules, simplified for class. Breaking them brings a warning from the staff.",
+    "cartel": {
+      "title": "Do not agree on prices (no cartels)",
+      "body": "Agreeing with another $t(terms.organization) to set the same price is not allowed. Decide your price yourself.",
+      "example": "For example: deciding \"let us all sell at 1,000 MP\""
+    },
+    "marketSplit": {
+      "title": "Do not divide the market between you",
+      "body": "Agreeing among $t(terms.organizations) that \"only we sell here\" is also not allowed.",
+      "example": "For example: deciding \"only company A sells in this area\""
+    },
+    "circular": {
+      "title": "Do not trade just to move money around",
+      "body": "Buying and selling with nothing real behind it is not allowed. Only the numbers grow; nothing is actually sold.",
+      "example": "For example: A buys from B, B buys from C, and C buys from A"
+    },
+    "favoritism": {
+      "title": "Do not buy only because you are friends",
+      "body": "Buying from a friend cannot be forbidden. But the imbalance shows up in the numbers. Be ready to explain why the product is useful to you."
+    },
+    "watching": {
+      "title": "What is visible",
+      "body": "The mutual trade rate between $t(terms.organizations), and how concentrated your buying is, appear on the $t(terms.administrator) screen. Purchases by $t(terms.administrators) are shared among $t(terms.administrators) too."
+    },
+    "penalty": "When a trade looks doubtful, we ask the people involved first. The system never punishes anyone on its own."
+  },
+  "tutorial": {
+    "title": "Getting started",
+    "lead": "Four steps, and you can both sell and buy.",
+    "step1": {
+      "title": "1. Create your $t(terms.organization)",
+      "body": "A name and a password are enough. Write down the ID and recovery code shown to you. They are never shown again."
+    },
+    "step2": {
+      "title": "2. List a product",
+      "body": "Write who it is for and what problem it solves. If that does not come across, it will not sell."
+    },
+    "step3": {
+      "title": "3. Buy from another $t(terms.organization)",
+      "body": "Pick one from the market. You cannot buy your own. The MP you pay goes to the other $t(terms.organization)."
+    },
+    "step4": {
+      "title": "4. Look at your business",
+      "body": "Revenue, expenses, profit, and how each product is selling. If something is not selling, try changing the wording, the price, or how you show it."
+    }
   }
 }

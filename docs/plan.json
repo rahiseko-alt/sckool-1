@@ -575,7 +575,7 @@
       "dependsOn": ["T032"],
       "files": ["apps/storefront/src/app/rules", "apps/storefront/src/content"],
       "automation": "ci",
-      "status": "todo",
+      "status": "awaiting_human",
       "origin": "initial"
     },
     {

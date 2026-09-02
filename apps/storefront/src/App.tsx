@@ -10,6 +10,7 @@ import { LogInScreen } from './screens/log-in'
 import { MarketScreen } from './screens/market'
 import { QuizzesScreen } from './screens/quizzes'
 import { RankingScreen } from './screens/ranking'
+import { RulesScreen } from './screens/rules'
 import { SignUpScreen } from './screens/sign-up'
 import { TransactionsScreen } from './screens/transactions'
 import { clearSession, readSession, saveSession, type Session } from './session'
@@ -36,6 +37,7 @@ type Screen =
   | 'dashboard'
   | 'transactions'
   | 'ads'
+  | 'rules'
 
 export default function App() {
   const { t } = useTranslation()
@@ -61,6 +63,7 @@ export default function App() {
     { key: 'ads', label: t('nav.ads') },
     { key: 'quizzes', label: t('nav.quizzes') },
     { key: 'ranking', label: t('nav.ranking') },
+    { key: 'rules', label: t('nav.rules') },
   ]
 
   return (
@@ -197,6 +200,8 @@ export default function App() {
         )}
 
         {screen === 'ranking' && <RankingScreen />}
+
+        {screen === 'rules' && <RulesScreen />}
 
         {screen === 'login' && (
           <div>

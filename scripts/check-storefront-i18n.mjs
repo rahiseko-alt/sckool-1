@@ -177,6 +177,32 @@ await page.screenshot({ path: 'tmp/store/transactions-ne.png' });
 
 await setLocale('en');
 
+console.log('\n=== ルール説明とはじめかたが6言語で読める（受け入れ基準 I2、T038）===');
+// カルテル・循環取引・贔屓の3つが載っていること。載っていないと、何が禁止か伝わらない。
+const RULE_MARKS = {
+  'ja-JP': ['カルテル', '循環取引', '仲の良さ'],
+  en: ['cartels', 'move money around', 'friends'],
+  'zh-CN': ['卡特尔', '循环交易', '关系好'],
+  'vi-VN': ['thỏa thuận giá', 'chuyển tiền vòng quanh', 'bạn bè'],
+  'ne-NP': ['कार्टेल', 'पैसा घुमाउन', 'साथी'],
+  'th-TH': ['ฮั้วราคา', 'หมุนเงิน', 'สนิทกัน'],
+};
+
+for (const [code, marks] of Object.entries(RULE_MARKS)) {
+  await setLocale(code);
+  await page
+    .getByRole('button', { name: /ルール|Rules|规则|Quy tắc|नियम|กฎ/ })
+    .first()
+    .click();
+  await page.waitForTimeout(900);
+  const text = await page.locator('main').innerText();
+  for (const mark of marks) {
+    expect(`${code}: ${mark} の説明がある`, text.includes(mark), true);
+  }
+}
+await page.screenshot({ path: 'tmp/store/rules-th.png' });
+await setLocale('en');
+
 console.log('\n=== 幅375pxで横スクロールが出ない（受け入れ基準 J3）===');
 const narrow = await browser.newContext({ viewport: { width: 375, height: 800 } });
 const small = await narrow.newPage();

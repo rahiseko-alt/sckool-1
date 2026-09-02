@@ -228,5 +228,53 @@
     "organizations": "企业",
     "administrator": "管理员",
     "administrators": "管理员"
+  },
+  "rules": {
+    "title": "本市场的规则",
+    "lead": "这些是把真实的商业规则为课堂做了简化。违反时会收到管理方的警告。",
+    "cartel": {
+      "title": "不得商量后统一定价（禁止卡特尔）",
+      "body": "与其他$t(terms.organization)商量把售价定成一样是被禁止的。价格请自己决定。",
+      "example": "例如：约定「大家都卖 1,000 MP」"
+    },
+    "marketSplit": {
+      "title": "不得瓜分市场",
+      "body": "$t(terms.organizations)之间约定「这里只有我们卖」同样被禁止。",
+      "example": "例如：约定「这个领域只让 A 公司卖」"
+    },
+    "circular": {
+      "title": "不得为了转移资金而交易（禁止循环交易）",
+      "body": "没有实质内容的买卖只是在转 MP，这是被禁止的。数字增加了，实际什么也没卖出去。",
+      "example": "例如：A 向 B 买，B 向 C 买，C 又向 A 买"
+    },
+    "favoritism": {
+      "title": "不要只因为关系好而购买",
+      "body": "因为关系好而购买无法完全禁止，但偏向会体现在数字上。请能够说明这个商品对自己有什么用。"
+    },
+    "watching": {
+      "title": "会被看到的内容",
+      "body": "$t(terms.organizations)之间的相互交易率，以及购买对象是否集中，都会显示在$t(terms.administrator)的画面上。$t(terms.administrators)的购买也会在$t(terms.administrators)之间共享。"
+    },
+    "penalty": "发现可疑交易时，会先询问当事人。系统不会自动做出处罚。"
+  },
+  "tutorial": {
+    "title": "如何开始",
+    "lead": "四个步骤，你既可以卖也可以买。",
+    "step1": {
+      "title": "1. 创建$t(terms.organization)",
+      "body": "只需要名称和密码。请务必记下显示的 ID 和找回码，它们不会再次显示。"
+    },
+    "step2": {
+      "title": "2. 发布商品",
+      "body": "写清楚这是为谁准备的、能解决什么问题。传达不到就卖不出去。"
+    },
+    "step3": {
+      "title": "3. 购买其他$t(terms.organization)的商品",
+      "body": "从市场中挑选购买。不能买自己的商品。支付的 MP 会进入对方$t(terms.organization)。"
+    },
+    "step4": {
+      "title": "4. 查看经营情况",
+      "body": "会显示销售额、支出、利润以及每个商品的销售情况。卖不动的商品，可以试着改写说明、价格或展示方式。"
+    }
   }
 }
