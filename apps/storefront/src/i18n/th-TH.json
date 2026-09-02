@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Market",
-    "tagline": "ตลาดที่ธุรกิจได้พบกัน"
+    "tagline": "ตลาดที่$t(terms.organization)ได้พบ$t(terms.organization)"
   },
   "nav": {
     "market": "ตลาด",
@@ -23,7 +23,7 @@
     "title": "ตลาด",
     "subtitle": "สินค้าที่กำลังขายอยู่",
     "empty": "ยังไม่มีสินค้า",
-    "seller": "ผู้ขาย",
+    "seller": "$t(terms.organization)ผู้ขาย",
     "price": "ราคา",
     "remaining": "คงเหลือ",
     "buy": "ซื้อ",
@@ -35,7 +35,7 @@
   },
   "detail": {
     "description": "รายละเอียดสินค้า",
-    "targetCustomer": "เหมาะกับธุรกิจแบบนี้",
+    "targetCustomer": "เหมาะกับ$t(terms.organization)แบบนี้",
     "problemSolved": "ปัญหาที่ช่วยแก้",
     "salePeriod": "ช่วงเวลาที่ขาย",
     "loginToBuy": "เข้าสู่ระบบเพื่อซื้อ",
@@ -55,13 +55,13 @@
     "sold_out": "สินค้าหมด"
   },
   "auth": {
-    "signUpTitle": "สร้างบริษัทของคุณ",
+    "signUpTitle": "สร้าง$t(terms.organization)ของคุณ",
     "signUpLead": "ใช้เพียงชื่อและรหัสผ่าน ไม่ถามข้อมูลอื่นใด",
-    "organizationName": "ชื่อบริษัท",
-    "organizationNameHint": "1 ถึง 40 ตัวอักษร และต้องไม่ซ้ำกับบริษัทอื่น",
+    "organizationName": "ชื่อ$t(terms.organization)",
+    "organizationNameHint": "1 ถึง 40 ตัวอักษร และต้องไม่ซ้ำกับ$t(terms.organization)อื่น",
     "password": "รหัสผ่าน",
     "passwordHint": "อย่างน้อย 8 ตัวอักษร",
-    "createAccount": "สร้างบริษัท",
+    "createAccount": "สร้าง$t(terms.organization)",
     "credentialsTitle": "โปรดจดสองสิ่งนี้ไว้",
     "credentialsLead": "แสดงเพียงครั้งเดียวเท่านั้น และดูซ้ำไม่ได้",
     "marketId": "ไอดี",
@@ -103,7 +103,7 @@
     "title": "อันดับ",
     "subtitle": "เลือกตัวชี้วัดเพื่อเปลี่ยนลำดับ",
     "rank": "ลำดับ",
-    "company": "บริษัท",
+    "company": "$t(terms.organization)",
     "empty": "ยังไม่มีอันดับ",
     "metric": {
       "revenue": "ยอดขาย",
@@ -118,9 +118,9 @@
   },
   "errors": {
     "password_too_short": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
-    "organization_name_invalid": "ใช้ชื่อบริษัทนี้ไม่ได้",
-    "organization_name_taken": "ชื่อบริษัทนี้มีผู้ใช้แล้ว",
-    "market_id_unavailable": "ตอนนี้สร้างบริษัทไม่ได้ กรุณาลองใหม่อีกครั้ง",
+    "organization_name_invalid": "ใช้ชื่อ$t(terms.organization)นี้ไม่ได้",
+    "organization_name_taken": "ชื่อ$t(terms.organization)นี้มีผู้ใช้แล้ว",
+    "market_id_unavailable": "ตอนนี้สร้าง$t(terms.organization)ไม่ได้ กรุณาลองใหม่อีกครั้ง",
     "cannot_buy_own_listing": "ไม่สามารถซื้อสินค้าของตัวเองได้",
     "insufficient_balance": "ยอดคงเหลือไม่พอ",
     "listing_not_found": "ไม่พบสินค้านั้น",
@@ -142,7 +142,7 @@
     "lead": "เขียนให้ผู้ซื้อรู้ได้ทันทีว่าสินค้านี้ทำมาเพื่อเขา",
     "productTitle": "ชื่อสินค้า",
     "description": "รายละเอียดสินค้า",
-    "targetCustomer": "เหมาะกับธุรกิจแบบใด",
+    "targetCustomer": "เหมาะกับ$t(terms.organization)แบบใด",
     "problemSolved": "ปัญหาที่ช่วยแก้",
     "price": "ราคา",
     "quantity": "จำนวนที่จัดหาได้",
@@ -220,5 +220,13 @@
     "remove": "ลบคำแปลนี้",
     "language": "ภาษา",
     "shownAs": "กำลังแสดงคำแปลภาษา {{language}}"
+  },
+  "terms": {
+    "participant": "ผู้เข้าร่วม",
+    "participants": "ผู้เข้าร่วม",
+    "organization": "บริษัท",
+    "organizations": "บริษัท",
+    "administrator": "ผู้ดูแล",
+    "administrators": "ผู้ดูแล"
   }
 }

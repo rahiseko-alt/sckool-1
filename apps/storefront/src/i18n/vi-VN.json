@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Market",
-    "tagline": "Nơi các doanh nghiệp gặp nhau"
+    "tagline": "Nơi $t(terms.organizations) gặp nhau"
   },
   "nav": {
     "market": "Thị trường",
@@ -23,7 +23,7 @@
     "title": "Thị trường",
     "subtitle": "Sản phẩm đang được bán",
     "empty": "Chưa có sản phẩm nào",
-    "seller": "Người bán",
+    "seller": "$t(terms.organization) bán",
     "price": "Giá",
     "remaining": "Còn lại",
     "buy": "Mua",
@@ -35,7 +35,7 @@
   },
   "detail": {
     "description": "Giới thiệu sản phẩm",
-    "targetCustomer": "Dành cho những doanh nghiệp như thế này",
+    "targetCustomer": "Dành cho những $t(terms.organization) như thế này",
     "problemSolved": "Vấn đề được giải quyết",
     "salePeriod": "Thời gian bán",
     "loginToBuy": "Hãy đăng nhập để mua",
@@ -55,13 +55,13 @@
     "sold_out": "Đã bán hết"
   },
   "auth": {
-    "signUpTitle": "Tạo doanh nghiệp của bạn",
+    "signUpTitle": "Tạo $t(terms.organization) của bạn",
     "signUpLead": "Chỉ cần tên và mật khẩu. Chúng tôi không hỏi gì thêm.",
-    "organizationName": "Tên doanh nghiệp",
-    "organizationNameHint": "Từ 1 đến 40 ký tự và chưa có ai dùng",
+    "organizationName": "Tên $t(terms.organization)",
+    "organizationNameHint": "Từ 1 đến 40 ký tự và chưa có $t(terms.organization) nào dùng",
     "password": "Mật khẩu",
     "passwordHint": "Ít nhất 8 ký tự",
-    "createAccount": "Tạo doanh nghiệp",
+    "createAccount": "Tạo $t(terms.organization)",
     "credentialsTitle": "Hãy ghi lại hai thông tin này",
     "credentialsLead": "Chúng chỉ hiện ra lần này. Bạn không thể xem lại.",
     "marketId": "ID",
@@ -103,7 +103,7 @@
     "title": "Xếp hạng",
     "subtitle": "Chọn một chỉ số để đổi thứ tự",
     "rank": "Hạng",
-    "company": "Doanh nghiệp",
+    "company": "$t(terms.organization)",
     "empty": "Chưa có xếp hạng",
     "metric": {
       "revenue": "Doanh thu",
@@ -118,9 +118,9 @@
   },
   "errors": {
     "password_too_short": "Mật khẩu cần ít nhất 8 ký tự",
-    "organization_name_invalid": "Không thể dùng tên doanh nghiệp đó",
-    "organization_name_taken": "Tên doanh nghiệp đó đã có người dùng",
-    "market_id_unavailable": "Hiện chưa tạo được doanh nghiệp. Vui lòng thử lại sau ít phút",
+    "organization_name_invalid": "Không thể dùng tên $t(terms.organization) đó",
+    "organization_name_taken": "Tên $t(terms.organization) đó đã có người dùng",
+    "market_id_unavailable": "Hiện chưa tạo được $t(terms.organization). Vui lòng thử lại sau ít phút",
     "cannot_buy_own_listing": "Bạn không thể mua sản phẩm của chính mình",
     "insufficient_balance": "Bạn không đủ MP",
     "listing_not_found": "Không tìm thấy sản phẩm đó",
@@ -142,7 +142,7 @@
     "lead": "Hãy viết sao cho người mua thấy ngay đây là sản phẩm dành cho họ.",
     "productTitle": "Tên sản phẩm",
     "description": "Giới thiệu sản phẩm",
-    "targetCustomer": "Dành cho doanh nghiệp nào",
+    "targetCustomer": "Dành cho $t(terms.organization) nào",
     "problemSolved": "Vấn đề được giải quyết",
     "price": "Giá",
     "quantity": "Số lượng có thể cung cấp",
@@ -220,5 +220,13 @@
     "remove": "Xóa bản dịch này",
     "language": "Ngôn ngữ",
     "shownAs": "Đang hiển thị bản dịch {{language}}"
+  },
+  "terms": {
+    "participant": "người tham gia",
+    "participants": "những người tham gia",
+    "organization": "doanh nghiệp",
+    "organizations": "các doanh nghiệp",
+    "administrator": "quản trị viên",
+    "administrators": "quản trị viên"
   }
 }

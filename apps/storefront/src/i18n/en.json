@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Market",
-    "tagline": "A marketplace where companies meet"
+    "tagline": "A marketplace where $t(terms.organizations) meet"
   },
   "nav": {
     "market": "Market",
@@ -23,7 +23,7 @@
     "title": "Market",
     "subtitle": "Products on sale now",
     "empty": "No products yet",
-    "seller": "Seller",
+    "seller": "Selling $t(terms.organization)",
     "price": "Price",
     "remaining": "Remaining",
     "buy": "Buy",
@@ -35,7 +35,7 @@
   },
   "detail": {
     "description": "About this product",
-    "targetCustomer": "Made for these companies",
+    "targetCustomer": "Made for these $t(terms.organizations)",
     "problemSolved": "The problem it solves",
     "salePeriod": "On sale",
     "loginToBuy": "Log in to buy this",
@@ -55,13 +55,13 @@
     "sold_out": "Sold out"
   },
   "auth": {
-    "signUpTitle": "Create your company",
+    "signUpTitle": "Create your $t(terms.organization)",
     "signUpLead": "A name and a password are all you need. We ask for nothing else.",
-    "organizationName": "Company name",
-    "organizationNameHint": "1 to 40 characters, and not already taken",
+    "organizationName": "$t(terms.organization) name",
+    "organizationNameHint": "1 to 40 characters, and no other $t(terms.organization) is using it",
     "password": "Password",
     "passwordHint": "At least 8 characters",
-    "createAccount": "Create company",
+    "createAccount": "Create $t(terms.organization)",
     "credentialsTitle": "Write these two down",
     "credentialsLead": "This is the only time they are shown. You cannot see them again.",
     "marketId": "ID",
@@ -103,7 +103,7 @@
     "title": "Ranking",
     "subtitle": "Pick a measure to change the order",
     "rank": "Rank",
-    "company": "Company",
+    "company": "$t(terms.organization)",
     "empty": "No ranking yet",
     "metric": {
       "revenue": "Revenue",
@@ -118,9 +118,9 @@
   },
   "errors": {
     "password_too_short": "Your password needs at least 8 characters",
-    "organization_name_invalid": "That company name cannot be used",
-    "organization_name_taken": "That company name is already taken",
-    "market_id_unavailable": "We cannot create a company right now. Please try again shortly",
+    "organization_name_invalid": "That $t(terms.organization) name cannot be used",
+    "organization_name_taken": "That $t(terms.organization) name is already taken",
+    "market_id_unavailable": "We cannot create a $t(terms.organization) right now. Please try again shortly",
     "cannot_buy_own_listing": "You cannot buy your own product",
     "insufficient_balance": "You do not have enough MP",
     "listing_not_found": "That product could not be found",
@@ -142,7 +142,7 @@
     "lead": "Write it so that a buyer can tell it is made for them.",
     "productTitle": "Product name",
     "description": "About this product",
-    "targetCustomer": "Which companies is it for",
+    "targetCustomer": "Which $t(terms.organizations) is it for",
     "problemSolved": "The problem it solves",
     "price": "Price",
     "quantity": "How many you can supply",
@@ -220,5 +220,13 @@
     "remove": "Remove this translation",
     "language": "Language",
     "shownAs": "Shown using the {{language}} translation"
+  },
+  "terms": {
+    "participant": "participant",
+    "participants": "participants",
+    "organization": "company",
+    "organizations": "companies",
+    "administrator": "administrator",
+    "administrators": "administrators"
   }
 }

@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Market",
-    "tagline": "कम्पनीहरू भेट्ने बजार"
+    "tagline": "$t(terms.organizations) भेट्ने बजार"
   },
   "nav": {
     "market": "बजार",
@@ -23,7 +23,7 @@
     "title": "बजार",
     "subtitle": "अहिले बिक्रीमा रहेका सामान",
     "empty": "अहिलेसम्म कुनै सामान छैन",
-    "seller": "बिक्रेता",
+    "seller": "बिक्रेता $t(terms.organization)",
     "price": "मूल्य",
     "remaining": "बाँकी",
     "buy": "किन्नुहोस्",
@@ -35,7 +35,7 @@
   },
   "detail": {
     "description": "सामानको विवरण",
-    "targetCustomer": "यस्ता कम्पनीहरूका लागि",
+    "targetCustomer": "यस्ता $t(terms.organizations) लागि",
     "problemSolved": "समाधान गर्ने समस्या",
     "salePeriod": "बिक्री अवधि",
     "loginToBuy": "किन्न लग इन गर्नुहोस्",
@@ -55,13 +55,13 @@
     "sold_out": "बिक्री भइसक्यो"
   },
   "auth": {
-    "signUpTitle": "आफ्नो कम्पनी बनाउनुहोस्",
+    "signUpTitle": "आफ्नो $t(terms.organization) बनाउनुहोस्",
     "signUpLead": "नाम र पासवर्ड मात्र चाहिन्छ। अरू केही सोधिँदैन।",
-    "organizationName": "कम्पनीको नाम",
-    "organizationNameHint": "१ देखि ४० अक्षर, अरूले नलिएको",
+    "organizationName": "$t(terms.organization) नाम",
+    "organizationNameHint": "१ देखि ४० अक्षर, अरू $t(terms.organization)ले नलिएको",
     "password": "पासवर्ड",
     "passwordHint": "कम्तीमा ८ अक्षर",
-    "createAccount": "कम्पनी बनाउनुहोस्",
+    "createAccount": "$t(terms.organization) बनाउनुहोस्",
     "credentialsTitle": "यी दुई कुरा टिपेर राख्नुहोस्",
     "credentialsLead": "यी यही पटक मात्र देखिन्छन्। फेरि हेर्न सकिँदैन।",
     "marketId": "आईडी",
@@ -103,7 +103,7 @@
     "title": "श्रेणी",
     "subtitle": "मापदण्ड छान्दा क्रम बदलिन्छ",
     "rank": "क्रम",
-    "company": "कम्पनी",
+    "company": "$t(terms.organization)",
     "empty": "अहिलेसम्म कुनै क्रम छैन",
     "metric": {
       "revenue": "बिक्री",
@@ -118,9 +118,9 @@
   },
   "errors": {
     "password_too_short": "पासवर्ड कम्तीमा ८ अक्षरको हुनुपर्छ",
-    "organization_name_invalid": "त्यो कम्पनीको नाम प्रयोग गर्न मिल्दैन",
-    "organization_name_taken": "त्यो कम्पनीको नाम पहिले नै लिइएको छ",
-    "market_id_unavailable": "अहिले कम्पनी बनाउन सकिएन। केही बेरपछि प्रयास गर्नुहोस्",
+    "organization_name_invalid": "त्यो $t(terms.organization) नाम प्रयोग गर्न मिल्दैन",
+    "organization_name_taken": "त्यो $t(terms.organization) नाम पहिले नै लिइएको छ",
+    "market_id_unavailable": "अहिले $t(terms.organization) बनाउन सकिएन। केही बेरपछि प्रयास गर्नुहोस्",
     "cannot_buy_own_listing": "आफ्नै सामान किन्न मिल्दैन",
     "insufficient_balance": "मौज्दात पुग्दैन",
     "listing_not_found": "त्यो सामान भेटिएन",
@@ -142,7 +142,7 @@
     "lead": "किन्ने मानिसले यो आफ्नै लागि हो भन्ने बुझ्ने गरी लेख्नुहोस्।",
     "productTitle": "सामानको नाम",
     "description": "सामानको विवरण",
-    "targetCustomer": "कस्ता कम्पनीका लागि हो",
+    "targetCustomer": "कस्ता $t(terms.organization) लागि हो",
     "problemSolved": "समाधान गर्ने समस्या",
     "price": "मूल्य",
     "quantity": "दिन सकिने संख्या",
@@ -220,5 +220,13 @@
     "remove": "यो अनुवाद हटाउनुहोस्",
     "language": "भाषा",
     "shownAs": "{{language}} को अनुवाद देखाइँदैछ"
+  },
+  "terms": {
+    "participant": "सहभागी",
+    "participants": "सहभागीहरू",
+    "organization": "कम्पनी",
+    "organizations": "कम्पनीहरू",
+    "administrator": "प्रशासक",
+    "administrators": "प्रशासकहरू"
   }
 }

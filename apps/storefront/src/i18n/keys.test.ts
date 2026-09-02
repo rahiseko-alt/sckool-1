@@ -99,6 +99,35 @@ describe('差し込みの突き合わせ', () => {
   })
 })
 
+describe('呼び名の差し替え（受け入れ基準 J2）', () => {
+  it('呼び名だけを書き換えると、それを参照している文が変わる', () => {
+    // 「企業」を「チーム」に変えたい、という要望に**辞書だけで**応えられること。
+    const dictionary = load(BASE_LOCALE) as {
+      terms: { organization: string }
+      auth: { signUpTitle: string }
+    }
+    expect(dictionary.auth.signUpTitle).toContain('$t(terms.organization)')
+    expect(dictionary.terms.organization).toBe('企業')
+  })
+
+  it('6言語すべてに呼び名がある', () => {
+    for (const locale of LOCALES) {
+      const dictionary = load(locale.code) as { terms?: Record<string, string> }
+      expect(dictionary.terms?.participant, locale.code).toBeTruthy()
+      expect(dictionary.terms?.organization, locale.code).toBeTruthy()
+      expect(dictionary.terms?.administrator, locale.code).toBeTruthy()
+    }
+  })
+
+  it('画面に出る語として「生徒」「先生」を辞書に直接書いていない', () => {
+    // 内部の名称は Participant / Organization / Administrator にそろえる（受け入れ基準 J2）。
+    // 「生徒」「先生」にしたいときは terms を書き換えるだけで済むようにしておく。
+    const japanese = JSON.stringify(load(BASE_LOCALE))
+    expect(japanese).not.toContain('生徒')
+    expect(japanese).not.toContain('先生')
+  })
+})
+
 describe('実際の辞書（受け入れ基準 I2）', () => {
   const base = { locale: BASE_LOCALE, dictionary: load(BASE_LOCALE) }
   const others = LOCALES.filter((locale) => locale.code !== BASE_LOCALE).map((locale) => ({

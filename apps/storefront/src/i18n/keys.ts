@@ -9,6 +9,22 @@
  * `scripts/check-i18n-keys.mjs` と単体テストが行う。
  */
 
+/**
+ * `$t(terms.organization)` のような**他のキーの参照**を取り除く。
+ *
+ * 参照だけでできている文字列は、どの言語でも同じ綴りになる。
+ * それを「日本語のまま」と数えると、呼び名を1箇所にまとめた途端に
+ * 検査が誤って落ちる（実際に落ちた）。
+ */
+function withoutReferences(text: string): string {
+  return text.replaceAll(/\$t\([^)]*\)/g, '').trim()
+}
+
+/** 文字列が参照している他のキー（`$t(...)` の中身）。 */
+function referencesOf(text: string): string[] {
+  return [...text.matchAll(/\$t\(([^)]*)\)/g)].map((match) => match[1]!.trim()).sort()
+}
+
 /** 入れ子の辞書を `a.b.c` の形に開く。 */
 export function flattenKeys(value: unknown, prefix = ''): Map<string, string> {
   const flat = new Map<string, string>()
@@ -69,7 +85,15 @@ export function findKeyProblems(input: {
         problems.push({ locale: other.locale, key, kind: 'empty' })
         continue
       }
-      if (value === baseValue && !allowSame.has(key)) {
+      /**
+       * 参照だけでできている文字列（`$t(terms.organization)` など）は、
+       * どの言語でも同じ綴りになるのが正しい。中身は参照先が持つ。
+       */
+      if (
+        value === baseValue &&
+        !allowSame.has(key) &&
+        withoutReferences(baseValue) !== ''
+      ) {
         problems.push({ locale: other.locale, key, kind: 'untranslated' })
       }
     }
@@ -100,10 +124,31 @@ export function findPlaceholderProblems(input: {
       const value = keys.get(key)
       if (value === undefined) continue
 
+      /**
+       * 差し込み（`{{count}}`）は**数まで含めてぴったり同じ**でなければならない。
+       * 落ちると、その言語だけ数字が出ない。
+       */
       const expected = placeholdersOf(baseValue)
       const found = placeholdersOf(value)
       if (expected.join(',') !== found.join(',')) {
         problems.push({ locale: other.locale, key, expected, found })
+      }
+
+      /**
+       * 呼び名の参照（`$t(terms.organization)`）は**あるか無いか**だけを見る。
+       *
+       * 言語によって語の数も形も変わる（日本語は「企業と企業」、英語は
+       * 「companies」1語）。数まで合わせようとすると、正しい訳のほうを
+       * 曲げることになる。**一度も参照していない**ときだけ問題にする。
+       * それだと、その言語だけ呼び名の差し替えが効かなくなるため。
+       */
+      if (referencesOf(baseValue).length > 0 && referencesOf(value).length === 0) {
+        problems.push({
+          locale: other.locale,
+          key,
+          expected: referencesOf(baseValue),
+          found: [],
+        })
       }
     }
   }
