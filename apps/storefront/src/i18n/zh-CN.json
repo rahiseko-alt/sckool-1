@@ -14,7 +14,8 @@
     "logout": "退出登录",
     "signUp": "注册",
     "transactions": "交易记录",
-    "ads": "广告"
+    "ads": "广告",
+    "account": "设置"
   },
   "language": {
     "label": "语言"

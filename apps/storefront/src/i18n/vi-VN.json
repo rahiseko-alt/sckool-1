@@ -14,7 +14,8 @@
     "logout": "Đăng xuất",
     "signUp": "Đăng ký",
     "transactions": "Lịch sử",
-    "ads": "Quảng cáo"
+    "ads": "Quảng cáo",
+    "account": "Cài đặt"
   },
   "language": {
     "label": "Ngôn ngữ"

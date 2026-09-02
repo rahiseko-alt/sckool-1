@@ -14,7 +14,8 @@
     "logout": "ออกจากระบบ",
     "signUp": "สมัครสมาชิก",
     "transactions": "ประวัติ",
-    "ads": "โฆษณา"
+    "ads": "โฆษณา",
+    "account": "ตั้งค่า"
   },
   "language": {
     "label": "ภาษา"

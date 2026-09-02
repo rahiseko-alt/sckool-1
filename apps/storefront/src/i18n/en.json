@@ -14,7 +14,8 @@
     "logout": "Log out",
     "signUp": "Sign up",
     "transactions": "History",
-    "ads": "Ads"
+    "ads": "Ads",
+    "account": "Settings"
   },
   "language": {
     "label": "Language"

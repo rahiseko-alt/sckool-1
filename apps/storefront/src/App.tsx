@@ -66,7 +66,13 @@ export default function App() {
     { key: 'quizzes', label: t('nav.quizzes') },
     { key: 'ranking', label: t('nav.ranking') },
     { key: 'rules', label: t('nav.rules') },
-    { key: 'account', label: t('account.title') },
+    /**
+     * ナビだけ短い語を使う。見出しの `account.title` は
+     * 「$t(terms.organization) settings」で、英語では小文字で始まる語
+     * （`company`）が先頭に来て "company settings" と不揃いに見える。
+     * 呼び名を辞書1語で変えられること（受け入れ基準 J2）は変わらない。
+     */
+    { key: 'account', label: t('nav.account') },
   ]
 
   return (
