@@ -26,28 +26,36 @@
 **このリポジトリは雛形から実プロジェクトに切り替わった。** 作るものは、60人規模の生徒が
 匿名アカウントで仮想企業を経営する **6言語のビジネスシミュレーション・プラットフォーム**。
 
-このセッションでやったのは**計画づくりだけ**。コードは1行も書いていない
-（ユーザー指示「受け入れ基準もきっちり決めろ・計画承認後は待機」）。
+計画を立てたあと、ユーザーの指示（`/goal 受け入れ条件すべてクリア`）で**実装に着手した**。
 
 - 要件の正本は **`docs/requirements.md`**。第1部がユーザーの原文44項目、第2部が
   **MVP 受け入れ基準 A〜K**（1つずつ確かめられる文にしてある）
-- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`、全て `todo`）
+- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **3件が `done`**
 - **雛形自身の28項目は `docs/plan.from-0.json` に改名して保存した。**
   `docs/decisions.md`「28.」までの T 番号はそちらを指す
 
-**次の1件は `T001`（Mercur を `apps/` に取り込んで起動する）。まだ着手していない。**
+**Mercur は実際に動いている。** `apps/api`・`apps/admin`・`apps/vendor` を取り込み、
+`/health` が 200、管理画面と企業パネルのログイン画面が描画されるところまで確認済み。
+
+**作業中のブランチは `claude/checkin-jb6vw4`、PR は #5。**
 
 ## 完了したこと
 
-### このセッション（計画のみ。コードの変更は無し）
+### このセッション
+
+**計画づくり**（PR #3・#4 でマージ済み）
 
 - `docs/requirements.md` を新規作成 — 要件44項目の原文 + MVP 受け入れ基準 A〜K
-- `docs/plan.json` を新規作成 — 43項目。`pnpm run test` の検証を通した
-- `docs/plan.json` → `docs/plan.from-0.json` に改名（雛形自身の計画を保存）
+- `docs/plan.json` を新規作成 — 43項目。`docs/plan.from-0.json` に雛形の計画を退避
 - `AGENTS.md` 冒頭の「目的」をこのプロジェクトのものに書き換え
-- `docs/decisions.md`「29.」を追記 — 番号衝突の回避方法、技術選定（Mercur / Medusa 2.18.0 /
-  Translation Module / SurveyJS）とその一次情報、この実行環境で確かめたこと、`[曖昧]` の一覧
-- `pnpm run check` / `pnpm run build` 通過
+- `docs/decisions.md`「29.」を追記 — 技術選定の一次情報と `[曖昧]` の一覧
+
+**実装**（PR #5、作業中）
+
+- `T001` Mercur を `apps/` に取り込んで起動できるようにした
+- `T002` CI に postgres / redis を足し、マイグレーション → 個人情報の検査 → 起動確認まで通す
+- `T012` 個人情報の検査を追加（`scripts/check-no-personal-data.mjs`）
+- `docs/decisions.md`「30.」を追記 — 受け入れ基準 A3 を2段構えに直した経緯
 
 ### 前のセッションまで（雛形 `from-0` としての作業）
 
@@ -70,21 +78,17 @@
 
 ## 次にやること
 
-**ユーザーの指示を待っている状態。** 前回のセッションは「計画承認後は待機」と指示されたため、
-`T001` に着手せずに終えた。**再開の合図があってから着手すること。**
+**ブランチ `claude/checkin-jb6vw4` と PR #5 の続きから。** `pnpm run plan:next` が次の1件を返す。
 
-着手してよいと言われたら `T001`（Mercur を `apps/` に取り込んで起動する）から。
-`pnpm run plan:next` が同じものを返す。
+残りの技術検証（結論は必ず `docs/decisions.md` に書く）:
 
-**`T001`〜`T005` は技術検証の項目**で、ここで決まったことが後続の作り方を左右する。
-結論は必ず `docs/decisions.md` に書くこと（`verify` にもそう書いてある）。
+- `T003` MP 口座を Medusa の Store Credit で作るか、独自に作るか — **未着手**
+- `T004` Market ID を標準の認証に渡せるか — **実機で確認済み、記録はこれから**
+  （`scripts/probe-auth.mjs` を実行すると再現できる）
+- `T005` 画面文字列の翻訳をどこに置くか — **未着手**
 
-- `T003` MP 口座を Medusa の Store Credit で作るか、独自に作るか
-- `T004` Market ID を標準の認証にそのまま渡せるか、独自の認証が要るか
-- `T005` 画面文字列の翻訳をどこに置くか
-
-`T001` `T006` `T007` は互いに独立していて同時に進められる（`pnpm run plan:parallel` で確認済み）。
-ただし**並列にするのはユーザーが明示的に頼んだときだけ**。
+**再開したらまず `pnpm run services` を実行すること。** コンテナが再起動すると
+PostgreSQL と Redis が止まっており、API もデータベースも動かない。
 
 補足: 週次 Routine は無効化済み（`trig_01LVCzPzXcTxdyGFdxtFQZSw`）。進み具合は
 `pnpm run plan:progress` で見る。
@@ -102,7 +106,18 @@
   `docs/plan.from-0.json` の `T001`〜`T029` は**雛形自身**。`docs/decisions.md` の
   「28.」までに出る T 番号は後者を指す。経緯は「29.」
 - **この実行環境では Docker デーモンが動いていない**（CLI だけ）。PostgreSQL 16 と Redis 7 は
-  実体があるので、`docker-compose` ではなくローカルで直接起動する
+  実体があるので、`docker-compose` ではなくローカルで直接起動する（`pnpm run services`）
+- **`pkill -f "medusa"` は自分自身も殺す。** シェルのコマンド行にその文字列が含まれるため、
+  実行中のコマンドごと終了コード143/144で落ちる。`pkill -f "[m]edusa"` のように書く
+- **長く動かすサーバーは `Bash` ツールの `run_in_background` で起動する。**
+  `コマンド &` で背景に回してもツール呼び出しの終了時に一緒に落ちる
+- **`curl` は権限設定で使えない。** HTTP の確認は `node scripts/check-api.mjs` を使う
+- **`.env` と `.env.example` は読み書きできない**（権限設定）。環境変数は
+  `scripts/run-api.mjs` の既定値として持たせている。キー名の一覧は `apps/api/.env.template`
+- **PR にコンフリクトがあると CI がそもそも起動しない**（`mergeable_state` が `dirty`）。
+  「CI が動かない」ときは、まず PR の状態を確認する
+- **Playwright のブラウザは `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`。**
+  `chromium/` という名前のディレクトリは無い
 - **CI のジョブ名 `check` は変えない。** `T002` で postgres を足すときも名前は据え置く
   （Ruleset の必須チェックが外れて PR がマージ不能になる）
 - **`docs/plan.from-0.json` の `done` のうち3件は「要件の取り下げ」を意味する**
@@ -132,14 +147,4 @@ statement`）。フックの中で `node -e` を使うときは関数で包む�
 - 記録時刻: 2026-09-02 03:35 UTC
 - ブランチ: `claude/checkin-jb6vw4`
 - HEAD: `d591689`
-- 未コミットの変更:
-
-```
-M .github/workflows/ci.yml
- M docs/handoff.md
- M docs/plan.json
- M package.json
- M pnpm-lock.yaml
-?? scripts/api-smoke.mjs
-?? scripts/check-no-personal-data.mjs
-```
+- 未コミットの変更: なし
