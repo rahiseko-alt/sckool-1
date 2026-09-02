@@ -117,6 +117,66 @@ await page.waitForTimeout(1200);
 expect('テストが英語', await page.locator('main h1').innerText(), 'Quizzes');
 await page.screenshot({ path: 'tmp/store/quizzes-en.png' });
 
+console.log('\n=== 企業側の画面がネパール語で訳されている（受け入れ基準 I2、T034）===');
+await setLocale('ne-NP');
+await page
+  .getByRole('button', { name: /मेरा सामानहरू/ })
+  .first()
+  .click();
+await page.waitForTimeout(1200);
+
+// 項目名がすべて訳されているか。かなが1文字でもあれば訳し漏れ。
+const formText = await page.locator('main form').innerText();
+expect('商品登録の項目名にかなが無い', japanese.test(formText), false);
+expect('デーバナーガリーで書かれている', /[ऀ-ॿ]/.test(formText), true);
+
+console.log('\n--- 必須項目を空にしたときのエラーも訳されている ---');
+// 1つだけ埋めて出す。残りの項目に「入力してください」が出るはず。
+await page.fill('#title', 'テスト');
+await page
+  .getByRole('button', { name: /राख्नुहोस्/ })
+  .first()
+  .click();
+await page.waitForTimeout(1500);
+const afterSubmit = await page.locator('main form').innerText();
+expect('項目ごとのエラーが出た', afterSubmit.includes('यो भर्नुहोस्'), true);
+expect('エラーにかなが無い', japanese.test(afterSubmit.replace('テスト', '')), false);
+await page.screenshot({ path: 'tmp/store/listing-form-ne.png' });
+
+console.log('\n--- 経営・広告も訳されている ---');
+for (const [label, name] of [
+  ['経営', /व्यवसाय/],
+  ['広告', /विज्ञापन/],
+]) {
+  await page.getByRole('button', { name }).first().click();
+  await page.waitForTimeout(1500);
+  const text = await page.locator('main').innerText();
+  expect(`${label}: かなが無い`, japanese.test(text), false);
+}
+await page.screenshot({ path: 'tmp/store/ads-ne.png' });
+
+console.log('\n--- 取引履歴も訳されている ---');
+// 商品名は生徒が入れたデータなので日本語のことがある（受け入れ基準 I3、T036）。
+// 見るのは見出しと、取引の種類の言葉だけ。
+await page
+  .getByRole('button', { name: /कारोबारको सूची/ })
+  .first()
+  .click();
+await page.waitForTimeout(1500);
+expect(
+  '取引履歴: 見出しにかなが無い',
+  japanese.test((await page.locator('main h1, main thead').allInnerTexts()).join(' ')),
+  false,
+);
+expect(
+  '取引履歴: 取引の種類が訳されている',
+  (await page.locator('main tbody').innerText()).includes('सुरुको पुँजी'),
+  true,
+);
+await page.screenshot({ path: 'tmp/store/transactions-ne.png' });
+
+await setLocale('en');
+
 console.log('\n=== 幅375pxで横スクロールが出ない（受け入れ基準 J3）===');
 const narrow = await browser.newContext({ viewport: { width: 375, height: 800 } });
 const small = await narrow.newPage();

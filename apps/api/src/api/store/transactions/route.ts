@@ -15,16 +15,11 @@ import type OrganizationService from '../../../modules/organization/service'
  * 「誰が動かしている企業か」を市場から辿れないようにするため。
  */
 
-/** 画面に出す言葉。何が起きたかが一目で分かるようにする。 */
-const KIND_LABELS: Record<string, string> = {
-  initial_grant: '初期資金',
-  bonus_grant: 'テストのボーナス',
-  bonus_expired: 'ボーナスの失効',
-  purchase: '商品の購入',
-  sale: '商品の販売',
-  ad_spend: '広告費',
-  reversal: '取り消し',
-}
+/**
+ * **画面に出す言葉はここで作らない。** 取引の種類は `kind` として返し、
+ * 訳は画面側の辞書（`transaction.kind.*`）が持つ。ここで日本語を作ると、
+ * ほかの言語を選んでいる生徒の画面にその行だけ日本語が出る（受け入れ基準 I2）。
+ */
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   // 見せる企業は**合鍵から決める**。他社の取引履歴を覗けないようにするため。
@@ -82,7 +77,6 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
         id: entry.id,
         occurred_at: entry.createdAt,
         kind: entry.kind,
-        kind_label: KIND_LABELS[entry.kind] ?? entry.kind,
         pocket: entry.pocket,
         amount: entry.amount,
         ...(listing ? { listing_title: listing.title } : {}),

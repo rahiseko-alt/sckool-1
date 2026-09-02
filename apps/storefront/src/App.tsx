@@ -2,12 +2,16 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LanguageSwitcher } from './components/language-switcher'
+import { AdsScreen } from './screens/ads'
+import { DashboardScreen } from './screens/dashboard'
 import { ListingDetailScreen } from './screens/listing-detail'
+import { ListingFormScreen } from './screens/listing-form'
 import { LogInScreen } from './screens/log-in'
 import { MarketScreen } from './screens/market'
 import { QuizzesScreen } from './screens/quizzes'
 import { RankingScreen } from './screens/ranking'
 import { SignUpScreen } from './screens/sign-up'
+import { TransactionsScreen } from './screens/transactions'
 import { clearSession, readSession, saveSession, type Session } from './session'
 import { hint, linkButton, quietButton } from './ui'
 
@@ -21,7 +25,17 @@ import { hint, linkButton, quietButton } from './ui'
  * 分ける必要が出たら（授業中に商品の URL を共有したい、など）そのとき入れる。
  */
 
-type Screen = 'market' | 'listing' | 'quizzes' | 'ranking' | 'login' | 'signUp'
+type Screen =
+  | 'market'
+  | 'listing'
+  | 'quizzes'
+  | 'ranking'
+  | 'login'
+  | 'signUp'
+  | 'sell'
+  | 'dashboard'
+  | 'transactions'
+  | 'ads'
 
 export default function App() {
   const { t } = useTranslation()
@@ -35,8 +49,16 @@ export default function App() {
     setScreen('market')
   }
 
+  /**
+   * 上の並び。**ログインしていない人にも「売る」側の入口を見せる。**
+   * 隠すと「この市場では買うことしかできない」と思われる。押すとログインを促す。
+   */
   const navItems: { key: Screen; label: string }[] = [
     { key: 'market', label: t('nav.market') },
+    { key: 'sell', label: t('nav.myListings') },
+    { key: 'dashboard', label: t('nav.dashboard') },
+    { key: 'transactions', label: t('nav.transactions') },
+    { key: 'ads', label: t('nav.ads') },
     { key: 'quizzes', label: t('nav.quizzes') },
     { key: 'ranking', label: t('nav.ranking') },
   ]
@@ -147,6 +169,31 @@ export default function App() {
             {...(session ? { session } : {})}
             onNeedLogin={() => setScreen('login')}
           />
+        )}
+
+        {screen === 'sell' && (
+          <ListingFormScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'dashboard' && (
+          <DashboardScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'transactions' && (
+          <TransactionsScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'ads' && (
+          <AdsScreen {...(session ? { session } : {})} onNeedLogin={() => setScreen('login')} />
         )}
 
         {screen === 'ranking' && <RankingScreen />}

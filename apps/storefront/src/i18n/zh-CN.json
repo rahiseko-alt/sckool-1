@@ -12,7 +12,9 @@
     "rules": "规则",
     "login": "登录",
     "logout": "退出登录",
-    "signUp": "注册"
+    "signUp": "注册",
+    "transactions": "交易记录",
+    "ads": "广告"
   },
   "language": {
     "label": "语言"
@@ -134,5 +136,81 @@
     "back": "返回",
     "required": "必填",
     "error": "发生了错误"
+  },
+  "listingForm": {
+    "title": "发布商品",
+    "lead": "请写清楚，让买家一看就知道这是为他们准备的商品。",
+    "productTitle": "商品名称",
+    "description": "商品说明",
+    "targetCustomer": "适合哪类企业",
+    "problemSolved": "能解决的问题",
+    "price": "价格",
+    "quantity": "可以提供的数量",
+    "imageUrl": "图片链接",
+    "saleStartsAt": "开售日期",
+    "saleEndsAt": "结束日期",
+    "submit": "发布",
+    "submitting": "正在发布",
+    "done": "商品已发布",
+    "another": "再发布一个",
+    "myListings": "你发布的商品",
+    "empty": "你还没有发布商品"
+  },
+  "field": {
+    "missing": "请填写这一项",
+    "too_long": "内容太长了",
+    "not_a_positive_integer": "请输入1以上的整数",
+    "invalid_date": "无法识别为日期",
+    "ends_before_starts": "结束日期早于开始日期"
+  },
+  "dashboard": {
+    "title": "经营",
+    "lead": "所有数字都根据交易记录计算得出",
+    "revenue": "销售额",
+    "expenses": "开支",
+    "profit": "利润",
+    "profitMargin": "利润率",
+    "salesCount": "售出件数",
+    "purchaseCount": "购买件数",
+    "adSpend": "广告费",
+    "productSales": "各商品的销售额",
+    "revenueChart": "销售额变化",
+    "noSales": "还没有卖出商品",
+    "loginRequired": "登录后才能查看经营数字"
+  },
+  "transaction": {
+    "title": "交易记录",
+    "when": "时间",
+    "what": "发生了什么",
+    "counterpart": "对方",
+    "amount": "金额",
+    "empty": "还没有交易",
+    "kind": {
+      "initial_grant": "启动资金",
+      "bonus_grant": "测验奖励",
+      "bonus_expired": "奖励过期",
+      "purchase": "购买商品",
+      "sale": "售出商品",
+      "ad_spend": "广告费",
+      "reversal": "已撤销"
+    }
+  },
+  "ads": {
+    "title": "广告",
+    "lead": "支付 MP 后，商品会出现在首页的显眼位置",
+    "chooseListing": "要推广的商品",
+    "days": "天数",
+    "price": "费用",
+    "buy": "投放广告",
+    "active": "投放中",
+    "ended": "已结束",
+    "impressions": "展示次数",
+    "clicks": "点击次数",
+    "ctr": "点击率",
+    "conversions": "通过广告的购买",
+    "adRevenue": "通过广告的销售额",
+    "roas": "投入回报",
+    "empty": "你还没有投放广告",
+    "needListing": "请先发布商品"
   }
 }

@@ -12,7 +12,9 @@
     "rules": "ルール",
     "login": "ログイン",
     "logout": "ログアウト",
-    "signUp": "新規登録"
+    "signUp": "新規登録",
+    "transactions": "取引履歴",
+    "ads": "広告"
   },
   "language": {
     "label": "言語"
@@ -134,5 +136,81 @@
     "back": "戻る",
     "required": "必須",
     "error": "エラーが発生しました"
+  },
+  "listingForm": {
+    "title": "商品を出す",
+    "lead": "買う人が「自分のための商品だ」と分かるように書いてください。",
+    "productTitle": "商品名",
+    "description": "商品の説明",
+    "targetCustomer": "どんな企業のための商品か",
+    "problemSolved": "解決する困りごと",
+    "price": "価格",
+    "quantity": "提供できる数",
+    "imageUrl": "画像のURL",
+    "saleStartsAt": "販売の開始日",
+    "saleEndsAt": "販売の終了日",
+    "submit": "出品する",
+    "submitting": "出品しています",
+    "done": "出品しました",
+    "another": "もう1つ出す",
+    "myListings": "出品中の商品",
+    "empty": "まだ出品していません"
+  },
+  "field": {
+    "missing": "入力してください",
+    "too_long": "長すぎます",
+    "not_a_positive_integer": "1以上の整数を入れてください",
+    "invalid_date": "日付として読めません",
+    "ends_before_starts": "終了日が開始日より前になっています"
+  },
+  "dashboard": {
+    "title": "経営",
+    "lead": "数字はすべて取引履歴から計算しています",
+    "revenue": "売上",
+    "expenses": "支出",
+    "profit": "利益",
+    "profitMargin": "利益率",
+    "salesCount": "売れた件数",
+    "purchaseCount": "買った件数",
+    "adSpend": "広告費",
+    "productSales": "商品ごとの売上",
+    "revenueChart": "売上の推移",
+    "noSales": "まだ売れていません",
+    "loginRequired": "経営の数字を見るにはログインしてください"
+  },
+  "transaction": {
+    "title": "取引履歴",
+    "when": "日時",
+    "what": "内容",
+    "counterpart": "相手",
+    "amount": "金額",
+    "empty": "まだ取引がありません",
+    "kind": {
+      "initial_grant": "初期資金",
+      "bonus_grant": "テストのボーナス",
+      "bonus_expired": "ボーナスの失効",
+      "purchase": "商品の購入",
+      "sale": "商品の販売",
+      "ad_spend": "広告費",
+      "reversal": "取り消し"
+    }
+  },
+  "ads": {
+    "title": "広告",
+    "lead": "MP を払うと、トップページの目立つ場所に商品が出ます",
+    "chooseListing": "宣伝する商品",
+    "days": "日数",
+    "price": "料金",
+    "buy": "広告を出す",
+    "active": "掲載中",
+    "ended": "掲載終了",
+    "impressions": "表示回数",
+    "clicks": "クリック数",
+    "ctr": "クリック率",
+    "conversions": "広告経由の購入",
+    "adRevenue": "広告経由の売上",
+    "roas": "費用対効果",
+    "empty": "まだ広告を出していません",
+    "needListing": "先に商品を出してください"
   }
 }

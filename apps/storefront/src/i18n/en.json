@@ -12,7 +12,9 @@
     "rules": "Rules",
     "login": "Log in",
     "logout": "Log out",
-    "signUp": "Sign up"
+    "signUp": "Sign up",
+    "transactions": "History",
+    "ads": "Ads"
   },
   "language": {
     "label": "Language"
@@ -134,5 +136,81 @@
     "back": "Back",
     "required": "Required",
     "error": "Something went wrong"
+  },
+  "listingForm": {
+    "title": "List a product",
+    "lead": "Write it so that a buyer can tell it is made for them.",
+    "productTitle": "Product name",
+    "description": "About this product",
+    "targetCustomer": "Which companies is it for",
+    "problemSolved": "The problem it solves",
+    "price": "Price",
+    "quantity": "How many you can supply",
+    "imageUrl": "Image URL",
+    "saleStartsAt": "Sale starts",
+    "saleEndsAt": "Sale ends",
+    "submit": "List it",
+    "submitting": "Listing",
+    "done": "Your product is listed",
+    "another": "List another one",
+    "myListings": "Your listed products",
+    "empty": "You have not listed anything yet"
+  },
+  "field": {
+    "missing": "Please fill this in",
+    "too_long": "This is too long",
+    "not_a_positive_integer": "Enter a whole number of 1 or more",
+    "invalid_date": "This is not a date we can read",
+    "ends_before_starts": "The end date is before the start date"
+  },
+  "dashboard": {
+    "title": "Business",
+    "lead": "Every number is calculated from your transaction history",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profit": "Profit",
+    "profitMargin": "Profit margin",
+    "salesCount": "Items sold",
+    "purchaseCount": "Items bought",
+    "adSpend": "Ad spend",
+    "productSales": "Revenue by product",
+    "revenueChart": "Revenue over time",
+    "noSales": "Nothing has sold yet",
+    "loginRequired": "Log in to see your business figures"
+  },
+  "transaction": {
+    "title": "History",
+    "when": "When",
+    "what": "What happened",
+    "counterpart": "With",
+    "amount": "Amount",
+    "empty": "No transactions yet",
+    "kind": {
+      "initial_grant": "Starting funds",
+      "bonus_grant": "Quiz bonus",
+      "bonus_expired": "Bonus expired",
+      "purchase": "Bought a product",
+      "sale": "Sold a product",
+      "ad_spend": "Ad spend",
+      "reversal": "Reversed"
+    }
+  },
+  "ads": {
+    "title": "Ads",
+    "lead": "Pay MP and your product appears in a prominent spot on the front page",
+    "chooseListing": "Product to advertise",
+    "days": "Days",
+    "price": "Cost",
+    "buy": "Run this ad",
+    "active": "Running",
+    "ended": "Finished",
+    "impressions": "Impressions",
+    "clicks": "Clicks",
+    "ctr": "Click rate",
+    "conversions": "Purchases from the ad",
+    "adRevenue": "Revenue from the ad",
+    "roas": "Return on ad spend",
+    "empty": "You have not run any ads yet",
+    "needListing": "List a product first"
   }
 }

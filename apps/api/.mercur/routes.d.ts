@@ -651,6 +651,7 @@ export type Routes = {
                 click: typeof import("../src/api/store/ads/[id]/click/route");
                 metrics: typeof import("../src/api/store/ads/[id]/metrics/route");
             };
+            mine: typeof import("../src/api/store/ads/mine/route");
         };
         custom: typeof import("../src/api/store/custom/route");
         dashboard: typeof import("../src/api/store/dashboard/route");

@@ -15,6 +15,14 @@ export interface ApiResult<T> {
   data?: T
   /** 失敗したときに画面へ出す文言のキー（`errors.*`）。 */
   errorKey?: string
+  /**
+   * 項目ごとの問題（商品の登録で使う）。
+   *
+   * **文言ではなく「どの項目がどういう問題か」だけ**をサーバーから受け取る。
+   * 文言をサーバーが作ると、ほかの言語を選んでいる生徒の画面にその行だけ
+   * 日本語が出る（受け入れ基準 I2）。
+   */
+  problems?: { field: string; problem: string }[]
 }
 
 /** サーバーが返す合図と、辞書のキーの対応。 */
@@ -75,8 +83,16 @@ export async function api<T>(
   }
 
   if (!response.ok) {
-    const code = (parsed as { code?: unknown } | undefined)?.code
-    return { ok: false, status: response.status, errorKey: errorKeyOf(response.status, code) }
+    const body = parsed as { code?: unknown; problems?: unknown } | undefined
+    const problems = Array.isArray(body?.problems)
+      ? (body.problems as { field: string; problem: string }[])
+      : undefined
+    return {
+      ok: false,
+      status: response.status,
+      errorKey: errorKeyOf(response.status, body?.code),
+      ...(problems ? { problems } : {}),
+    }
   }
 
   return { ok: true, status: response.status, data: parsed as T }

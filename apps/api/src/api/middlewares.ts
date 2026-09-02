@@ -149,6 +149,11 @@ export default defineMiddlewares({
       middlewares: [requireOrganization],
     },
     {
+      matcher: '/store/ads/mine',
+      method: 'GET',
+      middlewares: [requireOrganization],
+    },
+    {
       matcher: '/store/ads/*/metrics',
       method: 'GET',
       middlewares: [requireOrganization],

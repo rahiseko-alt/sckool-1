@@ -12,7 +12,9 @@
     "rules": "Quy tắc",
     "login": "Đăng nhập",
     "logout": "Đăng xuất",
-    "signUp": "Đăng ký"
+    "signUp": "Đăng ký",
+    "transactions": "Lịch sử",
+    "ads": "Quảng cáo"
   },
   "language": {
     "label": "Ngôn ngữ"
@@ -134,5 +136,81 @@
     "back": "Quay lại",
     "required": "Bắt buộc",
     "error": "Đã xảy ra lỗi"
+  },
+  "listingForm": {
+    "title": "Đăng bán sản phẩm",
+    "lead": "Hãy viết sao cho người mua thấy ngay đây là sản phẩm dành cho họ.",
+    "productTitle": "Tên sản phẩm",
+    "description": "Giới thiệu sản phẩm",
+    "targetCustomer": "Dành cho doanh nghiệp nào",
+    "problemSolved": "Vấn đề được giải quyết",
+    "price": "Giá",
+    "quantity": "Số lượng có thể cung cấp",
+    "imageUrl": "Đường dẫn hình ảnh",
+    "saleStartsAt": "Ngày bắt đầu bán",
+    "saleEndsAt": "Ngày kết thúc bán",
+    "submit": "Đăng bán",
+    "submitting": "Đang đăng",
+    "done": "Sản phẩm đã được đăng",
+    "another": "Đăng thêm sản phẩm",
+    "myListings": "Sản phẩm bạn đã đăng",
+    "empty": "Bạn chưa đăng sản phẩm nào"
+  },
+  "field": {
+    "missing": "Vui lòng điền mục này",
+    "too_long": "Nội dung quá dài",
+    "not_a_positive_integer": "Hãy nhập số nguyên từ 1 trở lên",
+    "invalid_date": "Không đọc được đây là ngày",
+    "ends_before_starts": "Ngày kết thúc sớm hơn ngày bắt đầu"
+  },
+  "dashboard": {
+    "title": "Kinh doanh",
+    "lead": "Mọi con số đều được tính từ lịch sử giao dịch",
+    "revenue": "Doanh thu",
+    "expenses": "Chi phí",
+    "profit": "Lợi nhuận",
+    "profitMargin": "Tỷ suất lợi nhuận",
+    "salesCount": "Số lần bán",
+    "purchaseCount": "Số lần mua",
+    "adSpend": "Chi phí quảng cáo",
+    "productSales": "Doanh thu theo sản phẩm",
+    "revenueChart": "Doanh thu theo thời gian",
+    "noSales": "Chưa bán được sản phẩm nào",
+    "loginRequired": "Hãy đăng nhập để xem số liệu kinh doanh"
+  },
+  "transaction": {
+    "title": "Lịch sử giao dịch",
+    "when": "Thời điểm",
+    "what": "Nội dung",
+    "counterpart": "Đối tác",
+    "amount": "Số tiền",
+    "empty": "Chưa có giao dịch nào",
+    "kind": {
+      "initial_grant": "Vốn ban đầu",
+      "bonus_grant": "Thưởng bài kiểm tra",
+      "bonus_expired": "Thưởng hết hạn",
+      "purchase": "Mua sản phẩm",
+      "sale": "Bán sản phẩm",
+      "ad_spend": "Chi phí quảng cáo",
+      "reversal": "Đã hoàn tác"
+    }
+  },
+  "ads": {
+    "title": "Quảng cáo",
+    "lead": "Trả MP để sản phẩm xuất hiện ở vị trí nổi bật trên trang đầu",
+    "chooseListing": "Sản phẩm muốn quảng cáo",
+    "days": "Số ngày",
+    "price": "Chi phí",
+    "buy": "Chạy quảng cáo",
+    "active": "Đang chạy",
+    "ended": "Đã kết thúc",
+    "impressions": "Số lần hiển thị",
+    "clicks": "Số lần nhấp",
+    "ctr": "Tỷ lệ nhấp",
+    "conversions": "Lượt mua từ quảng cáo",
+    "adRevenue": "Doanh thu từ quảng cáo",
+    "roas": "Hiệu quả chi phí quảng cáo",
+    "empty": "Bạn chưa chạy quảng cáo nào",
+    "needListing": "Hãy đăng sản phẩm trước"
   }
 }
