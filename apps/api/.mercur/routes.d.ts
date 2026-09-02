@@ -514,6 +514,7 @@ export type Routes = {
         };
         custom: typeof import("../src/api/admin/custom/route");
         organizations: typeof import("../src/api/admin/organizations/route");
+        tradeAnalysis: typeof import("../src/api/admin/trade-analysis/route");
     };
     auth: {
         $actorType: {

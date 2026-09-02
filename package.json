@@ -36,12 +36,13 @@
     "check:auth": "node scripts/check-accounts.mjs && node scripts/check-login-lock.mjs && node scripts/check-recovery.mjs",
     "check:recovery": "node scripts/check-recovery.mjs",
     "check:listings": "node scripts/check-listings.mjs",
-    "check:market:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/check-accounts.mjs -- node scripts/check-login-lock.mjs -- node scripts/check-recovery.mjs -- node scripts/check-listings.mjs -- node scripts/check-purchases.mjs -- node scripts/check-quizzes.mjs -- node scripts/check-ads.mjs -- node scripts/check-dashboard.mjs -- node scripts/check-admin.mjs",
+    "check:market:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/check-accounts.mjs -- node scripts/check-login-lock.mjs -- node scripts/check-recovery.mjs -- node scripts/check-listings.mjs -- node scripts/check-purchases.mjs -- node scripts/check-quizzes.mjs -- node scripts/check-ads.mjs -- node scripts/check-dashboard.mjs -- node scripts/check-admin.mjs -- node scripts/check-trade-analysis.mjs",
     "check:purchases": "node scripts/check-purchases.mjs",
     "check:quizzes": "node scripts/check-quizzes.mjs",
     "check:ads": "node scripts/check-ads.mjs",
     "check:dashboard": "node scripts/check-dashboard.mjs",
-    "check:admin": "node scripts/check-admin.mjs"
+    "check:admin": "node scripts/check-admin.mjs",
+    "check:trade-analysis": "node scripts/check-trade-analysis.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

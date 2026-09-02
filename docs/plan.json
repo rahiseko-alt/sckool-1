@@ -452,7 +452,7 @@
         "apps/api/src/admin/routes/trade-analysis"
       ],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

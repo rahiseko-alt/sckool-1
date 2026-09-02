@@ -30,7 +30,7 @@
 
 - 要件の正本は **`docs/requirements.md`**。第1部がユーザーの原文44項目、第2部が
   **MVP 受け入れ基準 A〜K**（1つずつ確かめられる文にしてある）
-- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **28件が `done`**、
+- 計画は **`docs/plan.json` の43項目**（`T001`〜`T043`）。うち **29件が `done`**、
   1件が人の確認待ち（`T006` デザイン）
 - **雛形自身の28項目は `docs/plan.from-0.json` に改名して保存した。**
   `docs/decisions.md`「28.」までの T 番号はそちらを指す
@@ -67,6 +67,7 @@
 - `T024` `T025` 広告枠の販売と効果の記録
 - `T026` `T027` `T028` 経営ダッシュボード・売上推移・ランキング
 - `T029` 管理者の全企業一覧（API と管理画面のページ）
+- `T030` 相互取引率・購入集中率（同上）
 - `docs/decisions.md`「30.」〜「35.」を追記
 
 ### 前のセッションまで（雛形 `from-0` としての作業）
@@ -101,15 +102,15 @@
 | `T004` | 認証は**標準のまま使える**。Market ID をそのまま渡せる          |
 | `T005` | 多言語は**自前**。Translation Module は経路も読み出しも動かない |
 
-次は `pnpm run plan:next` が返す1件から（いまは `T030` 相互取引率・購入集中率）。
+次は `pnpm run plan:next` が返す1件から（いまは `T031` 管理者の購入ログ）。
 
 **再開したらまず `pnpm run services` を実行すること。** コンテナが再起動すると
 PostgreSQL と Redis が止まっており、API もデータベースも動かない。
 そのあと `pnpm run seed`（公開鍵と販売channel）を実行すると Store API を呼べる。
 
 **Storefront（生徒が見る画面）はまだ無い。** いまあるのは `apps/api` の API と、
-Mercur が持ってきた管理画面・企業パネル、それに管理画面へ足した「企業一覧」
-（`apps/admin/src/routes/organizations/page.tsx`）だけ。`apps/storefront` には
+Mercur が持ってきた管理画面・企業パネル、それに管理画面へ足した「企業一覧」と
+「取引の偏り」（`apps/admin/src/routes/`）だけ。`apps/storefront` には
 デザインのトークンしか置いていない。
 
 補足: 週次 Routine は無効化済み（`trig_01LVCzPzXcTxdyGFdxtFQZSw`）。進み具合は
@@ -146,6 +147,8 @@ Mercur が持ってきた管理画面・企業パネル、それに管理画面�
   検査スクリプトは合鍵で呼ぶので影響を受けない。詳細は `docs/decisions.md`「35.」
 - **管理画面と企業パネルの URL は `/dashboard` から始まる**（`http://localhost:7000/dashboard/login`）。
   `/login` を開くと「public base URL is /dashboard」と出るだけで何も描画されない
+- **管理画面にページを足したら、その開発サーバーを起動し直す。** 経路自体は
+  すぐ開けるが、**左のメニューには載らない**（ページの一覧は起動時に作られる）
 - **`apps/api/src/api/` に経路を足したら、サーバーを完全に落として起動し直す。**
   古いサーバーが残っていると新しい経路が 404 のままになる（`EADDRINUSE` は
   ログを見ないと気づけない）。落とすときは `pgrep -f "[m]edusa"` で残りを確認する
