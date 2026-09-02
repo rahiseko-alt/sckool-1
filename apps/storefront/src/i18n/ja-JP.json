@@ -31,13 +31,102 @@
     "retry": "もう一度試す",
     "count": "{{count}} 件"
   },
+  "detail": {
+    "description": "商品の説明",
+    "targetCustomer": "こんな企業のための商品です",
+    "problemSolved": "解決する困りごと",
+    "salePeriod": "販売期間",
+    "loginToBuy": "購入するにはログインしてください",
+    "ownListing": "自社の商品です"
+  },
+  "purchase": {
+    "confirmTitle": "この商品を購入します",
+    "confirm": "購入を確定する",
+    "doneTitle": "購入しました",
+    "doneMessage": "{{title}} を {{seller}} から購入しました",
+    "balanceAfter": "購入後の残高",
+    "keepShopping": "市場に戻る"
+  },
   "unavailable": {
     "not_started": "販売開始前",
     "ended": "販売終了",
     "sold_out": "売り切れ"
   },
+  "auth": {
+    "signUpTitle": "企業をつくる",
+    "signUpLead": "名前とパスワードだけで始められます。ほかに聞くことはありません。",
+    "organizationName": "企業名",
+    "organizationNameHint": "1〜40文字。ほかの企業と同じ名前は使えません",
+    "password": "パスワード",
+    "passwordHint": "8文字以上",
+    "createAccount": "企業をつくる",
+    "credentialsTitle": "この2つを控えてください",
+    "credentialsLead": "この画面でしか表示されません。もう一度見ることはできません。",
+    "marketId": "ID",
+    "recoveryCode": "再発行コード",
+    "recoveryCodeHint": "パスワードを忘れたときに使います",
+    "saved": "控えました。市場へ進む",
+    "loginTitle": "ログイン",
+    "logIn": "ログイン",
+    "loggedInAs": "ログイン中",
+    "logOut": "ログアウト",
+    "creating": "作成しています",
+    "loggingIn": "ログインしています"
+  },
+  "balance": {
+    "title": "残高",
+    "normal": "通常",
+    "bonus": "ボーナス",
+    "total": "合計"
+  },
+  "quiz": {
+    "title": "テスト",
+    "subtitle": "合格するとボーナス MP がもらえます",
+    "empty": "いま受けられるテストはありません",
+    "topic": "分野",
+    "questionCount": "{{count}} 問",
+    "start": "受ける",
+    "submit": "答案を出す",
+    "question": "第 {{number}} 問",
+    "resultTitle": "採点しました",
+    "score": "点数",
+    "reward": "ボーナス {{amount}} MP",
+    "noReward": "今回のボーナスはありません",
+    "alreadyRewarded": "このテストのボーナスは受け取り済みです",
+    "expiresAt": "ボーナスの期限",
+    "loginToTake": "受けるにはログインしてください",
+    "backToList": "テストの一覧に戻る"
+  },
+  "ranking": {
+    "title": "ランキング",
+    "subtitle": "指標を選ぶと並びが変わります",
+    "rank": "順位",
+    "company": "企業",
+    "empty": "まだ順位がありません",
+    "metric": {
+      "revenue": "売上",
+      "profit": "利益",
+      "profit_margin": "利益率",
+      "customers": "顧客数",
+      "roas": "広告の費用対効果"
+    }
+  },
   "money": {
     "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "パスワードは8文字以上にしてください",
+    "organization_name_invalid": "その企業名は使えません",
+    "organization_name_taken": "その企業名はすでに使われています",
+    "market_id_unavailable": "いま企業を作れません。少し待ってからもう一度お試しください",
+    "cannot_buy_own_listing": "自社の商品は購入できません",
+    "insufficient_balance": "残高が足りません",
+    "listing_not_found": "その商品は見つかりません",
+    "listing_unavailable": "いまは購入できません",
+    "login_required": "ログインしてください",
+    "too_many_attempts": "何度も失敗したため、しばらく待ってからお試しください",
+    "invalid_login": "ID かパスワードが違います",
+    "unknown": "うまくいきませんでした。もう一度お試しください"
   },
   "common": {
     "cancel": "キャンセル",

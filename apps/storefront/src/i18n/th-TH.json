@@ -31,13 +31,102 @@
     "retry": "ลองอีกครั้ง",
     "count": "{{count}} รายการ"
   },
+  "detail": {
+    "description": "รายละเอียดสินค้า",
+    "targetCustomer": "เหมาะกับธุรกิจแบบนี้",
+    "problemSolved": "ปัญหาที่ช่วยแก้",
+    "salePeriod": "ช่วงเวลาที่ขาย",
+    "loginToBuy": "เข้าสู่ระบบเพื่อซื้อ",
+    "ownListing": "นี่คือสินค้าของคุณเอง"
+  },
+  "purchase": {
+    "confirmTitle": "คุณกำลังจะซื้อสินค้านี้",
+    "confirm": "ยืนยันการซื้อ",
+    "doneTitle": "ซื้อสำเร็จแล้ว",
+    "doneMessage": "คุณซื้อ {{title}} จาก {{seller}}",
+    "balanceAfter": "ยอดคงเหลือหลังการซื้อ",
+    "keepShopping": "กลับไปที่ตลาด"
+  },
   "unavailable": {
     "not_started": "ยังไม่เปิดขาย",
     "ended": "สิ้นสุดการขาย",
     "sold_out": "สินค้าหมด"
   },
+  "auth": {
+    "signUpTitle": "สร้างบริษัทของคุณ",
+    "signUpLead": "ใช้เพียงชื่อและรหัสผ่าน ไม่ถามข้อมูลอื่นใด",
+    "organizationName": "ชื่อบริษัท",
+    "organizationNameHint": "1 ถึง 40 ตัวอักษร และต้องไม่ซ้ำกับบริษัทอื่น",
+    "password": "รหัสผ่าน",
+    "passwordHint": "อย่างน้อย 8 ตัวอักษร",
+    "createAccount": "สร้างบริษัท",
+    "credentialsTitle": "โปรดจดสองสิ่งนี้ไว้",
+    "credentialsLead": "แสดงเพียงครั้งเดียวเท่านั้น และดูซ้ำไม่ได้",
+    "marketId": "ไอดี",
+    "recoveryCode": "รหัสกู้คืน",
+    "recoveryCodeHint": "ใช้เมื่อลืมรหัสผ่าน",
+    "saved": "จดไว้แล้ว ไปที่ตลาด",
+    "loginTitle": "เข้าสู่ระบบ",
+    "logIn": "เข้าสู่ระบบ",
+    "loggedInAs": "เข้าสู่ระบบในชื่อ",
+    "logOut": "ออกจากระบบ",
+    "creating": "กำลังสร้าง",
+    "loggingIn": "กำลังเข้าสู่ระบบ"
+  },
+  "balance": {
+    "title": "ยอดคงเหลือ",
+    "normal": "ปกติ",
+    "bonus": "โบนัส",
+    "total": "รวม"
+  },
+  "quiz": {
+    "title": "แบบทดสอบ",
+    "subtitle": "ทำได้ดีจะได้รับ MP โบนัส",
+    "empty": "ตอนนี้ยังไม่มีแบบทดสอบ",
+    "topic": "หัวข้อ",
+    "questionCount": "{{count}} ข้อ",
+    "start": "เริ่มทำ",
+    "submit": "ส่งคำตอบ",
+    "question": "ข้อที่ {{number}}",
+    "resultTitle": "ตรวจคำตอบเรียบร้อยแล้ว",
+    "score": "คะแนน",
+    "reward": "โบนัส {{amount}} MP",
+    "noReward": "ครั้งนี้ไม่ได้รับโบนัส",
+    "alreadyRewarded": "คุณได้รับโบนัสของแบบทดสอบนี้ไปแล้ว",
+    "expiresAt": "โบนัสหมดอายุ",
+    "loginToTake": "เข้าสู่ระบบเพื่อทำแบบทดสอบ",
+    "backToList": "กลับไปที่รายการแบบทดสอบ"
+  },
+  "ranking": {
+    "title": "อันดับ",
+    "subtitle": "เลือกตัวชี้วัดเพื่อเปลี่ยนลำดับ",
+    "rank": "ลำดับ",
+    "company": "บริษัท",
+    "empty": "ยังไม่มีอันดับ",
+    "metric": {
+      "revenue": "ยอดขาย",
+      "profit": "กำไร",
+      "profit_margin": "อัตรากำไร",
+      "customers": "จำนวนลูกค้า",
+      "roas": "ผลตอบแทนจากค่าโฆษณา"
+    }
+  },
   "money": {
     "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+    "organization_name_invalid": "ใช้ชื่อบริษัทนี้ไม่ได้",
+    "organization_name_taken": "ชื่อบริษัทนี้มีผู้ใช้แล้ว",
+    "market_id_unavailable": "ตอนนี้สร้างบริษัทไม่ได้ กรุณาลองใหม่อีกครั้ง",
+    "cannot_buy_own_listing": "ไม่สามารถซื้อสินค้าของตัวเองได้",
+    "insufficient_balance": "ยอดคงเหลือไม่พอ",
+    "listing_not_found": "ไม่พบสินค้านั้น",
+    "listing_unavailable": "ตอนนี้ยังซื้อไม่ได้",
+    "login_required": "กรุณาเข้าสู่ระบบ",
+    "too_many_attempts": "ผิดพลาดหลายครั้งเกินไป กรุณารอสักครู่แล้วลองใหม่",
+    "invalid_login": "ไอดีหรือรหัสผ่านไม่ถูกต้อง",
+    "unknown": "ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
   },
   "common": {
     "cancel": "ยกเลิก",

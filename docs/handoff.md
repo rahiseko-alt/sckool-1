@@ -30,7 +30,7 @@
 
 - 要件の正本は **`docs/requirements.md`**。第1部がユーザーの原文44項目、第2部が
   **MVP 受け入れ基準 A〜K**（1つずつ確かめられる文にしてある）
-- 計画は **`docs/plan.json` の44項目**（`T001`〜`T044`）。うち **32件が `done`**、
+- 計画は **`docs/plan.json` の44項目**（`T001`〜`T044`）。うち **33件が `done`**、
   1件が人の確認待ち（`T006` デザイン）
 - **雛形自身の28項目は `docs/plan.from-0.json` に改名して保存した。**
   `docs/decisions.md`「28.」までの T 番号はそちらを指す
@@ -72,6 +72,8 @@
 - `T032` 6言語の辞書・右上の言語切替・未翻訳キーの機械検査。**生徒が見る画面を作り始めた**
 - `T044`（追記した項目）**企業の名乗りを合鍵で確かめるようにした。**
   それまで本文の `market_id` を信じており、ログインせずに他社の残高で買えていた
+- `T033` 買う側の画面を6言語にした。**登録→ログイン→市場→詳細→購入→テスト→ランキング**が
+  日本語以外の1言語だけで最後まで進むことをブラウザで確認
 - `docs/decisions.md`「30.」〜「37.」を追記
 
 ### 前のセッションまで（雛形 `from-0` としての作業）
@@ -106,7 +108,7 @@
 | `T004` | 認証は**標準のまま使える**。Market ID をそのまま渡せる          |
 | `T005` | 多言語は**自前**。Translation Module は経路も読み出しも動かない |
 
-次は `pnpm run plan:next` が返す1件から（いまは `T033` Storefront 全画面の翻訳投入）。
+次は `pnpm run plan:next` が返す1件から（いまは `T034` 企業側の画面の翻訳）。
 **ここから先は多言語（受け入れ基準 I）が中心**で、`docs/decisions.md`「32.」の結論どおり
 Medusa の Translation Module は使わず自前で作る。
 
@@ -114,7 +116,8 @@ Medusa の Translation Module は使わず自前で作る。
 PostgreSQL と Redis が止まっており、API もデータベースも動かない。
 そのあと `pnpm run seed`（公開鍵と販売channel）を実行すると Store API を呼べる。
 
-**Storefront（生徒が見る画面）は市場一覧だけできている。** `pnpm run storefront:dev` で
+**Storefront（生徒が見る画面）は買う側が一通りできている**（市場一覧・商品詳細・購入・
+アカウント作成・ログイン・テスト・ランキング）。**出品と経営ダッシュボードの画面はまだ無い。** `pnpm run storefront:dev` で
 `http://localhost:8000`。**公開鍵を環境変数で渡す必要がある**（無いと商品が0件になる）:
 
 ```bash
@@ -163,6 +166,9 @@ VITE_PUBLISHABLE_KEY=$(psql "$DATABASE_URL" -tAc "SELECT token FROM api_key WHER
   `/login` を開くと「public base URL is /dashboard」と出るだけで何も描画されない
 - **管理画面にページを足したら、その開発サーバーを起動し直す。** 経路自体は
   すぐ開けるが、**左のメニューには載らない**（ページの一覧は起動時に作られる）
+- **生徒の画面（8000番）を使うときは `AUTH_CORS` にも入れる。** 商品の取得は `STORE_CORS`、
+  ログインは `AUTH_CORS` と見る設定が違うため、片方だけだと
+  「市場は開けるのにログインだけ失敗する」状態になる（実際にそうなった）
 - **企業として行う操作は合鍵（`Authorization: Bearer`）が要る。** 本文に `market_id` を
   書いても名乗ったことにならない（`docs/decisions.md`「37.」）。検査スクリプトは
   先に `/auth/customer/emailpass` でログインしてから呼ぶ

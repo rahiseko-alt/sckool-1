@@ -24,8 +24,10 @@ const defaults = {
   STORE_CORS: 'http://localhost:8000,http://localhost:3000',
   ADMIN_CORS: 'http://localhost:7000,http://localhost:9000',
   VENDOR_CORS: 'http://localhost:7001',
+  // 生徒の画面（8000）を入れ忘れると、市場は開けるのにログインだけが失敗する。
+  // 商品の取得は STORE_CORS、ログインは AUTH_CORS と、見る設定が違うため。
   AUTH_CORS:
-    'http://localhost:3000,http://localhost:7000,http://localhost:7001,http://localhost:9000',
+    'http://localhost:8000,http://localhost:3000,http://localhost:7000,http://localhost:7001,http://localhost:9000',
   MERCUR_VENDOR_URL: 'http://localhost:7001',
   STOREFRONT_REVALIDATE_URL: 'http://localhost:3000',
   // 開発専用の値。本番では必ず環境変数で別の値を与えること。

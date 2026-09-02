@@ -31,13 +31,102 @@
     "retry": "Thử lại",
     "count": "{{count}} sản phẩm"
   },
+  "detail": {
+    "description": "Giới thiệu sản phẩm",
+    "targetCustomer": "Dành cho những doanh nghiệp như thế này",
+    "problemSolved": "Vấn đề được giải quyết",
+    "salePeriod": "Thời gian bán",
+    "loginToBuy": "Hãy đăng nhập để mua",
+    "ownListing": "Đây là sản phẩm của chính bạn"
+  },
+  "purchase": {
+    "confirmTitle": "Bạn sắp mua sản phẩm này",
+    "confirm": "Xác nhận mua",
+    "doneTitle": "Đã mua xong",
+    "doneMessage": "Bạn đã mua {{title}} từ {{seller}}",
+    "balanceAfter": "Số dư sau khi mua",
+    "keepShopping": "Quay lại thị trường"
+  },
   "unavailable": {
     "not_started": "Chưa mở bán",
     "ended": "Đã kết thúc bán",
     "sold_out": "Đã bán hết"
   },
+  "auth": {
+    "signUpTitle": "Tạo doanh nghiệp của bạn",
+    "signUpLead": "Chỉ cần tên và mật khẩu. Chúng tôi không hỏi gì thêm.",
+    "organizationName": "Tên doanh nghiệp",
+    "organizationNameHint": "Từ 1 đến 40 ký tự và chưa có ai dùng",
+    "password": "Mật khẩu",
+    "passwordHint": "Ít nhất 8 ký tự",
+    "createAccount": "Tạo doanh nghiệp",
+    "credentialsTitle": "Hãy ghi lại hai thông tin này",
+    "credentialsLead": "Chúng chỉ hiện ra lần này. Bạn không thể xem lại.",
+    "marketId": "ID",
+    "recoveryCode": "Mã khôi phục",
+    "recoveryCodeHint": "Dùng khi bạn quên mật khẩu",
+    "saved": "Đã ghi lại, vào thị trường",
+    "loginTitle": "Đăng nhập",
+    "logIn": "Đăng nhập",
+    "loggedInAs": "Đang đăng nhập",
+    "logOut": "Đăng xuất",
+    "creating": "Đang tạo",
+    "loggingIn": "Đang đăng nhập"
+  },
+  "balance": {
+    "title": "Số dư",
+    "normal": "Thường",
+    "bonus": "Thưởng",
+    "total": "Tổng"
+  },
+  "quiz": {
+    "title": "Bài kiểm tra",
+    "subtitle": "Làm tốt sẽ nhận được MP thưởng",
+    "empty": "Hiện chưa có bài kiểm tra nào",
+    "topic": "Chủ đề",
+    "questionCount": "{{count}} câu hỏi",
+    "start": "Làm bài",
+    "submit": "Nộp bài",
+    "question": "Câu {{number}}",
+    "resultTitle": "Bài của bạn đã được chấm",
+    "score": "Điểm",
+    "reward": "Thưởng {{amount}} MP",
+    "noReward": "Lần này không có thưởng",
+    "alreadyRewarded": "Bạn đã nhận thưởng của bài kiểm tra này rồi",
+    "expiresAt": "Thưởng hết hạn",
+    "loginToTake": "Hãy đăng nhập để làm bài",
+    "backToList": "Quay lại danh sách bài kiểm tra"
+  },
+  "ranking": {
+    "title": "Xếp hạng",
+    "subtitle": "Chọn một chỉ số để đổi thứ tự",
+    "rank": "Hạng",
+    "company": "Doanh nghiệp",
+    "empty": "Chưa có xếp hạng",
+    "metric": {
+      "revenue": "Doanh thu",
+      "profit": "Lợi nhuận",
+      "profit_margin": "Tỷ suất lợi nhuận",
+      "customers": "Số khách hàng",
+      "roas": "Hiệu quả chi phí quảng cáo"
+    }
+  },
   "money": {
     "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "Mật khẩu cần ít nhất 8 ký tự",
+    "organization_name_invalid": "Không thể dùng tên doanh nghiệp đó",
+    "organization_name_taken": "Tên doanh nghiệp đó đã có người dùng",
+    "market_id_unavailable": "Hiện chưa tạo được doanh nghiệp. Vui lòng thử lại sau ít phút",
+    "cannot_buy_own_listing": "Bạn không thể mua sản phẩm của chính mình",
+    "insufficient_balance": "Bạn không đủ MP",
+    "listing_not_found": "Không tìm thấy sản phẩm đó",
+    "listing_unavailable": "Hiện không thể mua sản phẩm này",
+    "login_required": "Vui lòng đăng nhập",
+    "too_many_attempts": "Sai quá nhiều lần. Hãy đợi một lúc rồi thử lại",
+    "invalid_login": "ID hoặc mật khẩu không đúng",
+    "unknown": "Không thành công. Vui lòng thử lại"
   },
   "common": {
     "cancel": "Hủy",

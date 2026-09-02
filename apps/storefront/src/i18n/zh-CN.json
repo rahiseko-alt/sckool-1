@@ -31,13 +31,102 @@
     "retry": "重试",
     "count": "共 {{count}} 件商品"
   },
+  "detail": {
+    "description": "商品说明",
+    "targetCustomer": "适合这样的企业",
+    "problemSolved": "能解决的问题",
+    "salePeriod": "销售期间",
+    "loginToBuy": "购买前请先登录",
+    "ownListing": "这是你自己的商品"
+  },
+  "purchase": {
+    "confirmTitle": "即将购买该商品",
+    "confirm": "确认购买",
+    "doneTitle": "购买成功",
+    "doneMessage": "你从 {{seller}} 购买了 {{title}}",
+    "balanceAfter": "购买后的余额",
+    "keepShopping": "返回市场"
+  },
   "unavailable": {
     "not_started": "尚未开售",
     "ended": "销售结束",
     "sold_out": "已售罄"
   },
+  "auth": {
+    "signUpTitle": "创建你的企业",
+    "signUpLead": "只需要名称和密码，不会询问其他信息。",
+    "organizationName": "企业名称",
+    "organizationNameHint": "1到40个字符，不能与其他企业重名",
+    "password": "密码",
+    "passwordHint": "至少8个字符",
+    "createAccount": "创建企业",
+    "credentialsTitle": "请记下这两项",
+    "credentialsLead": "只在此页面显示一次，之后无法再次查看。",
+    "marketId": "ID",
+    "recoveryCode": "找回码",
+    "recoveryCodeHint": "忘记密码时使用",
+    "saved": "已记下，进入市场",
+    "loginTitle": "登录",
+    "logIn": "登录",
+    "loggedInAs": "当前登录",
+    "logOut": "退出登录",
+    "creating": "正在创建",
+    "loggingIn": "正在登录"
+  },
+  "balance": {
+    "title": "余额",
+    "normal": "普通",
+    "bonus": "奖励",
+    "total": "合计"
+  },
+  "quiz": {
+    "title": "测验",
+    "subtitle": "成绩好可以获得奖励 MP",
+    "empty": "目前没有可参加的测验",
+    "topic": "领域",
+    "questionCount": "{{count}} 道题",
+    "start": "参加",
+    "submit": "提交答案",
+    "question": "第 {{number}} 题",
+    "resultTitle": "已完成评分",
+    "score": "分数",
+    "reward": "奖励 {{amount}} MP",
+    "noReward": "这次没有奖励",
+    "alreadyRewarded": "这个测验的奖励已经领取过了",
+    "expiresAt": "奖励有效期至",
+    "loginToTake": "参加前请先登录",
+    "backToList": "返回测验列表"
+  },
+  "ranking": {
+    "title": "排行榜",
+    "subtitle": "选择指标可以改变排序",
+    "rank": "名次",
+    "company": "企业",
+    "empty": "还没有排名",
+    "metric": {
+      "revenue": "销售额",
+      "profit": "利润",
+      "profit_margin": "利润率",
+      "customers": "客户数",
+      "roas": "广告投入回报"
+    }
+  },
   "money": {
     "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "密码至少需要8个字符",
+    "organization_name_invalid": "这个企业名称不能使用",
+    "organization_name_taken": "这个企业名称已被使用",
+    "market_id_unavailable": "现在无法创建企业，请稍后再试",
+    "cannot_buy_own_listing": "不能购买自己的商品",
+    "insufficient_balance": "余额不足",
+    "listing_not_found": "找不到该商品",
+    "listing_unavailable": "现在无法购买",
+    "login_required": "请先登录",
+    "too_many_attempts": "失败次数过多，请稍等一会再试",
+    "invalid_login": "ID 或密码不正确",
+    "unknown": "操作没有成功，请再试一次"
   },
   "common": {
     "cancel": "取消",

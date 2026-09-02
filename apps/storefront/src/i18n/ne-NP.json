@@ -31,13 +31,102 @@
     "retry": "फेरि प्रयास गर्नुहोस्",
     "count": "{{count}} वटा"
   },
+  "detail": {
+    "description": "सामानको विवरण",
+    "targetCustomer": "यस्ता कम्पनीहरूका लागि",
+    "problemSolved": "समाधान गर्ने समस्या",
+    "salePeriod": "बिक्री अवधि",
+    "loginToBuy": "किन्न लग इन गर्नुहोस्",
+    "ownListing": "यो तपाईंकै सामान हो"
+  },
+  "purchase": {
+    "confirmTitle": "तपाईं यो सामान किन्न लाग्नुभएको छ",
+    "confirm": "किन्ने कुरा पक्का गर्नुहोस्",
+    "doneTitle": "किनियो",
+    "doneMessage": "तपाईंले {{seller}} बाट {{title}} किन्नुभयो",
+    "balanceAfter": "किनेपछिको मौज्दात",
+    "keepShopping": "बजारमा फर्कनुहोस्"
+  },
   "unavailable": {
     "not_started": "बिक्री सुरु भएको छैन",
     "ended": "बिक्री सकियो",
     "sold_out": "बिक्री भइसक्यो"
   },
+  "auth": {
+    "signUpTitle": "आफ्नो कम्पनी बनाउनुहोस्",
+    "signUpLead": "नाम र पासवर्ड मात्र चाहिन्छ। अरू केही सोधिँदैन।",
+    "organizationName": "कम्पनीको नाम",
+    "organizationNameHint": "१ देखि ४० अक्षर, अरूले नलिएको",
+    "password": "पासवर्ड",
+    "passwordHint": "कम्तीमा ८ अक्षर",
+    "createAccount": "कम्पनी बनाउनुहोस्",
+    "credentialsTitle": "यी दुई कुरा टिपेर राख्नुहोस्",
+    "credentialsLead": "यी यही पटक मात्र देखिन्छन्। फेरि हेर्न सकिँदैन।",
+    "marketId": "आईडी",
+    "recoveryCode": "पुनः प्राप्ति कोड",
+    "recoveryCodeHint": "पासवर्ड बिर्सिएमा प्रयोग गर्नुहोस्",
+    "saved": "टिपेँ, बजारमा जानुहोस्",
+    "loginTitle": "लग इन",
+    "logIn": "लग इन गर्नुहोस्",
+    "loggedInAs": "लग इन भएको",
+    "logOut": "लग आउट गर्नुहोस्",
+    "creating": "बनाउँदै",
+    "loggingIn": "लग इन हुँदै"
+  },
+  "balance": {
+    "title": "मौज्दात",
+    "normal": "सामान्य",
+    "bonus": "बोनस",
+    "total": "जम्मा"
+  },
+  "quiz": {
+    "title": "परीक्षा",
+    "subtitle": "राम्रो अंक ल्याए बोनस MP पाइन्छ",
+    "empty": "अहिले कुनै परीक्षा छैन",
+    "topic": "विषय",
+    "questionCount": "{{count}} प्रश्न",
+    "start": "दिनुहोस्",
+    "submit": "उत्तर बुझाउनुहोस्",
+    "question": "प्रश्न {{number}}",
+    "resultTitle": "तपाईंको उत्तर जाँचियो",
+    "score": "अंक",
+    "reward": "बोनस {{amount}} MP",
+    "noReward": "यसपटक बोनस छैन",
+    "alreadyRewarded": "यो परीक्षाको बोनस पहिले नै लिइसक्नुभयो",
+    "expiresAt": "बोनसको म्याद",
+    "loginToTake": "परीक्षा दिन लग इन गर्नुहोस्",
+    "backToList": "परीक्षाको सूचीमा फर्कनुहोस्"
+  },
+  "ranking": {
+    "title": "श्रेणी",
+    "subtitle": "मापदण्ड छान्दा क्रम बदलिन्छ",
+    "rank": "क्रम",
+    "company": "कम्पनी",
+    "empty": "अहिलेसम्म कुनै क्रम छैन",
+    "metric": {
+      "revenue": "बिक्री",
+      "profit": "नाफा",
+      "profit_margin": "नाफाको दर",
+      "customers": "ग्राहक संख्या",
+      "roas": "विज्ञापन खर्चको प्रतिफल"
+    }
+  },
   "money": {
     "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "पासवर्ड कम्तीमा ८ अक्षरको हुनुपर्छ",
+    "organization_name_invalid": "त्यो कम्पनीको नाम प्रयोग गर्न मिल्दैन",
+    "organization_name_taken": "त्यो कम्पनीको नाम पहिले नै लिइएको छ",
+    "market_id_unavailable": "अहिले कम्पनी बनाउन सकिएन। केही बेरपछि प्रयास गर्नुहोस्",
+    "cannot_buy_own_listing": "आफ्नै सामान किन्न मिल्दैन",
+    "insufficient_balance": "मौज्दात पुग्दैन",
+    "listing_not_found": "त्यो सामान भेटिएन",
+    "listing_unavailable": "अहिले किन्न मिल्दैन",
+    "login_required": "कृपया लग इन गर्नुहोस्",
+    "too_many_attempts": "धेरै पटक गलत भयो। केही बेर पर्खेर प्रयास गर्नुहोस्",
+    "invalid_login": "आईडी वा पासवर्ड मिलेन",
+    "unknown": "भएन। फेरि प्रयास गर्नुहोस्"
   },
   "common": {
     "cancel": "रद्द गर्नुहोस्",

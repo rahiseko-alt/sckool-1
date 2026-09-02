@@ -31,13 +31,102 @@
     "retry": "Try again",
     "count": "{{count}} items"
   },
+  "detail": {
+    "description": "About this product",
+    "targetCustomer": "Made for these companies",
+    "problemSolved": "The problem it solves",
+    "salePeriod": "On sale",
+    "loginToBuy": "Log in to buy this",
+    "ownListing": "This is your own product"
+  },
+  "purchase": {
+    "confirmTitle": "You are about to buy this",
+    "confirm": "Confirm purchase",
+    "doneTitle": "Purchase complete",
+    "doneMessage": "You bought {{title}} from {{seller}}",
+    "balanceAfter": "Balance after this purchase",
+    "keepShopping": "Back to the market"
+  },
   "unavailable": {
     "not_started": "Not on sale yet",
     "ended": "Sale ended",
     "sold_out": "Sold out"
   },
+  "auth": {
+    "signUpTitle": "Create your company",
+    "signUpLead": "A name and a password are all you need. We ask for nothing else.",
+    "organizationName": "Company name",
+    "organizationNameHint": "1 to 40 characters, and not already taken",
+    "password": "Password",
+    "passwordHint": "At least 8 characters",
+    "createAccount": "Create company",
+    "credentialsTitle": "Write these two down",
+    "credentialsLead": "This is the only time they are shown. You cannot see them again.",
+    "marketId": "ID",
+    "recoveryCode": "Recovery code",
+    "recoveryCodeHint": "Use it if you forget your password",
+    "saved": "Saved them, go to the market",
+    "loginTitle": "Log in",
+    "logIn": "Log in",
+    "loggedInAs": "Logged in as",
+    "logOut": "Log out",
+    "creating": "Creating",
+    "loggingIn": "Logging in"
+  },
+  "balance": {
+    "title": "Balance",
+    "normal": "Regular",
+    "bonus": "Bonus",
+    "total": "Total"
+  },
+  "quiz": {
+    "title": "Quizzes",
+    "subtitle": "Score well and earn bonus MP",
+    "empty": "No quizzes are open right now",
+    "topic": "Topic",
+    "questionCount": "{{count}} questions",
+    "start": "Take it",
+    "submit": "Submit answers",
+    "question": "Question {{number}}",
+    "resultTitle": "Your answers are graded",
+    "score": "Score",
+    "reward": "Bonus {{amount}} MP",
+    "noReward": "No bonus this time",
+    "alreadyRewarded": "You already received the bonus for this quiz",
+    "expiresAt": "Bonus expires",
+    "loginToTake": "Log in to take this quiz",
+    "backToList": "Back to the quiz list"
+  },
+  "ranking": {
+    "title": "Ranking",
+    "subtitle": "Pick a measure to change the order",
+    "rank": "Rank",
+    "company": "Company",
+    "empty": "No ranking yet",
+    "metric": {
+      "revenue": "Revenue",
+      "profit": "Profit",
+      "profit_margin": "Profit margin",
+      "customers": "Customers",
+      "roas": "Return on ad spend"
+    }
+  },
   "money": {
     "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "Your password needs at least 8 characters",
+    "organization_name_invalid": "That company name cannot be used",
+    "organization_name_taken": "That company name is already taken",
+    "market_id_unavailable": "We cannot create a company right now. Please try again shortly",
+    "cannot_buy_own_listing": "You cannot buy your own product",
+    "insufficient_balance": "You do not have enough MP",
+    "listing_not_found": "That product could not be found",
+    "listing_unavailable": "This cannot be bought right now",
+    "login_required": "Please log in",
+    "too_many_attempts": "Too many failed attempts. Please wait a while and try again",
+    "invalid_login": "That ID or password is not correct",
+    "unknown": "That did not work. Please try again"
   },
   "common": {
     "cancel": "Cancel",

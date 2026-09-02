@@ -22,4 +22,6 @@ export const ALLOW_SAME_AS_BASE = [
   // 「市場」はサービス名と同じ綴りになる言語がある。
   'market.title',
   'nav.market',
+  // 「ID」。日本語でもそのまま使う語で、英語・中国語・ベトナム語でも同じ綴りになる。
+  'auth.marketId',
 ] as const
