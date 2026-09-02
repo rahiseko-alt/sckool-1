@@ -19,9 +19,28 @@ const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:9000';
 const TIMEOUT_MS = Number(process.env.API_START_TIMEOUT_MS ?? 180_000);
 
-const command = process.argv.slice(2);
-if (command.length === 0) {
-  console.error('使い方: node scripts/with-api.mjs <実行したいコマンド>');
+/**
+ * 実行したいコマンド。`--` で区切ると、いくつでも順に実行できる。
+ *
+ *   node scripts/with-api.mjs node a.mjs -- node b.mjs
+ *
+ * 1つずつ書けるようにしたのは、サーバーの起動が重く（30秒前後）、
+ * 検査のたびに立て直すと CI が伸びるため。
+ */
+const commands = process.argv
+  .slice(2)
+  .reduce(
+    (groups, arg) => {
+      if (arg === '--') groups.push([]);
+      else groups[groups.length - 1].push(arg);
+      return groups;
+    },
+    [[]],
+  )
+  .filter((group) => group.length > 0);
+
+if (commands.length === 0) {
+  console.error('使い方: node scripts/with-api.mjs <コマンド> [-- <コマンド> ...]');
   process.exit(1);
 }
 
@@ -73,7 +92,16 @@ try {
   process.exit(1);
 }
 
-const child = spawn(command[0], command.slice(1), { cwd: repoRoot, stdio: 'inherit' });
-const [code] = await once(child, 'exit');
+// どれか1つでも失敗したら、そこで止めて失敗として返す。
+// 続きを走らせても、前の失敗が原因の連鎖でしかない。
+for (const command of commands) {
+  const child = spawn(command[0], command.slice(1), { cwd: repoRoot, stdio: 'inherit' });
+  const [code] = await once(child, 'exit');
+  if (code !== 0) {
+    await stopServer();
+    process.exit(code ?? 1);
+  }
+}
+
 await stopServer();
-process.exit(code ?? 0);
+process.exit(0);

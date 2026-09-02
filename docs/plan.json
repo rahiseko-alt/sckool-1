@@ -133,7 +133,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/api/store/auth-market-id", "apps/storefront/src/app/login"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

@@ -32,7 +32,9 @@
     "check:mp": "node scripts/run-api.mjs exec ./src/scripts/check-mp.ts",
     "seed": "node scripts/run-api.mjs exec ./src/scripts/seed-market.ts",
     "check:accounts": "node scripts/check-accounts.mjs",
-    "check:accounts:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/check-accounts.mjs"
+    "check:login-lock": "node scripts/check-login-lock.mjs",
+    "check:auth": "node scripts/check-accounts.mjs && node scripts/check-login-lock.mjs",
+    "check:auth:ci": "pnpm run seed && node scripts/with-api.mjs node scripts/check-accounts.mjs -- node scripts/check-login-lock.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",
