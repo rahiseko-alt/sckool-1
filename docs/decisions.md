@@ -1499,3 +1499,139 @@ i18next の**参照（`$t(...)`）**を使うと、呼び出し側に何も渡�
 **証拠の出し方について**: `AGENTS.md` の「証拠は実物で示す」に従い、ログやテストの出力では
 なく**実際に操作した画面のスクリーンショット**を渡した。テストが通ったという主張ではなく、
 本人が見て判断できるものを出す。
+
+### 42. 公開先は「サーバーとデータを別々の会社に置く」（2026-09-02）
+
+**結論: サーバー本体は Oracle Cloud の無料枠、生徒のデータは Aiven の無料 PostgreSQL、
+生徒の画面は Cloudflare Pages。3つを別々にするのは、Oracle がサーバーを予告なく
+取り上げうるため。**
+
+#### なぜ Oracle なのか（ほかに無かった）
+
+「止まらない Node のサーバーを永続無料で置ける場所」を一次情報で洗い出した結果、
+**Oracle Cloud の Always Free と Google Cloud の e2-micro の2つだけ**だった。
+それ以外は、期限つき（AWS・Azure の12か月枠）か、休眠する（Render は15分で休眠し
+復帰に約1分）か、常時起動に無料枠が足りない（Cloud Run・Cloudflare Workers・
+Deno Deploy・Scaleway・Azure Container Apps はいずれも月730時間に対し無料枠が
+4分の1〜14分の1）か、そもそも常駐プロセスを動かせない。
+
+**Google の e2-micro を採らなかった理由**は3つ。メモリが 1 GB しかない（実測ピークは
+1,290 MB）、**北米向け下り通信が月1 GB まで**で生徒60人だと超える恐れがある、
+そして**超過分は自動的に課金される**（無料が保証されない）。
+
+| 項目     | Oracle Always Free（A1） |
+| -------- | ------------------------ |
+| CPU      | 2 OCPU                   |
+| メモリ   | 12 GB                    |
+| ディスク | 200 GB                   |
+| 下り通信 | 10 TB/月                 |
+| 期限     | 無し                     |
+
+#### 実測: 60社が同時に買っても収まる
+
+`scripts/check-load.mjs`（60社・375件の購入）を走らせながら、medusa・postgres・redis の
+使用量を測った（2026-09-02、x86・4コアの開発環境）。
+
+| 測ったもの | 最大値                                              | Always Free の枠 |
+| ---------- | --------------------------------------------------- | ---------------- |
+| CPU        | **1.33 コア**                                       | 2 OCPU           |
+| メモリ     | **1,290 MB**（medusa 935 / postgres 349 / redis 7） | 12 GB            |
+| 所要時間   | 19.4 秒（毎秒19件の購入）                           | —                |
+
+実際の授業は毎秒19件も買わない（60人が1分に1回でも毎秒1件）。**19倍の余裕**がある。
+**測ったのは x86 で、ARM は1コアあたり遅い** `[曖昧]` が、この余裕を食い潰す差ではない。
+
+#### 取り上げ（idle reclamation）— これが構成を決めた
+
+Oracle は Always Free のサーバーを、7日間つづけて次の3つが**同時に**成り立つと回収する。
+
+> Idle Always Free compute instances may be reclaimed by Oracle. Oracle will deem virtual
+> machine and bare metal compute instances as idle if, during a 7-day period, the following
+> are true: CPU utilization for the 95th percentile is less than 20% / Network utilization is
+> less than 20% / Memory utilization is less than 20% (applies to A1 shapes only)
+
+**見ているのは機械の働き具合だけで、誰がログインしたか・何を操作したかは一切見ていない。**
+そのため「授業で使っていれば大丈夫」にはならない。
+
+- **メモリ**: 上の実測のとおり、60人が一斉に買っている瞬間ですら 12 GB の 20%（2.4 GB）に届かない
+- **CPU**: 判定は**95パーセンタイル**（上位5%を除いた値）。週2時間の授業は1週間の 1.2% なので、
+  その山はまるごと除外され、残る値はほぼ 0%
+- **通信**: 60人ぶんの画面と API の通信では、回線の 20% に遠く及ばない
+
+**当初は「PostgreSQL に 3 GB を握らせてメモリを 20% 以上に見せる」対策を採ろうとしたが、
+調べた結果これは事前に確かめられないと分かった。** Oracle は `MemoryUtilization` を
+「Space currently in use. Measured by pages.」としか定義しておらず、`/proc/meminfo` の
+どの値を使うか、共有メモリや page cache を数えるかを**どの公式文書にも書いていない**。
+Oracle Cloud Agent のソースも非公開。Linux は**実際に触るまで物理メモリを割り当てない**ため、
+`shared_buffers` を大きくしただけでメトリックが上がる保証もない `[曖昧]`。
+
+**さらに、回収されたときデータが残るかも公式に書かれていない。** 同じ Oracle の Free Tier
+FAQ では「reclaimed」を**完全削除・復元不可**の意味で使っている。
+
+> "your paid resources have been **reclaimed (terminated)**." /
+> "your resources have been reclaimed and **can't be restored**." /
+> "**reclaimed resources can't be recovered—they are permanently deleted**."
+
+Autonomous Database については「まず停止・データは保持、通算90日で削除」と**明記されている**。
+**compute について書いていないのは、書き忘れではなく空白と見るべき** `[曖昧]`。
+
+**契約書（`PaaS and IaaS Universal Credits Service Descriptions` 第E節）はさらに厳しい。**
+
+> "The following sections of the Oracle Cloud Hosting and Delivery Policies **do not apply to
+> Always Free Cloud Services: Cloud Service Continuity Policy, Cloud Service Level Agreement
+> and Oracle Cloud Support Policy.**" /
+> "Oracle **in its sole discretion may remove or modify an Always Free Cloud Service from the
+> Always Free category** at any time."
+
+つまり無料枠には**継続保証も稼働率保証もサポートも無く、Oracle はいつでも独断で終了できる**。
+
+#### だから、データをサーバーに置かない
+
+対策を「取り上げられないようにする」（確かめられない）から
+**「取り上げられても困らないようにする」**（確かめられる）に変えた。
+
+| 何を                           | どこに                    | なぜ                                   |
+| ------------------------------ | ------------------------- | -------------------------------------- |
+| 生徒のデータ（企業・MP・取引） | **Aiven Free PostgreSQL** | 無期限・カード不要・バックアップつき   |
+| サーバー本体（Medusa・Redis）  | **Oracle Always Free**    | 取り上げられても中身は空。作り直すだけ |
+| 生徒の画面                     | **Cloudflare Pages**      | 静的ファイルを置くだけ                 |
+
+Aiven の無料枠は公式に「期限なし・カード不要」と書かれている。
+
+> "You don't need a credit card ... use them indefinitely free of charge"
+
+これで最悪のシナリオが「先生がサーバーを作り直す時間」だけになり、**授業のデータは無傷**。
+再構築の手順は台本にして `docs/deploy.md` に置く。
+
+#### 残る限界
+
+- **Aiven の無料枠は 1 CPU / 1 GB メモリ / 1 GB ストレージ。** いまの規模（数百 MB）なら足りるが、
+  生徒が増えたら有料の検討が要る。**長期間使わないと停止される**（事前通知あり）
+- **Redis を Upstash の無料枠に出す案は採らなかった。** 月50万コマンドで、Medusa が
+  キャッシュ・イベント・ワークフローに使う量に足りるか未実測 `[曖昧]`。
+  Redis はキャッシュなので、消えても困らない。サーバーと同じ機械に置く
+- **Oracle の申し込みには本人確認のクレジットカードが要る**（課金はされない）。
+  学校の事務で通るかは確認が必要
+- **「そもそも作れない」ことがある。** 本拠地リージョンで枠が無いと `out of host capacity`。
+  本拠地リージョンは申し込み時に決まる（公式は「慎重に選べ」とだけ書き、変更可否は未記載）`[曖昧]`
+- **無料である以上、どの会社も「必ず動き続ける」保証はしない。** 授業の直前に動作確認をする
+  運用が要る
+- **Vercel は使わない。** バックエンドが動かないうえ、Hobby プランは公式に
+  「非商用・個人利用に限る」と書かれており、授業での利用は判断が要る
+
+#### 根拠（直リンク）
+
+- https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm （idle 回収の条件、A1 の枠）
+- https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier.htm （トライアル終了後も Always Free は残る）
+- https://www.oracle.com/cloud/free/faq/ （"reclaimed (terminated)"、"permanently deleted"）
+- https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/autonomous-always-free.html （DB は停止・データ保持と明記）
+- https://www.oracle.com/contracts/docs/paas_iaas_universal_credits_3940775.pdf （第E節。SLA・サポート・継続保証の非適用）
+- https://docs.oracle.com/en-us/iaas/Content/Compute/References/computemetrics.htm （`MemoryUtilization` の定義。計算式は未記載）
+- https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/enablingmonitoring.htm （プラグイン有効時のみメトリックが出る）
+- https://aiven.io/docs/platform/concepts/free-plan （無期限・カード不要）
+- https://aiven.io/pricing （PostgreSQL Free の枠）
+- https://docs.cloud.google.com/free/docs/free-cloud-features （e2-micro、下り1GB/月、超過は課金）
+- https://render.com/docs/free （15分で休眠、Postgres は30日で失効）
+- https://developers.cloudflare.com/pages/platform/limits/ （Pages の無料枠）
+- https://vercel.com/docs/plans/hobby （非商用・個人利用に限る）
+- https://docs.medusajs.com/learn/deployment （バックエンドは Node サーバーが要る。Vercel はフロントの例としてのみ）
