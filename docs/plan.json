@@ -58,7 +58,7 @@
       "dependsOn": ["T001"],
       "files": ["docs/decisions.md", "apps/api/src/modules/auth-market-id"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -73,7 +73,7 @@
       "dependsOn": ["T001"],
       "files": ["docs/decisions.md", "apps/api/src/scripts/i18n-probe.ts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {

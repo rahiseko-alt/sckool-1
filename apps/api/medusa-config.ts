@@ -28,6 +28,9 @@ module.exports = withMercur({
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     }
   },
+  // 商品情報の多言語（受け入れ基準 I3）に Medusa の Translation Module は使わない。
+  // フラグを立てても経路が現れず、翻訳を直接入れても反映されなかった。
+  // 実験の記録と代わりの方針は docs/decisions.md「32.」
   featureFlags: {
     seller_registration: true
   },

@@ -1168,3 +1168,70 @@ K（非機能）まで **1つずつ確かめられる文**として書いた。`
 機械で完全には守れない。だから `T008` 以降で「生徒がこれらの項目を入力できる画面・API を
 作らない」ことを併せて守る必要がある。**`INHERITED_TABLE_PREFIXES` に新しいテーブルを
 足すと検査が緩む。足してはいけない。**
+
+### 31. Market ID は標準の認証にそのまま渡せた（`docs/plan.json` T004、2026-09-02）
+
+**結論: 独自の認証プロバイダは要らない。標準の `emailpass` をそのまま使う。**
+
+`emailpass` は識別子を `email` という名前で受け取るが、**中身がメールアドレスの形かどうかを
+検査していない**。実装（`@medusajs/auth-emailpass@2.18.0` の `services/emailpass.js`）が
+見ているのは `isString(email)` だけ。
+
+**実際に API を叩いて確かめた**（再現手順: `pnpm run services` のあと API を起動し、
+`node scripts/probe-auth.mjs`）:
+
+| 試したこと                                                  | 応答                                                                |
+| ----------------------------------------------------------- | ------------------------------------------------------------------- |
+| `POST /auth/customer/emailpass/register` に `MKT-4PJZ-JGN2` | **200**。トークンが発行された                                       |
+| 同じ Market ID とパスワードでログイン                       | **200**。トークンが発行された                                       |
+| 存在しない `MKT-ZZZZ-ZZZZ` でログイン                       | 401 `{"type":"unauthorized","message":"Invalid email or password"}` |
+| 正しい ID + まちがったパスワード                            | 401 **まったく同じ本文**                                            |
+
+| 分かったこと                               | 内容                                                                                                                |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| **受け入れ基準 A2 は標準の挙動で満たせる** | 「ID が無い」と「パスワードが違う」で応答が同一。ID の存在が漏れない                                                |
+| **登録しても `customer` 行はできない**     | 実際に確認した結果、`customer` は0件のまま。`provider_identity.entity_id` に Market ID が入るだけで、`email` 列は空 |
+| **個人情報の検査も通ったまま**             | アカウントを2件作ったあとに再実行して違反0件                                                                        |
+
+**残る作業**: 画面に出す文言は「Invalid email or password」のままでは要件に合わない
+（メールを使わないため）。表示は翻訳辞書側で差し替える（`T009` `T032`）。
+
+### 32. Medusa の Translation Module は使わない（`docs/plan.json` T005、2026-09-02）
+
+**結論: 商品名・商品説明の多言語（受け入れ基準 I3）は自前のテーブルで持つ。**
+Medusa の Translation Module は、この組み合わせ（Medusa 2.18.0 + `@mercurjs/core` 2.3.3）
+では**動かせなかった**。
+
+**試したことと結果**（すべて実行して確かめた）:
+
+| 試したこと                                                               | 結果                                                                              |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| `medusa-config.ts` の `modules` に `@medusajs/medusa/translation` を足す | マイグレーションは成功。`translation` と `translation_settings` の表ができた      |
+| `featureFlags: { translation: true }` を足して起動                       | 起動ログに `Using flag MEDUSA_FF_TRANSLATION from project config with value true` |
+| `POST /admin/translations`                                               | **404**（実装を読むとこの経路は `GET` しか持たない）                              |
+| `POST /admin/translations/batch`（実装から見つけた正しい経路）           | **404**                                                                           |
+| `GET /admin/translations` / `/settings` / `/statistics`                  | **404**                                                                           |
+| `GET /admin/translations/entities`                                       | **400**（引数不足のエラー＝経路は存在する）                                       |
+| 環境変数 `MEDUSA_FF_TRANSLATION=true` で起動し直す                       | 変化なし。404 のまま                                                              |
+| `translation` 表に英訳の行を **SQL で直接入れて** 商品を取得             | `x-medusa-locale: en` を付けても**原文のまま**。`?locale=en` は **400**           |
+
+**分かったこと**: 404 になる経路にはどれも
+`defineFileConfig({ isDisabled: () => !FeatureFlag.isFeatureEnabled('translation') })` が
+付いており、唯一通った `entities` にはそれが無い。**フラグは読み込まれているのに、
+経路を組み立てる時点では「無効」と判定されている。** なぜそうなるかは追い切れていない `[曖昧]`。
+
+**なぜ深追いしないか**: 読み出し側（翻訳を入れても原文が返る）まで動かないため、仮に
+書き込み経路を通せても I3 は満たせない。Medusa 自身もこの機能を experimental として
+出している。土台の実験機能の不具合を追うより、自前で持つほうが確実で速い。
+
+**代わりの方針**（`T036` で実装する）:
+
+- 商品ごとに「原文 + 各言語の訳」を持つ**自前のテーブル**を作る
+  （`reference_id` / `locale_code` / `title` / `description`）
+- 表示するときは、閲覧者の言語の訳があればそれを、無ければ原文を返す
+- **この表は自作テーブルなので、個人情報の列を持ってはいけない**
+  （`scripts/check-no-personal-data.mjs` の (a) 側で機械的に守られる）
+
+**この判断で変わること**: `docs/decisions.md`「29.」の表にある
+「商品情報の多言語は Translation Module」は**取り消し**。画面文字列の翻訳を自前で持つ
+方針（同表）は変わらない。結果として**多言語は商品情報も画面文字列も自前**になる。
