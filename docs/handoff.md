@@ -87,6 +87,29 @@
   （実在のサービスに見える／幅375pxで読める／英語だけで完走できる／はじめかたで進める）
 - `docs/decisions.md`「30.」〜「41.」を追記
 
+**独立した判定役に A〜K を実物で照合させ、7件の未達を見つけて全部直した**（`docs/release-check.md`）
+
+判定役は `docs/plan.json` も git 履歴も見ず、動いているサーバーと画面だけを触った。
+**「済」にしてあった項目から7件落ちた。** これがこのセッションで一番大きい発見。
+
+| 基準  | 何が起きていたか                                                                                                                                 | 直し方                                                                 |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| A3    | Medusa 標準の `/store/customers` と `/auth/*/emailpass/register` が開いており、**氏名・電話・住所を実際に保存できた**                            | middleware で 404。`scripts/check-personal-data-routes.mjs`            |
+| B1    | 企業名を後から変える手段がどこにも無かった                                                                                                       | `/store/organization` と設定画面                                       |
+| A4    | 再発行コードの仕組みはあったが、生徒が入れる場所が無かった                                                                                       | 同じ設定画面（ログイン前でも使える）                                   |
+| D5    | 売った側の履歴の相手欄が空だった                                                                                                                 | `group_id` から買った企業を引く                                        |
+| F1    | 買った広告枠が生徒の画面のどこにも出ていなかった                                                                                                 | トップに Featured 枠（広告の印つき）                                   |
+| E2 B3 | **残高の計算が壊れていた。** ボーナスの失効が二重に引かれ、使い残しの計算も違っていた（1,500 のうち 500 使って期限切れ → 通常残高から 500 減る） | 配布ごとに使い残しを出す方式（`settleBonus`）。失効は毎時0分の定期実行 |
+| A5 E5 | 先生がパスワードを初期化する画面と、得点→MP 換算表の変更が無かった                                                                               | 管理画面に2ページ（`password-reset` `market-settings`）                |
+
+**並列で3つ動かした**（ユーザーの「並列で行けるところは行けよ」に従った）。判定役1本と
+実装2本を別々の worktree で走らせ、順にマージした。**衝突したのは `package.json` と
+`ci.yml` だけ**で、どちらも両方を残す形で解消した。
+
+**Vercel の準備だけした（公開はしていない）** — `vercel.json` と `docs/deploy.md`。
+**バックエンドは Vercel では動かない**（止まらないサーバー・定期実行・DB への常時接続が要る。
+公式文書も Vercel をフロントエンドの例としてだけ挙げている）。置けるのは生徒の画面だけ。
+
 ### 前のセッションまで（雛形 `from-0` としての作業）
 
 `main` に PR #41〜#51 をマージ済み。`pnpm run check` / `pnpm run build` 通過（46テスト）。
@@ -119,9 +142,18 @@
 | `T004` | 認証は**標準のまま使える**。Market ID をそのまま渡せる          |
 | `T005` | 多言語は**自前**。Translation Module は経路も読み出しも動かない |
 
-次は `pnpm run plan:next` が返す1件から（いまは `T034` 企業側の画面の翻訳）。
-**ここから先は多言語（受け入れ基準 I）が中心**で、`docs/decisions.md`「32.」の結論どおり
-Medusa の Translation Module は使わず自前で作る。
+**残っているのは `T043`（MVP リリース判定）だけ。** 手順は次の3つ。
+
+1. **判定役をもう一度呼ぶ。** 7件の未達を直したあと、まだ通しで照合していない。
+   `docs/release-check.md` を書き換えさせる（前回と同じく、`docs/plan.json` も
+   git 履歴も見せずに、動いているサーバーと画面だけを触らせること）
+2. 全部通ったら `T043` を `done` にして `/plan-verify`（全体照合）
+3. `/checkout`
+
+**「使えるか」への答えは、いまのところ「授業ではまだ」。** 中身は揃ったが
+**どこにも公開していない**。公開先（バックエンドと PostgreSQL / Redis をどこに置くか）は
+まだ決まっておらず、計画にも入っていない。ユーザーは費用を気にしている
+（「金かからんやつ選ばんかったか」）ので、**無料枠は一次情報で確かめてから出すこと**。
 
 **再開したらまず `pnpm run services` を実行すること。** コンテナが再起動すると
 PostgreSQL と Redis が止まっており、API もデータベースも動かない。
@@ -135,7 +167,9 @@ PostgreSQL と Redis が止まっており、API もデータベースも動か�
 VITE_PUBLISHABLE_KEY=$(psql "$DATABASE_URL" -tAc "SELECT token FROM api_key WHERE type='publishable' AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1") pnpm run storefront:dev
 ```
 
-管理画面には3ページ足してある（企業一覧・取引の偏り・先生の購入ログ、`apps/admin/src/routes/`）。
+管理画面には5ページ足してある（企業一覧・取引の偏り・先生の購入ログ・パスワードの初期化・
+設定、`apps/admin/src/routes/`）。**既定値は管理画面から変えられる**（初期資金・ロック回数・
+相互取引率のしきい値・得点→MP 換算表）。保存はサーバー再起動後も効く。
 
 **先生（管理者）も MP 口座を持つ。** 口座の id には利用者 id をそのまま使う
 （企業ではないので Market ID を持たない）。初めて買うときに 50,000 MP を1回だけ配る。
@@ -156,6 +190,14 @@ VITE_PUBLISHABLE_KEY=$(psql "$DATABASE_URL" -tAc "SELECT token FROM api_key WHER
 - **T 番号は2つある。** `docs/plan.json` の `T001`〜`T043` は**このプロジェクト**、
   `docs/plan.from-0.json` の `T001`〜`T029` は**雛形自身**。`docs/decisions.md` の
   「28.」までに出る T 番号は後者を指す。経緯は「29.」
+- **検査を走らせる前に、古いサーバーが残っていないか見る**（`pgrep -af "[m]edusa start"`）。
+  `scripts/with-api.mjs` は自分で立てたサーバーの生死を見ず `/health` が返るのを待つだけなので、
+  **古いサーバーに繋がったまま検査が進む**。直したはずの変更が反映されていないように見える。
+  起動前の port 検査を足したが、**port が違えば同じことが起きる**
+- **`node scripts/check-e2e.mjs` はこの環境では `CHROMIUM_PATH` が要る。**
+  Playwright が探す `chromium_headless_shell-1234` が無く `-1194` しかない。
+  `CHROMIUM_PATH=/opt/pw-browsers/chromium-1194/chrome-linux/chrome` を付ける
+  （CI は `playwright install` するので不要）
 - **この実行環境では Docker デーモンが動いていない**（CLI だけ）。PostgreSQL 16 と Redis 7 は
   実体があるので、`docker-compose` ではなくローカルで直接起動する（`pnpm run services`）
 - **`pkill -f "medusa"` は自分自身も殺す。** シェルのコマンド行にその文字列が含まれるため、
@@ -219,11 +261,7 @@ statement`）。フックの中で `node -e` を使うときは関数で包む�
 
 ## セッション終了時点の状態（自動記録）
 
-- 記録時刻: 2026-09-02 09:42 UTC
+- 記録時刻: 2026-09-02 09:47 UTC
 - ブランチ: `claude/checkin-jb6vw4`
-- HEAD: `93c2163`
-- 未コミットの変更:
-
-```
-M docs/handoff.md
-```
+- HEAD: `60eee6d`
+- 未コミットの変更: なし
