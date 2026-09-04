@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
+import { localeOf } from '../../../modules/catalog/locales'
 import { QUIZ_MODULE } from '../../../modules/quiz'
 import type QuizService from '../../../modules/quiz/service'
 
@@ -11,7 +12,7 @@ import type QuizService from '../../../modules/quiz/service'
  */
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const quiz = req.scope.resolve(QUIZ_MODULE) as QuizService
-  const quizzes = await quiz.listOpenQuizzes()
+  const quizzes = await quiz.listOpenQuizzes(localeOf(req))
 
   res.status(200).json({
     // 一覧では問題そのものを出さない。開いたときに取りに行く。

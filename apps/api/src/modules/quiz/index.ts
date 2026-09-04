@@ -16,4 +16,5 @@ export default Module(QUIZ_MODULE, {
 
 export { QuizService }
 export * from './grading'
-export type { PublicQuiz, SubmitResult } from './service'
+export * from './translation'
+export type { AdminQuiz, PublicQuiz, SubmitResult } from './service'

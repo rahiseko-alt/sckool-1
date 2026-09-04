@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
+import { localeOf } from '../../../../modules/catalog/locales'
 import { QUIZ_MODULE } from '../../../../modules/quiz'
 import type QuizService from '../../../../modules/quiz/service'
 
@@ -12,7 +13,7 @@ import type QuizService from '../../../../modules/quiz/service'
  */
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const quizService = req.scope.resolve(QUIZ_MODULE) as QuizService
-  const quiz = await quizService.findPublicQuiz(req.params.id)
+  const quiz = await quizService.findPublicQuiz(req.params.id, localeOf(req))
 
   if (!quiz) {
     res.status(404).json({ code: 'quiz_not_found' })

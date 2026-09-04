@@ -667,6 +667,31 @@
       "automation": "ci",
       "status": "done",
       "origin": "added"
+    },
+    {
+      "id": "T045",
+      "title": "テストの中身を6言語にする",
+      "deliverable": "テストの題名・題目・設問・選択肢に各言語の翻訳を入れられ、生徒はブラウザの言語に合う訳を見て受験でき、訳が無い言語では原文が出る状態。翻訳した選択肢は原文と同じ数・同じ並びであることが検査で保証されている",
+      "verify": [
+        "先生の管理画面でテストを開き、ある言語の題名・設問・選択肢の訳を入れて保存する",
+        "生徒の画面をその言語に切り替えてテストを開き、入れた訳が表示されることを確認する",
+        "訳を入れていない言語に切り替えて同じテストを開き、原文が表示されることを確認する",
+        "訳した選択肢の数を原文と変えて保存しようとし、断られることを確認する（正解の位置がずれないため）",
+        "訳のある言語で受験して満点を取り、原文の言語で受験したときと同じ得点・同じボーナスになることを確認する（正解は言語非依存）",
+        "生徒に返すテストの応答に、どの言語でも正解（correctIndex）が含まれないことを確認する"
+      ],
+      "dependsOn": ["T022", "T023", "T032"],
+      "files": [
+        "apps/api/src/modules/quiz",
+        "apps/api/src/api/store/quizzes",
+        "apps/api/src/api/admin/quizzes",
+        "apps/admin/src/routes/market-settings",
+        "apps/storefront/src/screens/quizzes.tsx",
+        "scripts/check-quiz-i18n.mjs"
+      ],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "added"
     }
   ]
 }

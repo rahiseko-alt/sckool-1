@@ -10,6 +10,7 @@ import {
   type RewardTier,
 } from './grading'
 import { Quiz, QuizAttempt } from './models/quiz'
+import { pickQuizTranslation, type QuizTranslation } from './translation'
 
 /** 保存されている1問。正解を含む。**そのまま返さないこと。** */
 interface StoredQuestion extends Question {
@@ -31,8 +32,12 @@ export interface PublicQuiz {
 }
 
 /**
- * 先生に見せるテスト（受け入れ基準 E5）。
- * **問題文と正解は含めない。** 換算表を直すのに要らない。
+ * 先生に見せるテスト（受け入れ基準 E5・I3）。
+ *
+ * 換算表を直すためには問題文・正解は要らないが、**翻訳を入れるには原文の
+ * 題名・題目・設問・選択肢が要る**（何を訳すのか見えないと訳せない）。
+ * そこで**正解（correctIndex）は除いた**原文と、いま入っている訳を渡す。
+ * 正解は含めないので、先生の画面から漏れても生徒に正解は伝わらない。
  */
 export interface AdminQuiz {
   id: string
@@ -42,6 +47,10 @@ export interface AdminQuiz {
   reward_tiers: RewardTier[]
   bonus_valid_days: number
   is_open: boolean
+  /** 原文の設問（正解を含まない）。翻訳の入力欄を作るのに使う。 */
+  questions: PublicQuestion[]
+  /** いま入っている各言語の訳。 */
+  translations: QuizTranslation[]
 }
 
 export interface SubmitResult {
@@ -71,33 +80,49 @@ class QuizService extends MedusaService({ Quiz, QuizAttempt }) {
     return tiers && tiers.length > 0 ? tiers : DEFAULT_REWARD_TIERS
   }
 
-  /** 生徒に見せる形にする。**正解を落とすのはここだけ**なので必ず通す。 */
-  private toPublic(row: any): PublicQuiz {
+  private translationsOf(row: any): QuizTranslation[] {
+    const t = row.translations as QuizTranslation[] | null | undefined
+    return Array.isArray(t) ? t : []
+  }
+
+  /**
+   * 生徒に見せる形にする。**正解を落とすのはここだけ**なので必ず通す。
+   * `locale` を渡すと、その言語の訳を当てる。無ければ原文（受け入れ基準 I3）。
+   */
+  private toPublic(row: any, locale?: string): PublicQuiz {
     const questions = this.storedQuestions(row)
     const tiers = this.tiersOf(row)
+    const publicQuestions = questions.map((question) => toPublicQuestion(question))
+
+    // 正解を含まない原文だけを翻訳の材料にする（correctIndex はここに渡さない）。
+    const display = pickQuizTranslation(
+      { title: row.title, topic: row.topic, questions: publicQuestions },
+      this.translationsOf(row),
+      locale,
+    )
 
     return {
       id: row.id,
-      title: row.title,
-      topic: row.topic,
+      title: display.title,
+      topic: display.topic,
       question_count: questions.length,
       max_reward: Math.max(...tiers.map((tier) => tier.amount)),
       bonus_valid_days: Number(row.bonus_valid_days),
       is_open: Boolean(row.is_open),
-      questions: questions.map((question) => toPublicQuestion(question)),
+      questions: display.questions,
     }
   }
 
-  /** 受けられるテストの一覧。 */
-  async listOpenQuizzes(): Promise<PublicQuiz[]> {
+  /** 受けられるテストの一覧。`locale` があればその言語で見せる。 */
+  async listOpenQuizzes(locale?: string): Promise<PublicQuiz[]> {
     const rows = await this.listQuizzes({ is_open: true })
-    return rows.map((row) => this.toPublic(row))
+    return rows.map((row) => this.toPublic(row, locale))
   }
 
-  /** 1件を、生徒に見せる形で引く。 */
-  async findPublicQuiz(id: string): Promise<PublicQuiz | undefined> {
+  /** 1件を、生徒に見せる形で引く。`locale` があればその言語で見せる。 */
+  async findPublicQuiz(id: string, locale?: string): Promise<PublicQuiz | undefined> {
     const [row] = await this.listQuizzes({ id })
-    return row ? this.toPublic(row) : undefined
+    return row ? this.toPublic(row, locale) : undefined
   }
 
   /**
@@ -108,15 +133,58 @@ class QuizService extends MedusaService({ Quiz, QuizAttempt }) {
    */
   async listForAdmin(): Promise<AdminQuiz[]> {
     const rows = await this.listQuizzes({})
-    return rows.map((row) => ({
+    return rows.map((row) => this.toAdmin(row))
+  }
+
+  /** 1件を先生の画面向けに引く（翻訳の編集に使う）。 */
+  async findAdminQuiz(id: string): Promise<AdminQuiz | undefined> {
+    const [row] = await this.listQuizzes({ id })
+    return row ? this.toAdmin(row) : undefined
+  }
+
+  /** 先生に見せる形。**正解（correctIndex）は含めない。** */
+  private toAdmin(row: any): AdminQuiz {
+    const questions = this.storedQuestions(row)
+    return {
       id: row.id,
       title: row.title,
       topic: row.topic,
-      question_count: this.storedQuestions(row).length,
+      question_count: questions.length,
       reward_tiers: this.tiersOf(row),
       bonus_valid_days: Number(row.bonus_valid_days),
       is_open: Boolean(row.is_open),
-    }))
+      questions: questions.map((question) => toPublicQuestion(question)),
+      translations: this.translationsOf(row),
+    }
+  }
+
+  /**
+   * 原文（正解を含まない）を返す。翻訳を保存する前の検査に使う
+   * （選択肢の数が原文と合っているかを確かめるため）。
+   */
+  async originalForTranslation(
+    id: string,
+  ): Promise<{ title: string; topic: string; questions: PublicQuestion[] } | undefined> {
+    const [row] = await this.listQuizzes({ id })
+    if (!row) return undefined
+    return {
+      title: row.title,
+      topic: row.topic,
+      questions: this.storedQuestions(row).map((q) => toPublicQuestion(q)),
+    }
+  }
+
+  /**
+   * 各言語の訳を保存する（受け入れ基準 I3）。
+   * **検査（`checkQuizTranslations`）を通した値を、正規化してから渡すこと。**
+   * ここは保存するだけで、選択肢の数などの判定はしない。
+   */
+  async saveTranslations(id: string, translations: QuizTranslation[]): Promise<AdminQuiz | undefined> {
+    const [row] = await this.listQuizzes({ id })
+    if (!row) return undefined
+    await this.updateQuizzes({ id, translations })
+    const [updated] = await this.listQuizzes({ id })
+    return updated ? this.toAdmin(updated) : undefined
   }
 
   /**
@@ -140,15 +208,7 @@ class QuizService extends MedusaService({ Quiz, QuizAttempt }) {
     const [updated] = await this.listQuizzes({ id })
     if (!updated) return undefined
 
-    return {
-      id: updated.id,
-      title: updated.title,
-      topic: updated.topic,
-      question_count: this.storedQuestions(updated).length,
-      reward_tiers: this.tiersOf(updated),
-      bonus_valid_days: Number(updated.bonus_valid_days),
-      is_open: Boolean(updated.is_open),
-    }
+    return this.toAdmin(updated)
   }
 
   /** その企業がすでにボーナスを受け取っているか（受け入れ基準 E3）。 */

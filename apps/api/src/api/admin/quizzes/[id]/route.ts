@@ -1,8 +1,21 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http'
 
-import { findRewardTierProblems, isValidBonusValidDays, QUIZ_MODULE } from '../../../../modules/quiz'
+import { LOCALE_CODES } from '../../../../modules/catalog/locales'
+import {
+  checkQuizTranslations,
+  findRewardTierProblems,
+  isValidBonusValidDays,
+  normalizeQuizTranslations,
+  QUIZ_MODULE,
+} from '../../../../modules/quiz'
 import type { RewardTier } from '../../../../modules/quiz/grading'
 import type QuizService from '../../../../modules/quiz/service'
+
+/**
+ * 訳を入れられる言語。原文は日本語なので、原文以外の5言語を訳の対象にする。
+ * （原文の言語に訳を入れても原文と同じなので意味が無い。）
+ */
+const TRANSLATABLE_LOCALES = LOCALE_CODES.filter((code) => code !== 'ja-JP')
 
 /**
  * 先生が得点からボーナスへの換算表を変える（受け入れ基準 E5）。
@@ -24,6 +37,37 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     reward_tiers?: unknown
     bonus_valid_days?: unknown
     is_open?: unknown
+    translations?: unknown
+  }
+
+  const quizzes = req.scope.resolve(QUIZ_MODULE) as QuizService
+
+  /**
+   * 訳の保存（受け入れ基準 I3）。
+   *
+   * **選択肢の数が原文と合っているかをここで確かめる。** 合わないと正解の位置が
+   * ずれて、ある言語だけ別の選択肢が正解になってしまう。原文（正解を含まない）を
+   * サービスから引いて突き合わせる。
+   */
+  if (body.translations !== undefined) {
+    const original = await quizzes.originalForTranslation(id)
+    if (!original) {
+      res.status(404).json({ code: 'quiz_not_found', quiz_id: id })
+      return
+    }
+    const problems = checkQuizTranslations(body.translations, original, TRANSLATABLE_LOCALES)
+    if (problems.length > 0) {
+      res.status(400).json({ code: 'invalid_translations', problems })
+      return
+    }
+    const normalized = normalizeQuizTranslations(body.translations, original, TRANSLATABLE_LOCALES)
+    const updated = await quizzes.saveTranslations(id, normalized)
+    if (!updated) {
+      res.status(404).json({ code: 'quiz_not_found', quiz_id: id })
+      return
+    }
+    res.status(200).json({ quiz: updated })
+    return
   }
 
   const patch: {
@@ -64,7 +108,6 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     return
   }
 
-  const quizzes = req.scope.resolve(QUIZ_MODULE) as QuizService
   const updated = await quizzes.updateSettings(id, patch)
   if (!updated) {
     res.status(404).json({ code: 'quiz_not_found', quiz_id: id })

@@ -86,6 +86,22 @@
           "enumItems": [],
           "mappedType": "json"
         },
+        "translations": {
+          "name": "translations",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
         "bonus_valid_days": {
           "name": "bonus_valid_days",
           "type": "integer",

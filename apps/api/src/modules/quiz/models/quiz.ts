@@ -27,6 +27,14 @@ export const Quiz = model.define('quiz', {
   /** 得点からボーナス額への換算表。`{ minScore, amount }` の配列。 */
   reward_tiers: model.json(),
 
+  /**
+   * 各言語の翻訳（受け入れ基準 I3 をテストに広げる）。
+   * `{ locale_code, title?, topic?, questions?: [{ id, prompt, choices[] }] }` の配列。
+   * **選択肢は原文と同じ数・同じ並びで持つ**（正解の位置は言語非依存のため）。
+   * 訳が無ければ原文を出す。中身の選び方は translation.ts。
+   */
+  translations: model.json().nullable(),
+
   /** ボーナスが使える長さ（日）。要件32は「7日間、または次回授業終了まで」。 */
   bonus_valid_days: model.number(),
 
