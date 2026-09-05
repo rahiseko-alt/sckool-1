@@ -705,7 +705,7 @@
       "dependsOn": ["T027"],
       "files": ["apps/storefront/src/screens/dashboard.tsx", "docs/plan.json"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "added",
       "note": "全体照合(2026-09-05)で発見。T027 の verify は『折れ線』だが実装は棒グラフ。0埋めの連続は満たす。折れ線グラフ自体が禁止モチーフ回避で棒にされた経緯があるため、どちらを正とするかは人が決める"
     },
@@ -720,7 +720,7 @@
       "dependsOn": ["T041"],
       "files": ["docs/acceptance-i18n.md"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "added",
       "note": "全体照合(2026-09-05)で発見。T041 は機能としては英語のみで全工程を通過できるが、deliverable と files が指す記録ファイルが存在しない。ユーザーはセッション中に実画面で合格を出している（その事実を記録すればよい）"
     },
@@ -734,7 +734,7 @@
       "dependsOn": ["T042"],
       "files": ["docs/acceptance-design.md"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "added",
       "note": "全体照合(2026-09-05)で発見。375px横スクロール無しは実測で確認済み、ユーザーもセッション中に実画面で合格を出しているが、deliverable と files が指す記録ファイルが存在しない"
     }
