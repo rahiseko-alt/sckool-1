@@ -22,4 +22,11 @@ export const ALLOW_SAME_AS_BASE = [
   'purchaseLog.byAdmin.separator',
   // Market ID の入力例。どの言語でも同じ形（MKT-XXXX-XXXX）で発行される。
   'passwordReset.marketIdPlaceholder',
+  // テスト翻訳の言語選択肢。各言語は自分の文字で表記する（切替の選択肢と同じ考え方）ので、
+  // どの言語の辞書でも同じ綴りになる。
+  'marketSettings.quizzes.translation.locale.en',
+  'marketSettings.quizzes.translation.locale.zh-CN',
+  'marketSettings.quizzes.translation.locale.vi-VN',
+  'marketSettings.quizzes.translation.locale.ne-NP',
+  'marketSettings.quizzes.translation.locale.th-TH',
 ] as const

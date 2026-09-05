@@ -198,6 +198,30 @@
         "missingZero": "Hãy quyết định số tiền khi được 0 điểm.",
         "duplicateScore": "Cùng một mức điểm xuất hiện hai lần ({{value}}).",
         "notMonotonic": "Điểm cao hơn lại được ít hơn điểm thấp."
+      },
+      "translation": {
+        "title": "Bản dịch bài kiểm tra",
+        "lead": "Nhập tiêu đề, chủ đề, câu hỏi và lựa chọn cho từng ngôn ngữ. Ô để trống sẽ hiển thị bản gốc.",
+        "language": "Ngôn ngữ cần dịch",
+        "quizTitle": "Tiêu đề",
+        "quizTopic": "Chủ đề",
+        "question": "Câu {{number}}",
+        "choice": "Lựa chọn {{number}}",
+        "save": "Lưu bản dịch",
+        "saved": "Đã lưu bản dịch.",
+        "problem": {
+          "choicesCountMismatch": "Số lựa chọn khác với bản gốc. Giữ nguyên số lượng để đáp án đúng không bị lệch.",
+          "unknownQuestion": "Câu hỏi này không có trong bản gốc.",
+          "tooLong": "Quá dài.",
+          "unknownLocale": "Ngôn ngữ không được hỗ trợ."
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
       }
     }
   },

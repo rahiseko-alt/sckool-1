@@ -49,6 +49,19 @@ interface RewardTier {
   amount: number
 }
 
+interface QuizQuestion {
+  id: string
+  prompt: string
+  choices: string[]
+}
+
+interface QuizTranslation {
+  locale_code: string
+  title?: string
+  topic?: string
+  questions?: { id: string; prompt: string; choices: string[] }[]
+}
+
 interface AdminQuiz {
   id: string
   title: string
@@ -57,6 +70,19 @@ interface AdminQuiz {
   reward_tiers: RewardTier[]
   bonus_valid_days: number
   is_open: boolean
+  /** 原文の設問（正解を含まない）。翻訳の入力欄を作るのに使う。 */
+  questions: QuizQuestion[]
+  /** いま入っている各言語の訳。 */
+  translations: QuizTranslation[]
+}
+
+/** 訳を入れられる言語（原文の日本語を除く5言語）。生徒の画面と同じ並び。 */
+const TRANSLATABLE_LOCALES = ['en', 'zh-CN', 'vi-VN', 'ne-NP', 'th-TH'] as const
+
+interface QuizTranslationProblem {
+  locale_code: string
+  code: 'unknown_locale' | 'too_long' | 'unknown_question' | 'choices_count_mismatch'
+  question_id?: string
 }
 
 interface TierProblem {
@@ -138,6 +164,10 @@ const MarketSettingsPage = () => {
   const [quizDraft, setQuizDraft] = useState<Record<string, AdminQuiz>>({})
   const [quizProblems, setQuizProblems] = useState<Record<string, TierProblem[]>>({})
   const [quizSaved, setQuizSaved] = useState<Record<string, boolean>>({})
+  /** テストごとに、いま翻訳を編集している言語。 */
+  const [quizLocale, setQuizLocale] = useState<Record<string, string>>({})
+  const [quizTrProblems, setQuizTrProblems] = useState<Record<string, QuizTranslationProblem[]>>({})
+  const [quizTrSaved, setQuizTrSaved] = useState<Record<string, boolean>>({})
 
   /** 応答の中身を画面の入力欄に写す。保存のあとも同じ処理で書き戻す。 */
   const adopt = useCallback((body: SettingsResponse) => {
@@ -291,6 +321,67 @@ const MarketSettingsPage = () => {
       const quiz = current[id]
       return quiz ? { ...current, [id]: change(quiz) } : current
     })
+
+  /** ある言語の訳の1項目を書き換える。無ければその言語の訳を作る。 */
+  const editTranslation = (
+    quizId: string,
+    locale: string,
+    change: (tr: QuizTranslation) => QuizTranslation,
+  ) =>
+    editQuiz(quizId, (quiz) => {
+      const list = quiz.translations ?? []
+      const existing = list.find((tr) => tr.locale_code === locale) ?? { locale_code: locale }
+      const next = change(existing)
+      const others = list.filter((tr) => tr.locale_code !== locale)
+      return { ...quiz, translations: [...others, next] }
+    })
+
+  /** 表示中の言語の訳（無ければ空）を取り出す。 */
+  const translationFor = (quiz: AdminQuiz, locale: string): QuizTranslation =>
+    (quiz.translations ?? []).find((tr) => tr.locale_code === locale) ?? { locale_code: locale }
+
+  /** ある設問の訳（無ければ空）を取り出す。 */
+  const questionTranslation = (tr: QuizTranslation, questionId: string) =>
+    (tr.questions ?? []).find((q) => q.id === questionId) ?? { id: questionId, prompt: '', choices: [] }
+
+  const saveTranslations = async (quiz: AdminQuiz) => {
+    setQuizTrSaved((current) => ({ ...current, [quiz.id]: false }))
+    try {
+      const response = await fetch(`${__BACKEND_URL__}/admin/quizzes/${quiz.id}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ translations: quiz.translations ?? [] }),
+      })
+      if (!response.ok) {
+        const body = (await response.json().catch(() => ({}))) as {
+          problems?: QuizTranslationProblem[]
+        }
+        setQuizTrProblems((current) => ({ ...current, [quiz.id]: body.problems ?? [] }))
+        return
+      }
+      const body = (await response.json()) as { quiz: AdminQuiz }
+      setQuizTrProblems((current) => ({ ...current, [quiz.id]: [] }))
+      setQuizDraft((current) => ({ ...current, [quiz.id]: body.quiz }))
+      setQuizzes((current) => current.map((row) => (row.id === quiz.id ? body.quiz : row)))
+      setQuizTrSaved((current) => ({ ...current, [quiz.id]: true }))
+    } catch {
+      setError({ key: 'error.offline' })
+    }
+  }
+
+  const trProblemText = (problem: QuizTranslationProblem) => {
+    switch (problem.code) {
+      case 'choices_count_mismatch':
+        return t('marketSettings.quizzes.translation.problem.choicesCountMismatch')
+      case 'unknown_question':
+        return t('marketSettings.quizzes.translation.problem.unknownQuestion')
+      case 'too_long':
+        return t('marketSettings.quizzes.translation.problem.tooLong')
+      case 'unknown_locale':
+        return t('marketSettings.quizzes.translation.problem.unknownLocale')
+    }
+  }
 
   const settingProblemText = (problem: SettingProblem) => {
     const field = FIELDS.find((row) => row.key === problem.key)
@@ -548,6 +639,182 @@ const MarketSettingsPage = () => {
             >
               {t('marketSettings.save')}
             </button>
+
+            {/* --- 翻訳（受け入れ基準 I3）--- */}
+            <div style={{ marginTop: '28px', borderTop: BORDER, paddingTop: '20px' }}>
+              <h4 style={{ margin: 0, fontSize: '15px' }}>
+                {t('marketSettings.quizzes.translation.title')}
+              </h4>
+              <p style={{ opacity: 0.7, marginTop: '4px' }}>
+                {t('marketSettings.quizzes.translation.lead')}
+              </p>
+
+              <label style={{ display: 'grid', gap: '6px', maxWidth: '240px', marginTop: '12px' }}>
+                <span style={{ opacity: 0.7 }}>
+                  {t('marketSettings.quizzes.translation.language')}
+                </span>
+                <select
+                  value={quizLocale[quiz.id] ?? TRANSLATABLE_LOCALES[0]}
+                  onChange={(event) =>
+                    setQuizLocale((current) => ({ ...current, [quiz.id]: event.target.value }))
+                  }
+                  style={{ ...input, width: '240px' }}
+                >
+                  {TRANSLATABLE_LOCALES.map((code) => (
+                    <option key={code} value={code}>
+                      {t(`marketSettings.quizzes.translation.locale.${code}`)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              {(() => {
+                const locale = quizLocale[quiz.id] ?? TRANSLATABLE_LOCALES[0]
+                const tr = translationFor(editing, locale)
+                return (
+                  <div style={{ marginTop: '16px', display: 'grid', gap: '16px' }}>
+                    <label style={{ display: 'grid', gap: '6px' }}>
+                      <span style={{ opacity: 0.7 }}>
+                        {t('marketSettings.quizzes.translation.quizTitle')}
+                      </span>
+                      <div style={{ opacity: 0.55, fontSize: '13px' }}>{editing.title}</div>
+                      <input
+                        value={tr.title ?? ''}
+                        placeholder={editing.title}
+                        onChange={(event) =>
+                          editTranslation(quiz.id, locale, (current) => ({
+                            ...current,
+                            title: event.target.value,
+                          }))
+                        }
+                        style={{ ...input, width: '100%', maxWidth: '480px' }}
+                      />
+                    </label>
+
+                    <label style={{ display: 'grid', gap: '6px' }}>
+                      <span style={{ opacity: 0.7 }}>
+                        {t('marketSettings.quizzes.translation.quizTopic')}
+                      </span>
+                      <div style={{ opacity: 0.55, fontSize: '13px' }}>{editing.topic}</div>
+                      <input
+                        value={tr.topic ?? ''}
+                        placeholder={editing.topic}
+                        onChange={(event) =>
+                          editTranslation(quiz.id, locale, (current) => ({
+                            ...current,
+                            topic: event.target.value,
+                          }))
+                        }
+                        style={{ ...input, width: '100%', maxWidth: '480px' }}
+                      />
+                    </label>
+
+                    {editing.questions.map((question, qIndex) => {
+                      const qtr = questionTranslation(tr, question.id)
+                      return (
+                        <div
+                          key={question.id}
+                          style={{ border: BORDER, borderRadius: '8px', padding: '12px' }}
+                        >
+                          <div style={{ opacity: 0.7, fontSize: '13px' }}>
+                            {t('marketSettings.quizzes.translation.question', { number: qIndex + 1 })}
+                          </div>
+                          <div style={{ opacity: 0.55, fontSize: '13px', marginTop: '4px' }}>
+                            {question.prompt}
+                          </div>
+                          <input
+                            value={qtr.prompt ?? ''}
+                            placeholder={question.prompt}
+                            onChange={(event) =>
+                              editTranslation(quiz.id, locale, (current) => {
+                                const list = current.questions ?? []
+                                const others = list.filter((q) => q.id !== question.id)
+                                const prev = list.find((q) => q.id === question.id)
+                                return {
+                                  ...current,
+                                  questions: [
+                                    ...others,
+                                    {
+                                      id: question.id,
+                                      prompt: event.target.value,
+                                      choices: prev?.choices ?? [],
+                                    },
+                                  ],
+                                }
+                              })
+                            }
+                            style={{ ...input, width: '100%', maxWidth: '480px', marginTop: '6px' }}
+                          />
+                          <div style={{ display: 'grid', gap: '6px', marginTop: '8px' }}>
+                            {question.choices.map((choice, cIndex) => (
+                              // 選択肢の位置は正解の位置と対応するので、位置を鍵にする。
+                              // eslint-disable-next-line react/no-array-index-key
+                              <div key={cIndex} style={{ display: 'grid', gap: '2px' }}>
+                                <span style={{ opacity: 0.55, fontSize: '12px' }}>{choice}</span>
+                                <input
+                                  aria-label={t(
+                                    'marketSettings.quizzes.translation.choice',
+                                    { number: cIndex + 1 },
+                                  )}
+                                  value={qtr.choices?.[cIndex] ?? ''}
+                                  placeholder={choice}
+                                  onChange={(event) =>
+                                    editTranslation(quiz.id, locale, (current) => {
+                                      const list = current.questions ?? []
+                                      const others = list.filter((q) => q.id !== question.id)
+                                      const prev =
+                                        list.find((q) => q.id === question.id) ??
+                                        ({ id: question.id, prompt: '', choices: [] } as {
+                                          id: string
+                                          prompt: string
+                                          choices: string[]
+                                        })
+                                      // 原文と同じ数の枠を必ず用意してから、その位置だけ書き換える。
+                                      const choices = question.choices.map(
+                                        (_, at) => prev.choices?.[at] ?? '',
+                                      )
+                                      choices[cIndex] = event.target.value
+                                      return {
+                                        ...current,
+                                        questions: [...others, { ...prev, id: question.id, choices }],
+                                      }
+                                    })
+                                  }
+                                  style={{ ...input, width: '100%', maxWidth: '480px' }}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })}
+
+                    {(quizTrProblems[quiz.id] ?? []).length > 0 && (
+                      <ul style={{ color: ALERT }} data-testid="quiz-tr-problems">
+                        {(quizTrProblems[quiz.id] ?? []).map((problem, at) => (
+                          // eslint-disable-next-line react/no-array-index-key
+                          <li key={at}>{trProblemText(problem)}</li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {quizTrSaved[quiz.id] === true && (
+                      <p style={{ color: OK }} data-testid="quiz-tr-notice">
+                        {t('marketSettings.quizzes.translation.saved')}
+                      </p>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => void saveTranslations(editing)}
+                      style={{ ...button, justifySelf: 'start' }}
+                    >
+                      {t('marketSettings.quizzes.translation.save')}
+                    </button>
+                  </div>
+                )
+              })()}
+            </div>
           </div>
         )
       })}

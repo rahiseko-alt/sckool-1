@@ -35,7 +35,7 @@ interface Result {
 }
 
 export function QuizzesScreen(props: { session?: Session; onNeedLogin: () => void }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [list, setList] = useState<QuizSummary[] | undefined>()
   const [open, setOpen] = useState<{ summary: QuizSummary; questions: Question[] } | undefined>()
   const [answers, setAnswers] = useState<Record<string, number>>({})
@@ -43,25 +43,29 @@ export function QuizzesScreen(props: { session?: Session; onNeedLogin: () => voi
   const [errorKey, setErrorKey] = useState<string | undefined>()
   const [busy, setBusy] = useState(false)
 
+  // 言語を渡してテストの訳を受け取る（受け入れ基準 I3）。言語を変えたら取り直す。
   useEffect(() => {
     let cancelled = false
     void (async () => {
-      const response = await api<{ quizzes: QuizSummary[] }>('GET', '/store/quizzes')
+      const response = await api<{ quizzes: QuizSummary[] }>(
+        'GET',
+        `/store/quizzes?locale=${i18n.language}`,
+      )
       if (!cancelled && response.ok && response.data) setList(response.data.quizzes)
     })()
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [i18n.language])
 
   const start = async (summary: QuizSummary) => {
     if (!props.session) {
       props.onNeedLogin()
       return
     }
-    const response = await api<{ quiz: { questions: Question[] } }>(
+    const response = await api<{ quiz: { title: string; topic: string; questions: Question[] } }>(
       'GET',
-      `/store/quizzes/${summary.id}`,
+      `/store/quizzes/${summary.id}?locale=${i18n.language}`,
     )
     if (!response.ok || !response.data) {
       setErrorKey(response.errorKey ?? 'unknown')

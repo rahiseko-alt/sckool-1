@@ -198,6 +198,30 @@
         "missingZero": "请决定 0 分时的金额。",
         "duplicateScore": "同一个分数出现了两次（{{value}}）。",
         "notMonotonic": "分数高的一方金额比分数低的一方还少。"
+      },
+      "translation": {
+        "title": "测验翻译",
+        "lead": "为每种语言填写标题、题目、问题和选项。留空的字段将显示原文。",
+        "language": "翻译的语言",
+        "quizTitle": "标题",
+        "quizTopic": "题目",
+        "question": "第 {{number}} 题",
+        "choice": "选项 {{number}}",
+        "save": "保存翻译",
+        "saved": "翻译已保存。",
+        "problem": {
+          "choicesCountMismatch": "选项数量与原文不同。请保持相同数量，以免正确答案错位。",
+          "unknownQuestion": "原文中没有此问题。",
+          "tooLong": "太长了。",
+          "unknownLocale": "不支持的语言。"
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
       }
     }
   },

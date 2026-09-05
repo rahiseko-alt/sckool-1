@@ -198,6 +198,30 @@
         "missingZero": "Please decide the amount for a score of 0.",
         "duplicateScore": "The same score appears twice ({{value}}).",
         "notMonotonic": "A higher score gives less than a lower one."
+      },
+      "translation": {
+        "title": "Quiz translation",
+        "lead": "Enter the title, topic, questions, and choices for each language. Empty fields fall back to the original.",
+        "language": "Language to translate",
+        "quizTitle": "Title",
+        "quizTopic": "Topic",
+        "question": "Question {{number}}",
+        "choice": "Choice {{number}}",
+        "save": "Save translation",
+        "saved": "Translation saved.",
+        "problem": {
+          "choicesCountMismatch": "The number of choices differs from the original. Keep the same count so the correct answer stays aligned.",
+          "unknownQuestion": "This question is not in the original.",
+          "tooLong": "Too long.",
+          "unknownLocale": "Unsupported language."
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
       }
     }
   },

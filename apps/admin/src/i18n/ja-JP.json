@@ -198,6 +198,30 @@
         "missingZero": "0点のときの額を決めてください。",
         "duplicateScore": "同じ得点が2回出てきます（{{value}}）。",
         "notMonotonic": "得点が高いほうの額が、低いほうより少なくなっています。"
+      },
+      "translation": {
+        "title": "テストの翻訳",
+        "lead": "各言語の題名・題目・設問・選択肢を入れます。空の欄はその言語でも原文が出ます。",
+        "language": "翻訳する言語",
+        "quizTitle": "題名",
+        "quizTopic": "題材",
+        "question": "第 {{number}} 問",
+        "choice": "選択肢 {{number}}",
+        "save": "翻訳を保存",
+        "saved": "翻訳を保存しました。",
+        "problem": {
+          "choicesCountMismatch": "選択肢の数が原文と違います。正解の位置がずれるため、原文と同じ数にしてください。",
+          "unknownQuestion": "原文に無い設問です。",
+          "tooLong": "文字数が多すぎます。",
+          "unknownLocale": "対応していない言語です。"
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
       }
     }
   },
