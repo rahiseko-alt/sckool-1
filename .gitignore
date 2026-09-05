@@ -71,3 +71,6 @@ desktop.ini
 # Medusa / Mercur の生成物
 .medusa/
 apps/*/dist/
+
+verify-debug.mjs
+audit-*.mjs
