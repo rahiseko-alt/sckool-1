@@ -74,3 +74,4 @@ apps/*/dist/
 
 verify-debug.mjs
 audit-*.mjs
+verify-*.mjs
