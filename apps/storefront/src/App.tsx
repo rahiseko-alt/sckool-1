@@ -1,0 +1,253 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { LanguageSwitcher } from './components/language-switcher'
+import { AccountScreen } from './screens/account'
+import { AdsScreen } from './screens/ads'
+import { DashboardScreen } from './screens/dashboard'
+import { ListingDetailScreen } from './screens/listing-detail'
+import { ListingFormScreen } from './screens/listing-form'
+import { LogInScreen } from './screens/log-in'
+import { MarketScreen } from './screens/market'
+import { QuizzesScreen } from './screens/quizzes'
+import { RankingScreen } from './screens/ranking'
+import { RulesScreen } from './screens/rules'
+import { SignUpScreen } from './screens/sign-up'
+import { TransactionsScreen } from './screens/transactions'
+import { clearSession, readSession, saveSession, type Session } from './session'
+import { hint, linkButton, quietButton } from './ui'
+
+/**
+ * 生徒が見る画面（受け入れ基準 I1・I2）。
+ *
+ * **画面に日本語を直接書かない。** 全ての文字列は辞書から引く。1つでも直接書くと、
+ * その行だけ切り替わらないまま残り、日本語以外の生徒には読めない箇所になる。
+ *
+ * 画面の切り替えは状態だけで行う。URL は分けていない `[曖昧]`。
+ * 分ける必要が出たら（授業中に商品の URL を共有したい、など）そのとき入れる。
+ */
+
+type Screen =
+  | 'market'
+  | 'listing'
+  | 'quizzes'
+  | 'ranking'
+  | 'login'
+  | 'signUp'
+  | 'sell'
+  | 'dashboard'
+  | 'transactions'
+  | 'ads'
+  | 'rules'
+  | 'account'
+
+export default function App() {
+  const { t } = useTranslation()
+  const [screen, setScreen] = useState<Screen>('market')
+  const [listingId, setListingId] = useState<string | undefined>()
+  const [session, setSession] = useState<Session | undefined>(readSession)
+
+  const startSession = (next: Session) => {
+    saveSession(next)
+    setSession(next)
+    setScreen('market')
+  }
+
+  /**
+   * 上の並び。**ログインしていない人にも「売る」側の入口を見せる。**
+   * 隠すと「この市場では買うことしかできない」と思われる。押すとログインを促す。
+   */
+  const navItems: { key: Screen; label: string }[] = [
+    { key: 'market', label: t('nav.market') },
+    { key: 'sell', label: t('nav.myListings') },
+    { key: 'dashboard', label: t('nav.dashboard') },
+    { key: 'transactions', label: t('nav.transactions') },
+    { key: 'ads', label: t('nav.ads') },
+    { key: 'quizzes', label: t('nav.quizzes') },
+    { key: 'ranking', label: t('nav.ranking') },
+    { key: 'rules', label: t('nav.rules') },
+    /**
+     * ナビだけ短い語を使う。見出しの `account.title` は
+     * 「$t(terms.organization) settings」で、英語では小文字で始まる語
+     * （`company`）が先頭に来て "company settings" と不揃いに見える。
+     * 呼び名を辞書1語で変えられること（受け入れ基準 J2）は変わらない。
+     */
+    { key: 'account', label: t('nav.account') },
+  ]
+
+  return (
+    <div style={{ maxWidth: 'var(--content-max)', margin: '0 auto', padding: 'var(--sp-4)' }}>
+      <header
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 'var(--sp-4)',
+          paddingBottom: 'var(--sp-4)',
+          borderBottom: '1px solid var(--border)',
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setScreen('market')}
+          style={{ ...linkButton, textAlign: 'left', color: 'var(--text)' }}
+        >
+          <div style={{ fontSize: 'var(--text-h2)', fontWeight: 600 }}>{t('app.name')}</div>
+          <div style={hint}>{t('app.tagline')}</div>
+        </button>
+
+        {/* 言語の切替は右上に常設する。ログインしていなくても切り替えられる。 */}
+        <LanguageSwitcher />
+      </header>
+
+      <nav
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: 'var(--sp-3)',
+          padding: 'var(--sp-3) 0',
+          borderBottom: '1px solid var(--border)',
+        }}
+      >
+        {navItems.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => setScreen(item.key)}
+            style={{
+              ...linkButton,
+              fontWeight: screen === item.key ? 600 : 400,
+              color: screen === item.key ? 'var(--accent)' : 'var(--text)',
+            }}
+          >
+            {item.label}
+          </button>
+        ))}
+
+        <span style={{ flex: 1 }} />
+
+        {session ? (
+          <>
+            <span style={hint}>
+              {t('auth.loggedInAs')}: {session.organizationName}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                clearSession()
+                setSession(undefined)
+                setScreen('market')
+              }}
+              style={quietButton}
+            >
+              {t('auth.logOut')}
+            </button>
+          </>
+        ) : (
+          <>
+            <button type="button" onClick={() => setScreen('login')} style={linkButton}>
+              {t('nav.login')}
+            </button>
+            <button type="button" onClick={() => setScreen('signUp')} style={quietButton}>
+              {t('nav.signUp')}
+            </button>
+          </>
+        )}
+      </nav>
+
+      <main style={{ paddingTop: 'var(--sp-6)' }}>
+        {screen === 'market' && (
+          <MarketScreen
+            onOpen={(id) => {
+              setListingId(id)
+              setScreen('listing')
+            }}
+          />
+        )}
+
+        {screen === 'listing' && listingId && (
+          <ListingDetailScreen
+            listingId={listingId}
+            {...(session ? { session } : {})}
+            onBack={() => setScreen('market')}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'quizzes' && (
+          <QuizzesScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'sell' && (
+          <ListingFormScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'dashboard' && (
+          <DashboardScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'transactions' && (
+          <TransactionsScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+          />
+        )}
+
+        {screen === 'ads' && (
+          <AdsScreen {...(session ? { session } : {})} onNeedLogin={() => setScreen('login')} />
+        )}
+
+        {screen === 'ranking' && <RankingScreen />}
+
+        {screen === 'rules' && <RulesScreen />}
+
+        {screen === 'account' && (
+          <AccountScreen
+            {...(session ? { session } : {})}
+            onNeedLogin={() => setScreen('login')}
+            onRenamed={(organizationName) => {
+              // 上の「ログイン中」の表示も新しい名前にする。
+              if (!session) return
+              const next = { ...session, organizationName }
+              saveSession(next)
+              setSession(next)
+            }}
+          />
+        )}
+
+        {screen === 'login' && (
+          <div>
+            <LogInScreen onDone={startSession} />
+            <p style={{ marginTop: 'var(--sp-4)' }}>
+              <button type="button" onClick={() => setScreen('signUp')} style={linkButton}>
+                {t('nav.signUp')}
+              </button>
+            </p>
+          </div>
+        )}
+
+        {screen === 'signUp' && (
+          <div>
+            <SignUpScreen onDone={startSession} />
+            <p style={{ marginTop: 'var(--sp-4)' }}>
+              <button type="button" onClick={() => setScreen('login')} style={linkButton}>
+                {t('nav.login')}
+              </button>
+            </p>
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}

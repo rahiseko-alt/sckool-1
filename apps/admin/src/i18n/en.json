@@ -1,0 +1,233 @@
+{
+  "language": {
+    "label": "Language"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "Please log in as an administrator",
+    "load": "Could not load ({{status}})",
+    "offline": "Cannot reach the backend"
+  },
+  "organizations": {
+    "title": "$t(terms.organization)",
+    "description": "Balance, revenue, profit, listings and ad spend of every participating $t(terms.organization). Click a column heading to sort.",
+    "summary": "{{organizations}} $t(terms.organization) / total balance {{balance}} / total revenue {{revenue}}",
+    "supplyMismatch": "* The MP ledger does not add up",
+    "bonus": "(bonus {{amount}})",
+    "empty": "No $t(terms.organization) yet.",
+    "columns": {
+      "organizationName": "$t(terms.organization)",
+      "balanceTotal": "Balance",
+      "revenue": "Revenue",
+      "expenses": "Expenses",
+      "profit": "Profit",
+      "profitMargin": "Profit margin",
+      "listingCount": "Listings",
+      "adSpend": "Ad spend",
+      "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "Close",
+      "listings": "Products ({{count}})",
+      "noListings": "No products",
+      "remaining": "{{count}} left",
+      "transactions": "Transactions ({{count}}, newest 50)",
+      "noTransactions": "No transactions",
+      "kind": {
+        "initial_grant": "Initial funds",
+        "bonus_grant": "Bonus",
+        "bonus_expired": "Bonus expired",
+        "purchase": "Purchase",
+        "sale": "Sale",
+        "ad_spend": "Ad spend",
+        "reversal": "Reversal"
+      }
+    }
+  },
+  "tradeAnalysis": {
+    "title": "Trading bias",
+    "lead": "Shows mutual buying and reliance on a single partner as numbers.",
+    "notice": "This is not a judgement of cheating.",
+    "detail": "Buying from a friend because the product is genuinely good and buying from each other to score points look the same in the data. If a pair looks odd, ask the $t(terms.participant) themselves.",
+    "empty": "No trades yet.",
+    "mutual": {
+      "title": "Mutual trade rate",
+      "description": "Trade between the two $t(terms.organization) / total trade of those two $t(terms.organization). Pairs above {{threshold}}% are highlighted. Two $t(terms.organization) that trade only with each other reach 50% (the same amount is counted twice in the total).",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "Partner",
+        "between": "Between the two",
+        "total": "Total of the two",
+        "rate": "Mutual trade rate"
+      }
+    },
+    "concentration": {
+      "title": "Purchase concentration",
+      "lead": "Share of everything a $t(terms.organization) bought that went to its biggest supplier.",
+      "notice": "A $t(terms.organization) that bought from only one supplier is always at 100%.",
+      "detail": "$t(terms.organization) that simply bought very few times also rise to the top, so read the number of suppliers and the amount together.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "Biggest supplier",
+        "topAmount": "To that supplier",
+        "totalAmount": "Total bought",
+        "sellerCount": "Suppliers",
+        "rate": "Purchase concentration"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "$t(terms.administrator) purchase log",
+    "lead": "What each $t(terms.administrator) bought and for how much is",
+    "notice": "visible to the other $t(terms.administrator).",
+    "detail": "It is here so that a $t(terms.administrator) can notice their own unintended bias. $t(terms.participant) cannot see this page.",
+    "summary": "{{admins}} $t(terms.administrator) / {{purchases}} purchases / {{amount}} in total",
+    "empty": "No $t(terms.administrator) purchases yet.",
+    "byAdmin": {
+      "title": "By $t(terms.administrator)",
+      "noPurchase": "Nothing bought yet",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}}x)",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "Purchases",
+        "totalAmount": "Amount spent",
+        "concentration": "Concentration",
+        "sellers": "Bought from"
+      }
+    },
+    "bySeller": {
+      "title": "By $t(terms.organization) (bought by $t(terms.administrator))",
+      "description": "The number of $t(terms.administrator) is shown as well, so you can tell whether one $t(terms.administrator) bought a lot or many $t(terms.administrator) bought a little.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "Amount received",
+        "count": "Purchases",
+        "adminCount": "$t(terms.administrator)"
+      }
+    },
+    "recent": {
+      "title": "Most recent",
+      "columns": {
+        "when": "When",
+        "admin": "$t(terms.administrator)",
+        "seller": "Bought from",
+        "amount": "Amount"
+      }
+    }
+  },
+  "passwordReset": {
+    "title": "Password reset",
+    "lead": "Use this when a $t(terms.participant) has lost their password.",
+    "notice": "Check who they are in the classroom first.",
+    "detail": "This system does not know which Market ID belongs to whom. The characters below are shown only once, so write them down and hand them over on the spot.",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "Issue",
+    "submitting": "Issuing",
+    "result": {
+      "title": "Issued",
+      "warning": "Once you leave this screen you can never see these again.",
+      "temporaryPassword": "Temporary password",
+      "recoveryCode": "New recovery code",
+      "next": "After handing them over, ask them to change the password themselves."
+    },
+    "error": {
+      "required": "Please enter a Market ID.",
+      "notFound": "No account has that Market ID ({{marketId}}). Please check for typing mistakes."
+    }
+  },
+  "marketSettings": {
+    "title": "Settings",
+    "lead": "Numbers you can change to fit your class.",
+    "notice": "Saving takes effect for everyone straight away.",
+    "detail": "To go back to the original numbers, press \"Reset everything to the defaults\" below.",
+    "defaultHint": "Default {{value}}",
+    "rangeHint": "A whole number from {{min}} to {{max}}",
+    "save": "Save",
+    "saving": "Saving",
+    "saved": "Saved.",
+    "reset": "Reset everything to the defaults",
+    "resetDone": "Reset to the defaults.",
+    "unknownField": "Unknown item",
+    "fields": {
+      "initialFunds": {
+        "label": "Starting funds",
+        "help": "Given once when a new $t(terms.organization) is created. Balances that already exist do not change."
+      },
+      "loginMaxAttempts": {
+        "label": "Failed logins before locking",
+        "help": "After this many failures in a row, logging in is blocked for a while."
+      },
+      "loginLockMinutes": {
+        "label": "How long logging in stays blocked (minutes)",
+        "help": "While it is blocked, even the correct password will not work."
+      },
+      "mutualTradeThreshold": {
+        "label": "Mutual trading rate to highlight (%)",
+        "help": "Pairs above this rate are coloured on the \"Trading bias\" screen."
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}} must be a whole number.",
+      "outOfRange": "{{field}} must be between {{min}} and {{max}}.",
+      "unknownKey": "{{field}} cannot be changed."
+    },
+    "quizzes": {
+      "title": "Quiz bonus table",
+      "lead": "How much is given for each score. Each quiz can have its own table.",
+      "empty": "There are no quizzes yet.",
+      "topic": "Topic",
+      "questionCount": "{{questions}} questions",
+      "open": "Open",
+      "closed": "Closed",
+      "columns": {
+        "minScore": "Score or above",
+        "amount": "Amount given"
+      },
+      "addTier": "Add a row",
+      "removeTier": "Remove",
+      "validDays": "Days the bonus can be used",
+      "saved": "Bonus table saved.",
+      "problem": {
+        "empty": "The table is empty. Add at least one row.",
+        "notAList": "That value cannot be used. Please enter numbers only.",
+        "scoreOutOfRange": "Scores must be whole numbers from 0 to 100 ({{value}}).",
+        "amountNegative": "Amounts must be whole numbers of 0 or more ({{value}}).",
+        "missingZero": "Please decide the amount for a score of 0.",
+        "duplicateScore": "The same score appears twice ({{value}}).",
+        "notMonotonic": "A higher score gives less than a lower one."
+      },
+      "translation": {
+        "title": "Quiz translation",
+        "lead": "Enter the title, topic, questions, and choices for each language. Empty fields fall back to the original.",
+        "language": "Language to translate",
+        "quizTitle": "Title",
+        "quizTopic": "Topic",
+        "question": "Question {{number}}",
+        "choice": "Choice {{number}}",
+        "save": "Save translation",
+        "saved": "Translation saved.",
+        "problem": {
+          "choicesCountMismatch": "The number of choices differs from the original. Keep the same count so the correct answer stays aligned.",
+          "unknownQuestion": "This question is not in the original.",
+          "tooLong": "Too long.",
+          "unknownLocale": "Unsupported language."
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
+      }
+    }
+  },
+  "terms": {
+    "participant": "student",
+    "organization": "company",
+    "administrator": "teacher"
+  }
+}

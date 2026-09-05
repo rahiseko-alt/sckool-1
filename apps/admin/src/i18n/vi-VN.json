@@ -1,0 +1,233 @@
+{
+  "language": {
+    "label": "Ngôn ngữ"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "Vui lòng đăng nhập với tư cách quản trị viên",
+    "load": "Không đọc được ({{status}})",
+    "offline": "Không kết nối được với máy chủ"
+  },
+  "organizations": {
+    "title": "Danh sách $t(terms.organization)",
+    "description": "Số dư, doanh thu, lợi nhuận, số sản phẩm và chi phí quảng cáo của các $t(terms.organization) tham gia. Bấm vào tiêu đề cột để đổi thứ tự.",
+    "summary": "{{organizations}} $t(terms.organization) / tổng số dư {{balance}} / tổng doanh thu {{revenue}}",
+    "supplyMismatch": "* Sổ MP không khớp",
+    "bonus": "(thưởng {{amount}})",
+    "empty": "Chưa có $t(terms.organization) nào.",
+    "columns": {
+      "organizationName": "Tên $t(terms.organization)",
+      "balanceTotal": "Số dư",
+      "revenue": "Doanh thu",
+      "expenses": "Chi phí",
+      "profit": "Lợi nhuận",
+      "profitMargin": "Tỷ suất lợi nhuận",
+      "listingCount": "Số sản phẩm",
+      "adSpend": "Chi phí quảng cáo",
+      "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "Đóng",
+      "listings": "Sản phẩm ({{count}})",
+      "noListings": "Không có sản phẩm",
+      "remaining": "Còn {{count}}",
+      "transactions": "Giao dịch ({{count}}, 50 mới nhất)",
+      "noTransactions": "Không có giao dịch",
+      "kind": {
+        "initial_grant": "Vốn ban đầu",
+        "bonus_grant": "Thưởng",
+        "bonus_expired": "Thưởng hết hạn",
+        "purchase": "Mua",
+        "sale": "Bán",
+        "ad_spend": "Chi phí quảng cáo",
+        "reversal": "Hoàn tác"
+      }
+    }
+  },
+  "tradeAnalysis": {
+    "title": "Độ lệch trong giao dịch",
+    "lead": "Hiển thị bằng con số việc mua qua mua lại và việc dồn vào một $t(terms.organization).",
+    "notice": "Đây không phải là kết luận gian lận.",
+    "detail": "Mua hàng của bạn thân vì thấy sản phẩm thật sự tốt và mua qua mua lại để lấy điểm nhìn giống hệt nhau trong dữ liệu. Thấy cặp nào đáng ngờ, hãy hỏi trực tiếp các em.",
+    "empty": "Chưa có giao dịch nào.",
+    "mutual": {
+      "title": "Tỷ lệ giao dịch qua lại",
+      "description": "Giá trị giao dịch giữa hai $t(terms.organization) ÷ tổng giao dịch của hai $t(terms.organization) đó. Cặp vượt {{threshold}}% được tô màu. Hai $t(terms.organization) chỉ giao dịch với nhau sẽ là 50% (cùng một khoản được tính hai lần trong tổng).",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "Đối tác",
+        "between": "Giữa hai bên",
+        "total": "Tổng của hai bên",
+        "rate": "Tỷ lệ giao dịch qua lại"
+      }
+    },
+    "concentration": {
+      "title": "Mức tập trung khi mua",
+      "lead": "Phần mà nơi bán nhiều nhất chiếm trong tổng số tiền đã mua.",
+      "notice": "$t(terms.organization) chỉ mua của một nơi luôn là 100%.",
+      "detail": "$t(terms.organization) chỉ mua vài lần cũng lên đầu bảng, nên hãy xem cùng lúc số đối tác và số tiền.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "Nơi mua nhiều nhất",
+        "topAmount": "Trả cho nơi đó",
+        "totalAmount": "Tổng đã mua",
+        "sellerCount": "Số đối tác",
+        "rate": "Mức tập trung khi mua"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "Nhật ký mua hàng của $t(terms.administrator)",
+    "lead": "Việc $t(terms.administrator) mua của ai và hết bao nhiêu",
+    "notice": "được các $t(terms.administrator) khác nhìn thấy.",
+    "detail": "Màn hình này để mỗi $t(terms.administrator) tự nhận ra thiên vị ngoài ý muốn của mình. $t(terms.participant) không xem được.",
+    "summary": "{{admins}} $t(terms.administrator) / {{purchases}} lần mua / tổng {{amount}}",
+    "empty": "$t(terms.administrator) chưa mua gì.",
+    "byAdmin": {
+      "title": "Theo $t(terms.administrator)",
+      "noPurchase": "Chưa mua gì",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}} lần)",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "Số lần mua",
+        "totalAmount": "Số tiền đã mua",
+        "concentration": "Mức tập trung",
+        "sellers": "Nơi đã mua"
+      }
+    },
+    "bySeller": {
+      "title": "Theo $t(terms.organization) (được $t(terms.administrator) mua)",
+      "description": "Số $t(terms.administrator) cũng được hiển thị, để phân biệt một $t(terms.administrator) mua thật nhiều hay nhiều $t(terms.administrator) mỗi người mua một ít.",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "Số tiền được mua",
+        "count": "Số lần",
+        "adminCount": "Số $t(terms.administrator)"
+      }
+    },
+    "recent": {
+      "title": "Mới nhất trước",
+      "columns": {
+        "when": "Thời điểm",
+        "admin": "$t(terms.administrator)",
+        "seller": "Nơi đã mua",
+        "amount": "Số tiền"
+      }
+    }
+  },
+  "passwordReset": {
+    "title": "Đặt lại mật khẩu",
+    "lead": "Dùng khi $t(terms.participant) quên mật khẩu.",
+    "notice": "Hãy xác nhận danh tính ngay tại lớp trước.",
+    "detail": "Hệ thống không biết Market ID nào thuộc về ai. Các ký tự dưới đây chỉ hiện một lần, hãy chép lại và trao tận tay.",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "Cấp mới",
+    "submitting": "Đang cấp",
+    "result": {
+      "title": "Đã cấp",
+      "warning": "Rời khỏi màn hình này thì không xem lại được nữa.",
+      "temporaryPassword": "Mật khẩu tạm thời",
+      "recoveryCode": "Mã khôi phục mới",
+      "next": "Sau khi trao, hãy để chính người đó tự đổi mật khẩu."
+    },
+    "error": {
+      "required": "Vui lòng nhập Market ID.",
+      "notFound": "Không tìm thấy Market ID này ({{marketId}}). Hãy kiểm tra xem có gõ nhầm không."
+    }
+  },
+  "marketSettings": {
+    "title": "Cài đặt",
+    "lead": "Các con số có thể thay đổi cho phù hợp với buổi học.",
+    "notice": "Lưu xong là áp dụng ngay cho mọi người.",
+    "detail": "Muốn trở lại các con số ban đầu thì bấm \"Đưa tất cả về mặc định\" ở dưới.",
+    "defaultHint": "Mặc định {{value}}",
+    "rangeHint": "Số nguyên từ {{min}} đến {{max}}",
+    "save": "Lưu",
+    "saving": "Đang lưu",
+    "saved": "Đã lưu.",
+    "reset": "Đưa tất cả về mặc định",
+    "resetDone": "Đã đưa về mặc định.",
+    "unknownField": "Mục không rõ",
+    "fields": {
+      "initialFunds": {
+        "label": "Vốn cấp lúc bắt đầu",
+        "help": "Chỉ cấp một lần khi tạo $t(terms.organization) mới. Số dư đã có không thay đổi."
+      },
+      "loginMaxAttempts": {
+        "label": "Số lần sai trước khi khóa đăng nhập",
+        "help": "Sai liên tiếp bấy nhiêu lần thì không đăng nhập được trong một lúc."
+      },
+      "loginLockMinutes": {
+        "label": "Thời gian khóa đăng nhập (phút)",
+        "help": "Trong lúc bị khóa thì mật khẩu đúng cũng không vào được."
+      },
+      "mutualTradeThreshold": {
+        "label": "Tỷ lệ giao dịch qua lại được tô màu (%)",
+        "help": "Ở màn hình \"Độ lệch trong giao dịch\", cặp vượt tỷ lệ này sẽ được tô màu."
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}} phải là số nguyên.",
+      "outOfRange": "{{field}} phải nằm trong khoảng {{min}} đến {{max}}.",
+      "unknownKey": "Không thể thay đổi {{field}}."
+    },
+    "quizzes": {
+      "title": "Bảng quy đổi thưởng của bài kiểm tra",
+      "lead": "Số tiền cấp theo điểm. Mỗi bài kiểm tra có bảng riêng.",
+      "empty": "Chưa có bài kiểm tra nào.",
+      "topic": "Chủ đề",
+      "questionCount": "{{questions}} câu",
+      "open": "Đang nhận bài",
+      "closed": "Đã đóng",
+      "columns": {
+        "minScore": "Từ điểm này trở lên",
+        "amount": "Số tiền cấp"
+      },
+      "addTier": "Thêm một dòng",
+      "removeTier": "Xóa",
+      "validDays": "Số ngày dùng được tiền thưởng",
+      "saved": "Đã lưu bảng quy đổi.",
+      "problem": {
+        "empty": "Bảng đang trống. Hãy nhập ít nhất một dòng.",
+        "notAList": "Giá trị này không dùng được. Chỉ nhập số thôi.",
+        "scoreOutOfRange": "Điểm phải là số nguyên từ 0 đến 100 ({{value}}).",
+        "amountNegative": "Số tiền phải là số nguyên từ 0 trở lên ({{value}}).",
+        "missingZero": "Hãy quyết định số tiền khi được 0 điểm.",
+        "duplicateScore": "Cùng một mức điểm xuất hiện hai lần ({{value}}).",
+        "notMonotonic": "Điểm cao hơn lại được ít hơn điểm thấp."
+      },
+      "translation": {
+        "title": "Bản dịch bài kiểm tra",
+        "lead": "Nhập tiêu đề, chủ đề, câu hỏi và lựa chọn cho từng ngôn ngữ. Ô để trống sẽ hiển thị bản gốc.",
+        "language": "Ngôn ngữ cần dịch",
+        "quizTitle": "Tiêu đề",
+        "quizTopic": "Chủ đề",
+        "question": "Câu {{number}}",
+        "choice": "Lựa chọn {{number}}",
+        "save": "Lưu bản dịch",
+        "saved": "Đã lưu bản dịch.",
+        "problem": {
+          "choicesCountMismatch": "Số lựa chọn khác với bản gốc. Giữ nguyên số lượng để đáp án đúng không bị lệch.",
+          "unknownQuestion": "Câu hỏi này không có trong bản gốc.",
+          "tooLong": "Quá dài.",
+          "unknownLocale": "Ngôn ngữ không được hỗ trợ."
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
+      }
+    }
+  },
+  "terms": {
+    "participant": "học sinh",
+    "organization": "doanh nghiệp",
+    "administrator": "giáo viên"
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "language": {
+    "label": "ภาษา"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "กรุณาเข้าสู่ระบบในฐานะผู้ดูแล",
+    "load": "อ่านข้อมูลไม่ได้ ({{status}})",
+    "offline": "เชื่อมต่อกับเซิร์ฟเวอร์ไม่ได้"
+  },
+  "organizations": {
+    "title": "รายชื่อ$t(terms.organization)",
+    "description": "ยอดคงเหลือ ยอดขาย กำไร จำนวนสินค้า และค่าโฆษณาของ$t(terms.organization)ที่เข้าร่วม กดหัวตารางเพื่อเรียงลำดับใหม่",
+    "summary": "{{organizations}} $t(terms.organization) / ยอดคงเหลือรวม {{balance}} / ยอดขายรวม {{revenue}}",
+    "supplyMismatch": "* บัญชี MP ไม่ตรงกัน",
+    "bonus": "(โบนัส {{amount}})",
+    "empty": "ยังไม่มี$t(terms.organization)",
+    "columns": {
+      "organizationName": "ชื่อ$t(terms.organization)",
+      "balanceTotal": "ยอดคงเหลือ",
+      "revenue": "ยอดขาย",
+      "expenses": "รายจ่าย",
+      "profit": "กำไร",
+      "profitMargin": "อัตรากำไร",
+      "listingCount": "จำนวนสินค้า",
+      "adSpend": "ค่าโฆษณา",
+      "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "ปิด",
+      "listings": "สินค้า ({{count}})",
+      "noListings": "ไม่มีสินค้า",
+      "remaining": "เหลือ {{count}}",
+      "transactions": "ธุรกรรม ({{count}} รายการล่าสุด 50)",
+      "noTransactions": "ไม่มีธุรกรรม",
+      "kind": {
+        "initial_grant": "เงินทุนตั้งต้น",
+        "bonus_grant": "โบนัส",
+        "bonus_expired": "โบนัสหมดอายุ",
+        "purchase": "ซื้อ",
+        "sale": "ขาย",
+        "ad_spend": "ค่าโฆษณา",
+        "reversal": "ยกเลิก"
+      }
+    }
+  },
+  "tradeAnalysis": {
+    "title": "ความเอนเอียงของการซื้อขาย",
+    "lead": "แสดงเป็นตัวเลขว่ามีการซื้อขายกันไปมา หรือกระจุกอยู่กับ$t(terms.organization)เดียวมากแค่ไหน",
+    "notice": "นี่ไม่ใช่การตัดสินว่าโกง",
+    "detail": "การซื้อสินค้าของเพื่อนเพราะคิดว่าดีจริง กับการซื้อขายกันไปมาเพื่อคะแนน ดูจากข้อมูลแล้วแยกกันไม่ออก ถ้าเห็นคู่ไหนน่าสงสัย ให้ถาม$t(terms.participant)โดยตรง",
+    "empty": "ยังไม่มีการซื้อขาย",
+    "mutual": {
+      "title": "อัตราการซื้อขายระหว่างกัน",
+      "description": "มูลค่าการซื้อขายระหว่างสอง$t(terms.organization) ÷ มูลค่าการซื้อขายทั้งหมดของสอง$t(terms.organization)นั้น คู่ที่เกิน {{threshold}}% จะถูกเน้นด้วยสี สอง$t(terms.organization)ที่ซื้อขายกันเองเท่านั้นจะได้ 50% (เพราะยอดเดียวกันถูกนับสองครั้งในยอดรวม)",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "คู่ค้า",
+        "between": "ระหว่างสอง$t(terms.organization)",
+        "total": "ยอดรวมของสอง$t(terms.organization)",
+        "rate": "อัตราการซื้อขายระหว่างกัน"
+      }
+    },
+    "concentration": {
+      "title": "อัตราการกระจุกตัวของการซื้อ",
+      "lead": "สัดส่วนของยอดที่ซื้อทั้งหมดที่ตกอยู่กับผู้ขายรายที่ซื้อมากที่สุด",
+      "notice": "$t(terms.organization)ที่ซื้อจากผู้ขายรายเดียวจะได้ 100% เสมอ",
+      "detail": "$t(terms.organization)ที่ซื้อเพียงไม่กี่ครั้งก็ขึ้นมาอยู่อันดับต้นได้ จึงควรดูจำนวนผู้ขายและจำนวนเงินประกอบกัน",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "ผู้ขายที่ซื้อมากที่สุด",
+        "topAmount": "จ่ายให้รายนั้น",
+        "totalAmount": "ยอดที่ซื้อทั้งหมด",
+        "sellerCount": "จำนวนผู้ขาย",
+        "rate": "อัตราการกระจุกตัวของการซื้อ"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "บันทึกการซื้อของ$t(terms.administrator)",
+    "lead": "$t(terms.administrator)ซื้อจากใครเป็นเงินเท่าไร",
+    "notice": "$t(terms.administrator)คนอื่นก็มองเห็นได้",
+    "detail": "หน้านี้มีไว้ให้$t(terms.administrator)สังเกตความเอนเอียงที่ไม่ได้ตั้งใจของตัวเอง $t(terms.participant)มองไม่เห็น",
+    "summary": "$t(terms.administrator) {{admins}} คน / ซื้อ {{purchases}} ครั้ง / รวม {{amount}}",
+    "empty": "$t(terms.administrator)ยังไม่ได้ซื้ออะไร",
+    "byAdmin": {
+      "title": "แยกตาม$t(terms.administrator)",
+      "noPurchase": "ยังไม่ได้ซื้ออะไร",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}} ครั้ง)",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "จำนวนครั้งที่ซื้อ",
+        "totalAmount": "ยอดที่ซื้อ",
+        "concentration": "อัตราการกระจุกตัว",
+        "sellers": "ซื้อจาก"
+      }
+    },
+    "bySeller": {
+      "title": "แยกตาม$t(terms.organization) (ยอดที่$t(terms.administrator)ซื้อ)",
+      "description": "แสดงจำนวน$t(terms.administrator)ที่ซื้อด้วย เพื่อแยกว่า$t(terms.administrator)คนเดียวซื้อเยอะ หรือ$t(terms.administrator)หลายคนซื้อคนละนิดหน่อย",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "ยอดที่ขายได้",
+        "count": "จำนวนครั้ง",
+        "adminCount": "จำนวน$t(terms.administrator)"
+      }
+    },
+    "recent": {
+      "title": "ใหม่ล่าสุดก่อน",
+      "columns": {
+        "when": "เมื่อไร",
+        "admin": "$t(terms.administrator)",
+        "seller": "ซื้อจาก",
+        "amount": "จำนวนเงิน"
+      }
+    }
+  },
+  "passwordReset": {
+    "title": "ตั้งรหัสผ่านใหม่",
+    "lead": "ใช้เมื่อ$t(terms.participant)ลืมรหัสผ่าน",
+    "notice": "กรุณายืนยันตัวบุคคลในห้องเรียนก่อน",
+    "detail": "ระบบไม่รู้ว่า Market ID ไหนเป็นของใคร ตัวอักษรด้านล่างจะแสดงเพียงครั้งเดียว จึงควรจดไว้แล้วส่งให้เจ้าตัวทันที",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "ออกรหัส",
+    "submitting": "กำลังออกรหัส",
+    "result": {
+      "title": "ออกรหัสแล้ว",
+      "warning": "เมื่อออกจากหน้านี้แล้วจะดูอีกไม่ได้",
+      "temporaryPassword": "รหัสผ่านชั่วคราว",
+      "recoveryCode": "รหัสกู้คืนใหม่",
+      "next": "เมื่อส่งให้แล้ว ให้เจ้าตัวเปลี่ยนรหัสผ่านด้วยตนเอง"
+    },
+    "error": {
+      "required": "กรุณากรอก Market ID",
+      "notFound": "ไม่พบ Market ID นี้ ({{marketId}}) กรุณาตรวจว่าพิมพ์ผิดหรือไม่"
+    }
+  },
+  "marketSettings": {
+    "title": "การตั้งค่า",
+    "lead": "ปรับตัวเลขให้เข้ากับคาบเรียนได้",
+    "notice": "บันทึกแล้วมีผลกับทุกคนทันที",
+    "detail": "ถ้าต้องการกลับไปใช้ตัวเลขเดิม ให้กด \"คืนค่าทั้งหมดเป็นค่าเริ่มต้น\" ด้านล่าง",
+    "defaultHint": "ค่าเริ่มต้น {{value}}",
+    "rangeHint": "จำนวนเต็มตั้งแต่ {{min}} ถึง {{max}}",
+    "save": "บันทึก",
+    "saving": "กำลังบันทึก",
+    "saved": "บันทึกแล้ว",
+    "reset": "คืนค่าทั้งหมดเป็นค่าเริ่มต้น",
+    "resetDone": "คืนค่าเริ่มต้นแล้ว",
+    "unknownField": "รายการที่ไม่รู้จัก",
+    "fields": {
+      "initialFunds": {
+        "label": "เงินทุนที่แจกตอนเริ่ม",
+        "help": "แจกครั้งเดียวเมื่อสร้าง$t(terms.organization)ใหม่ ยอดคงเหลือที่มีอยู่แล้วจะไม่เปลี่ยน"
+      },
+      "loginMaxAttempts": {
+        "label": "จำนวนครั้งที่ผิดก่อนล็อกการเข้าสู่ระบบ",
+        "help": "ถ้าผิดติดต่อกันครบจำนวนนี้ จะเข้าสู่ระบบไม่ได้ชั่วคราว"
+      },
+      "loginLockMinutes": {
+        "label": "ระยะเวลาที่ล็อกการเข้าสู่ระบบ (นาที)",
+        "help": "ระหว่างที่ล็อกอยู่ ต่อให้รหัสผ่านถูกก็เข้าไม่ได้"
+      },
+      "mutualTradeThreshold": {
+        "label": "อัตราการซื้อขายระหว่างกันที่จะใส่สี (%)",
+        "help": "ในหน้า \"ความเอนเอียงของการซื้อขาย\" คู่ที่เกินอัตรานี้จะถูกใส่สี"
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}}ต้องเป็นจำนวนเต็ม",
+      "outOfRange": "{{field}}ต้องอยู่ระหว่าง {{min}} ถึง {{max}}",
+      "unknownKey": "{{field}} เปลี่ยนไม่ได้"
+    },
+    "quizzes": {
+      "title": "ตารางโบนัสของแบบทดสอบ",
+      "lead": "จำนวนเงินที่แจกตามคะแนน แต่ละแบบทดสอบมีตารางของตัวเองได้",
+      "empty": "ยังไม่มีแบบทดสอบ",
+      "topic": "หัวข้อ",
+      "questionCount": "{{questions}} ข้อ",
+      "open": "เปิดรับคำตอบ",
+      "closed": "ปิดรับแล้ว",
+      "columns": {
+        "minScore": "ตั้งแต่คะแนนนี้ขึ้นไป",
+        "amount": "จำนวนที่แจก"
+      },
+      "addTier": "เพิ่มแถว",
+      "removeTier": "ลบ",
+      "validDays": "จำนวนวันที่ใช้โบนัสได้",
+      "saved": "บันทึกตารางแล้ว",
+      "problem": {
+        "empty": "ตารางว่างเปล่า กรุณาใส่อย่างน้อยหนึ่งแถว",
+        "notAList": "ค่าที่ใส่ใช้ไม่ได้ กรุณาใส่เฉพาะตัวเลข",
+        "scoreOutOfRange": "คะแนนต้องเป็นจำนวนเต็ม 0 ถึง 100 ({{value}})",
+        "amountNegative": "จำนวนเงินต้องเป็นจำนวนเต็มตั้งแต่ 0 ขึ้นไป ({{value}})",
+        "missingZero": "กรุณากำหนดจำนวนเงินเมื่อได้ 0 คะแนน",
+        "duplicateScore": "คะแนนเดียวกันปรากฏสองครั้ง ({{value}})",
+        "notMonotonic": "คะแนนสูงกว่ากลับได้น้อยกว่าคะแนนต่ำ"
+      },
+      "translation": {
+        "title": "การแปลแบบทดสอบ",
+        "lead": "กรอกชื่อ หัวข้อ คำถาม และตัวเลือกสำหรับแต่ละภาษา ช่องที่เว้นว่างจะแสดงต้นฉบับ",
+        "language": "ภาษาที่จะแปล",
+        "quizTitle": "ชื่อ",
+        "quizTopic": "หัวข้อ",
+        "question": "ข้อ {{number}}",
+        "choice": "ตัวเลือก {{number}}",
+        "save": "บันทึกการแปล",
+        "saved": "บันทึกการแปลแล้ว",
+        "problem": {
+          "choicesCountMismatch": "จำนวนตัวเลือกต่างจากต้นฉบับ โปรดใช้จำนวนเท่ากันเพื่อไม่ให้คำตอบที่ถูกต้องคลาดเคลื่อน",
+          "unknownQuestion": "ไม่มีคำถามนี้ในต้นฉบับ",
+          "tooLong": "ยาวเกินไป",
+          "unknownLocale": "ภาษาที่ไม่รองรับ"
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
+      }
+    }
+  },
+  "terms": {
+    "participant": "นักเรียน",
+    "organization": "บริษัท",
+    "administrator": "ครู"
+  }
+}

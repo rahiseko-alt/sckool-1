@@ -19,6 +19,37 @@ jobs:
   check:
     name: check
     runs-on: ubuntu-latest
+
+    # apps/api（Medusa）はデータベースが無いと起動もマイグレーションもできない。
+    # 実行環境にデーモンが無くても動くよう、Docker ではなく Actions のサービスを使う。
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: medusa
+          POSTGRES_PASSWORD: medusa
+          POSTGRES_DB: sckool
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://medusa:medusa@localhost:5432/sckool
+      REDIS_URL: redis://localhost:6379
+
     steps:
       - uses: actions/checkout@v7
 
@@ -36,3 +67,50 @@ jobs:
       - run: pnpm run check
 
       - run: pnpm run build
+
+      # 生徒が見る画面。型と組み立てが通ることを見る。
+      - name: 生徒の画面のビルド
+        run: pnpm run storefront:build
+
+      # 6言語の辞書に過不足が無いか（受け入れ基準 I2）。サーバーは要らない。
+      - name: 翻訳の過不足の検査
+        run: pnpm run check:i18n
+
+      - name: マイグレーション
+        run: pnpm run api:migrate
+
+      # 生徒の個人情報がデータベースに入っていないことを機械で確かめる（受け入れ基準 A3）。
+      - name: 個人情報が入っていないことの検査
+        run: pnpm run check:no-personal-data
+
+      # MP 口座が受け入れ基準どおりに動くかを、実際のデータベースで確かめる。
+      # 純粋な計算は単体テストが見ているので、ここは保存と読み直しを見る。
+      - name: MP口座の確認
+        run: pnpm run check:mp
+
+      - name: バックエンドの起動確認
+        run: pnpm run api:smoke
+
+      # 匿名アカウントの作成・ログイン・失敗時のロックを、動いているサーバーに
+      # 対して確かめる。起動したまま検査するので、立ててから実行して最後に落とす。
+      # 最後の check-load.mjs が、60社が同時に買っても残高と在庫が狂わないことを見る
+      # （受け入れ基準 K1）。手元で 24 秒だったので、この一連の中に入れてある。
+      # ボーナスの失効（check-bonus-expiry.mjs）は、定期実行が本当に動くことも見る。
+      # そのためにサーバーを毎分の設定で起動する（既定は毎時0分。CI で1時間待てない）。
+      #
+      # 最後の check-settings.mjs が、「既定値は管理者が画面から変更できる」
+      # （docs/requirements.md 第2部の前書き）と、テストのボーナス換算表
+      # （受け入れ基準 E5）を確かめる。**この検査は最後に既定値へ戻す**ので、
+      # 前に並ぶ検査が 100,000 MP や5回のロックを前提にしていても影響しない。
+      - name: 市場の確認（アカウント・ログイン・商品・ボーナスの失効・60社同時購入・設定の変更）
+        run: pnpm run check:market:ci
+
+      # 生徒と同じ手順をブラウザでなぞる検査に要る。使うのは chromium だけ。
+      - name: ブラウザの用意
+        run: pnpm exec playwright install --with-deps chromium
+
+      # アカウント作成 → 商品登録 → 他社商品の購入 → 経営の画面までを、
+      # 実際のブラウザでボタンを押して通す。API だけの検査では、画面と API の
+      # つなぎ目が切れていても気づけない。
+      - name: 主要な流れをブラウザで通す
+        run: pnpm run check:e2e:ci

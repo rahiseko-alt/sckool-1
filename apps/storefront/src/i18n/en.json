@@ -1,0 +1,308 @@
+{
+  "app": {
+    "name": "Market",
+    "tagline": "A marketplace where $t(terms.organizations) meet"
+  },
+  "nav": {
+    "market": "Market",
+    "dashboard": "Business",
+    "myListings": "My products",
+    "quizzes": "Quizzes",
+    "ranking": "Ranking",
+    "rules": "Rules",
+    "login": "Log in",
+    "logout": "Log out",
+    "signUp": "Sign up",
+    "transactions": "History",
+    "ads": "Ads",
+    "account": "Settings"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "market": {
+    "title": "Market",
+    "subtitle": "Products on sale now",
+    "empty": "No products yet",
+    "seller": "Selling $t(terms.organization)",
+    "price": "Price",
+    "remaining": "Remaining",
+    "buy": "Buy",
+    "detail": "View details",
+    "loading": "Loading",
+    "loadError": "Could not load the products",
+    "retry": "Try again",
+    "count": "{{count}} items"
+  },
+  "detail": {
+    "description": "About this product",
+    "targetCustomer": "Made for these $t(terms.organizations)",
+    "problemSolved": "The problem it solves",
+    "salePeriod": "On sale",
+    "loginToBuy": "Log in to buy this",
+    "ownListing": "This is your own product"
+  },
+  "purchase": {
+    "confirmTitle": "You are about to buy this",
+    "confirm": "Confirm purchase",
+    "doneTitle": "Purchase complete",
+    "doneMessage": "You bought {{title}} from {{seller}}",
+    "balanceAfter": "Balance after this purchase",
+    "keepShopping": "Back to the market"
+  },
+  "unavailable": {
+    "not_started": "Not on sale yet",
+    "ended": "Sale ended",
+    "sold_out": "Sold out"
+  },
+  "auth": {
+    "signUpTitle": "Create your $t(terms.organization)",
+    "signUpLead": "A name and a password are all you need. We ask for nothing else.",
+    "organizationName": "$t(terms.organization) name",
+    "organizationNameHint": "1 to 40 characters, and no other $t(terms.organization) is using it",
+    "password": "Password",
+    "passwordHint": "At least 8 characters",
+    "createAccount": "Create $t(terms.organization)",
+    "credentialsTitle": "Write these two down",
+    "credentialsLead": "This is the only time they are shown. You cannot see them again.",
+    "marketId": "ID",
+    "recoveryCode": "Recovery code",
+    "recoveryCodeHint": "Use it if you forget your password",
+    "saved": "Saved them, go to the market",
+    "loginTitle": "Log in",
+    "logIn": "Log in",
+    "loggedInAs": "Logged in as",
+    "logOut": "Log out",
+    "creating": "Creating",
+    "loggingIn": "Logging in"
+  },
+  "balance": {
+    "title": "Balance",
+    "normal": "Regular",
+    "bonus": "Bonus",
+    "total": "Total"
+  },
+  "quiz": {
+    "title": "Quizzes",
+    "subtitle": "Score well and earn bonus MP",
+    "empty": "No quizzes are open right now",
+    "topic": "Topic",
+    "questionCount": "{{count}} questions",
+    "start": "Take it",
+    "submit": "Submit answers",
+    "question": "Question {{number}}",
+    "resultTitle": "Your answers are graded",
+    "score": "Score",
+    "reward": "Bonus {{amount}} MP",
+    "noReward": "No bonus this time",
+    "alreadyRewarded": "You already received the bonus for this quiz",
+    "expiresAt": "Bonus expires",
+    "loginToTake": "Log in to take this quiz",
+    "backToList": "Back to the quiz list"
+  },
+  "ranking": {
+    "title": "Ranking",
+    "subtitle": "Pick a measure to change the order",
+    "rank": "Rank",
+    "company": "$t(terms.organization)",
+    "empty": "No ranking yet",
+    "metric": {
+      "revenue": "Revenue",
+      "profit": "Profit",
+      "profit_margin": "Profit margin",
+      "customers": "Customers",
+      "roas": "Return on ad spend"
+    }
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "Your password needs at least 8 characters",
+    "organization_name_invalid": "That $t(terms.organization) name cannot be used",
+    "organization_name_taken": "That $t(terms.organization) name is already taken",
+    "market_id_unavailable": "We cannot create a $t(terms.organization) right now. Please try again shortly",
+    "cannot_buy_own_listing": "You cannot buy your own product",
+    "insufficient_balance": "You do not have enough MP",
+    "listing_not_found": "That product could not be found",
+    "listing_unavailable": "This cannot be bought right now",
+    "login_required": "Please log in",
+    "too_many_attempts": "Too many failed attempts. Please wait a while and try again",
+    "invalid_login": "That ID or password is not correct",
+    "unknown": "That did not work. Please try again"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "required": "Required",
+    "error": "Something went wrong"
+  },
+  "listingForm": {
+    "title": "List a product",
+    "lead": "Write it so that a buyer can tell it is made for them.",
+    "productTitle": "Product name",
+    "description": "About this product",
+    "targetCustomer": "Which $t(terms.organizations) is it for",
+    "problemSolved": "The problem it solves",
+    "price": "Price",
+    "quantity": "How many you can supply",
+    "imageUrl": "Image URL",
+    "saleStartsAt": "Sale starts",
+    "saleEndsAt": "Sale ends",
+    "submit": "List it",
+    "submitting": "Listing",
+    "done": "Your product is listed",
+    "another": "List another one",
+    "myListings": "Your listed products",
+    "empty": "You have not listed anything yet"
+  },
+  "field": {
+    "missing": "Please fill this in",
+    "too_long": "This is too long",
+    "not_a_positive_integer": "Enter a whole number of 1 or more",
+    "invalid_date": "This is not a date we can read",
+    "ends_before_starts": "The end date is before the start date"
+  },
+  "dashboard": {
+    "title": "Business",
+    "lead": "Every number is calculated from your transaction history",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profit": "Profit",
+    "profitMargin": "Profit margin",
+    "salesCount": "Items sold",
+    "purchaseCount": "Items bought",
+    "adSpend": "Ad spend",
+    "productSales": "Revenue by product",
+    "revenueChart": "Revenue over time",
+    "noSales": "Nothing has sold yet",
+    "loginRequired": "Log in to see your business figures"
+  },
+  "transaction": {
+    "title": "History",
+    "when": "When",
+    "what": "What happened",
+    "counterpart": "With",
+    "amount": "Amount",
+    "empty": "No transactions yet",
+    "kind": {
+      "initial_grant": "Starting funds",
+      "bonus_grant": "Quiz bonus",
+      "bonus_expired": "Bonus expired",
+      "purchase": "Bought a product",
+      "sale": "Sold a product",
+      "ad_spend": "Ad spend",
+      "reversal": "Reversed"
+    }
+  },
+  "ads": {
+    "title": "Ads",
+    "lead": "Pay MP and your product appears in a prominent spot on the front page",
+    "chooseListing": "Product to advertise",
+    "days": "Days",
+    "price": "Cost",
+    "buy": "Run this ad",
+    "active": "Running",
+    "ended": "Finished",
+    "impressions": "Impressions",
+    "clicks": "Clicks",
+    "ctr": "Click rate",
+    "conversions": "Purchases from the ad",
+    "adRevenue": "Revenue from the ad",
+    "roas": "Return on ad spend",
+    "empty": "You have not run any ads yet",
+    "needListing": "List a product first"
+  },
+  "translations": {
+    "title": "Translations (optional)",
+    "lead": "You can list without these. If you add one, people reading that language see it instead.",
+    "add": "Add a translation",
+    "remove": "Remove this translation",
+    "language": "Language",
+    "shownAs": "Shown using the {{language}} translation"
+  },
+  "terms": {
+    "participant": "participant",
+    "participants": "participants",
+    "organization": "company",
+    "organizations": "companies",
+    "administrator": "administrator",
+    "administrators": "administrators"
+  },
+  "rules": {
+    "title": "Rules of this market",
+    "lead": "These are real trading rules, simplified for class. Breaking them brings a warning from the staff.",
+    "cartel": {
+      "title": "Do not agree on prices (no cartels)",
+      "body": "Agreeing with another $t(terms.organization) to set the same price is not allowed. Decide your price yourself.",
+      "example": "For example: deciding \"let us all sell at 1,000 MP\""
+    },
+    "marketSplit": {
+      "title": "Do not divide the market between you",
+      "body": "Agreeing among $t(terms.organizations) that \"only we sell here\" is also not allowed.",
+      "example": "For example: deciding \"only company A sells in this area\""
+    },
+    "circular": {
+      "title": "Do not trade just to move money around",
+      "body": "Buying and selling with nothing real behind it is not allowed. Only the numbers grow; nothing is actually sold.",
+      "example": "For example: A buys from B, B buys from C, and C buys from A"
+    },
+    "favoritism": {
+      "title": "Do not buy only because you are friends",
+      "body": "Buying from a friend cannot be forbidden. But the imbalance shows up in the numbers. Be ready to explain why the product is useful to you."
+    },
+    "watching": {
+      "title": "What is visible",
+      "body": "The mutual trade rate between $t(terms.organizations), and how concentrated your buying is, appear on the $t(terms.administrator) screen. Purchases by $t(terms.administrators) are shared among $t(terms.administrators) too."
+    },
+    "penalty": "When a trade looks doubtful, we ask the people involved first. The system never punishes anyone on its own."
+  },
+  "tutorial": {
+    "title": "Getting started",
+    "lead": "Four steps, and you can both sell and buy.",
+    "step1": {
+      "title": "1. Create your $t(terms.organization)",
+      "body": "A name and a password are enough. Write down the ID and recovery code shown to you. They are never shown again."
+    },
+    "step2": {
+      "title": "2. List a product",
+      "body": "Write who it is for and what problem it solves. If that does not come across, it will not sell."
+    },
+    "step3": {
+      "title": "3. Buy from another $t(terms.organization)",
+      "body": "Pick one from the market. You cannot buy your own. The MP you pay goes to the other $t(terms.organization)."
+    },
+    "step4": {
+      "title": "4. Look at your business",
+      "body": "Revenue, expenses, profit, and how each product is selling. If something is not selling, try changing the wording, the price, or how you show it."
+    }
+  },
+  "featured": {
+    "title": "Featured",
+    "lead": "Products that $t(terms.organizations) are advertising",
+    "badge": "Ad"
+  },
+  "account": {
+    "title": "$t(terms.organization) settings",
+    "nameTitle": "Change your $t(terms.organization) name",
+    "nameLead": "Fix a typo, or change it when your plan changes.",
+    "save": "Change it",
+    "saving": "Changing",
+    "saved": "Changed",
+    "recoveryTitle": "If you forget your password",
+    "recoveryLead": "Use the recovery code you wrote down to set a new password.",
+    "recoveryCode": "Recovery code",
+    "newPassword": "New password",
+    "reset": "Change password",
+    "resetDone": "Your password is changed. Write down the new code below."
+  },
+  "nameProblem": {
+    "empty": "Please fill this in",
+    "too_long": "Use 40 characters or fewer",
+    "no_visible_characters": "Please include readable characters",
+    "control_characters": "This contains characters that cannot be used",
+    "name_taken": "That name is already taken",
+    "not_found": "That $t(terms.organization) was not found"
+  }
+}

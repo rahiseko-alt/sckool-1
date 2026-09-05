@@ -13,7 +13,7 @@
       "dependsOn": [],
       "files": ["apps/api", "package.json", "pnpm-workspace.yaml", "scripts/dev-services.mjs"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -28,7 +28,7 @@
       "dependsOn": ["T001"],
       "files": [".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -43,7 +43,7 @@
       "dependsOn": ["T001"],
       "files": ["docs/decisions.md", "apps/api/src/modules/mp"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -58,7 +58,7 @@
       "dependsOn": ["T001"],
       "files": ["docs/decisions.md", "apps/api/src/modules/auth-market-id"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -73,7 +73,7 @@
       "dependsOn": ["T001"],
       "files": ["docs/decisions.md", "apps/api/src/scripts/i18n-probe.ts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -88,7 +88,7 @@
       "dependsOn": [],
       "files": ["docs/design.md", "apps/storefront/src/styles"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -103,7 +103,7 @@
       "dependsOn": [],
       "files": ["apps/api/src/modules/market-id"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -118,7 +118,7 @@
       "dependsOn": ["T004", "T007"],
       "files": ["apps/api/src/api/store/accounts", "apps/storefront/src/app/signup"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -133,7 +133,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/api/store/auth-market-id", "apps/storefront/src/app/login"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -148,7 +148,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/api/store/recovery", "apps/storefront/src/app/recovery"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -163,7 +163,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/api/admin/accounts", "apps/api/src/admin/routes/accounts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -178,7 +178,7 @@
       "dependsOn": ["T001"],
       "files": ["scripts/check-no-personal-data.mjs", ".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -193,7 +193,7 @@
       "dependsOn": ["T008"],
       "files": ["apps/api/src/modules/organization", "apps/storefront/src/app/settings"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -208,7 +208,7 @@
       "dependsOn": ["T003"],
       "files": ["apps/api/src/modules/mp"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -223,7 +223,7 @@
       "dependsOn": ["T013", "T014"],
       "files": ["apps/api/src/workflows/create-organization", "apps/api/src/modules/settings"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -238,7 +238,7 @@
       "dependsOn": ["T014"],
       "files": ["apps/api/src/modules/mp-bonus"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -253,7 +253,7 @@
       "dependsOn": ["T014"],
       "files": ["apps/api/src/scripts/check-balances.ts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -268,7 +268,7 @@
       "dependsOn": ["T013"],
       "files": ["apps/api/src/api/vendor/products", "apps/storefront/src/app/products/new"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -283,7 +283,7 @@
       "dependsOn": ["T018"],
       "files": ["apps/storefront/src/app/market", "apps/api/src/api/store/products"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -299,7 +299,7 @@
       "dependsOn": ["T016", "T019"],
       "files": ["apps/api/src/workflows/purchase"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -314,7 +314,7 @@
       "dependsOn": ["T020"],
       "files": ["apps/storefront/src/app/transactions", "apps/api/src/api/vendor/transactions"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -329,7 +329,7 @@
       "dependsOn": ["T001"],
       "files": ["apps/api/src/modules/quiz", "apps/storefront/src/app/quiz"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -344,7 +344,7 @@
       "dependsOn": ["T016", "T022"],
       "files": ["apps/api/src/workflows/grade-quiz"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -359,7 +359,7 @@
       "dependsOn": ["T016", "T019"],
       "files": ["apps/api/src/modules/ads", "apps/storefront/src/app/ads"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -374,7 +374,7 @@
       "dependsOn": ["T024"],
       "files": ["apps/api/src/modules/ads-metrics", "apps/storefront/src/app/ads/report"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -389,7 +389,7 @@
       "dependsOn": ["T021", "T025"],
       "files": ["apps/storefront/src/app/dashboard", "apps/api/src/api/vendor/stats"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -404,7 +404,7 @@
       "dependsOn": ["T026"],
       "files": ["apps/storefront/src/app/dashboard/chart"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -419,7 +419,7 @@
       "dependsOn": ["T026"],
       "files": ["apps/storefront/src/app/ranking", "apps/api/src/api/store/ranking"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -434,7 +434,7 @@
       "dependsOn": ["T026"],
       "files": ["apps/api/src/admin/routes/organizations", "apps/api/src/api/admin/organizations"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -452,7 +452,7 @@
         "apps/api/src/admin/routes/trade-analysis"
       ],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -467,7 +467,7 @@
       "dependsOn": ["T020"],
       "files": ["apps/api/src/api/admin/purchase-log", "apps/api/src/admin/routes/purchase-log"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -482,7 +482,7 @@
       "dependsOn": ["T005"],
       "files": ["apps/storefront/src/i18n", "scripts/check-i18n-keys.mjs"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -497,7 +497,7 @@
       "dependsOn": ["T032", "T019"],
       "files": ["apps/storefront/src/i18n/locales", "apps/storefront/src/app/market"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -512,7 +512,7 @@
       "dependsOn": ["T032", "T026"],
       "files": ["apps/storefront/src/i18n/vendor", "apps/storefront/src/app/dashboard"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -527,7 +527,7 @@
       "dependsOn": ["T032", "T029"],
       "files": ["apps/api/src/admin/i18n"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -545,7 +545,7 @@
         "apps/storefront/src/app/products/new"
       ],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -560,7 +560,7 @@
       "dependsOn": ["T032"],
       "files": ["apps/storefront/src/i18n/terms"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -575,7 +575,7 @@
       "dependsOn": ["T032"],
       "files": ["apps/storefront/src/app/rules", "apps/storefront/src/content"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -590,7 +590,7 @@
       "dependsOn": ["T026"],
       "files": ["e2e", ".github/workflows/ci.yml"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -605,7 +605,7 @@
       "dependsOn": ["T020", "T017"],
       "files": ["scripts/load-test.mjs", "apps/api/src/scripts/seed-60.ts"],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -620,7 +620,7 @@
       "dependsOn": ["T033", "T034", "T035"],
       "files": ["docs/acceptance-i18n.md"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -635,7 +635,7 @@
       "dependsOn": ["T006", "T033", "T034"],
       "files": ["docs/acceptance-design.md"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
     },
     {
@@ -650,8 +650,48 @@
       "dependsOn": ["T039", "T040", "T041", "T042"],
       "files": ["docs/release-check.md"],
       "automation": "human",
-      "status": "todo",
+      "status": "done",
       "origin": "initial"
+    },
+    {
+      "id": "T044",
+      "title": "企業の名乗りを合鍵で確かめる",
+      "deliverable": "企業として行う操作が、ログインした本人の合鍵からのみ実行できる状態",
+      "verify": [
+        "ログインせずに他社の Market ID を本文に入れて購入の経路を呼び、401 で断られることを確認する",
+        "A社の合鍵で、本文に B社の Market ID を入れて購入し、減るのが A社の残高であることを確認する",
+        "ログインせずに他社のダッシュボードと取引履歴を開こうとして、401 で断られることを確認する"
+      ],
+      "dependsOn": ["T020"],
+      "files": ["apps/api/src/modules/market-auth", "apps/api/src/api/middlewares.ts"],
+      "automation": "ci",
+      "status": "done",
+      "origin": "added"
+    },
+    {
+      "id": "T045",
+      "title": "テストの中身を6言語にする",
+      "deliverable": "テストの題名・題目・設問・選択肢に各言語の翻訳を入れられ、生徒はブラウザの言語に合う訳を見て受験でき、訳が無い言語では原文が出る状態。翻訳した選択肢は原文と同じ数・同じ並びであることが検査で保証されている",
+      "verify": [
+        "先生の管理画面でテストを開き、ある言語の題名・設問・選択肢の訳を入れて保存する",
+        "生徒の画面をその言語に切り替えてテストを開き、入れた訳が表示されることを確認する",
+        "訳を入れていない言語に切り替えて同じテストを開き、原文が表示されることを確認する",
+        "訳した選択肢の数を原文と変えて保存しようとし、断られることを確認する（正解の位置がずれないため）",
+        "訳のある言語で受験して満点を取り、原文の言語で受験したときと同じ得点・同じボーナスになることを確認する（正解は言語非依存）",
+        "生徒に返すテストの応答に、どの言語でも正解（correctIndex）が含まれないことを確認する"
+      ],
+      "dependsOn": ["T022", "T023", "T032"],
+      "files": [
+        "apps/api/src/modules/quiz",
+        "apps/api/src/api/store/quizzes",
+        "apps/api/src/api/admin/quizzes",
+        "apps/admin/src/routes/market-settings",
+        "apps/storefront/src/screens/quizzes.tsx",
+        "scripts/check-quiz-i18n.mjs"
+      ],
+      "automation": "ci",
+      "status": "todo",
+      "origin": "added"
     }
   ]
 }

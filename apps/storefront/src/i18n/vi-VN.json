@@ -1,0 +1,308 @@
+{
+  "app": {
+    "name": "Market",
+    "tagline": "Nơi $t(terms.organizations) gặp nhau"
+  },
+  "nav": {
+    "market": "Thị trường",
+    "dashboard": "Kinh doanh",
+    "myListings": "Sản phẩm của tôi",
+    "quizzes": "Bài kiểm tra",
+    "ranking": "Xếp hạng",
+    "rules": "Quy tắc",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "signUp": "Đăng ký",
+    "transactions": "Lịch sử",
+    "ads": "Quảng cáo",
+    "account": "Cài đặt"
+  },
+  "language": {
+    "label": "Ngôn ngữ"
+  },
+  "market": {
+    "title": "Thị trường",
+    "subtitle": "Sản phẩm đang được bán",
+    "empty": "Chưa có sản phẩm nào",
+    "seller": "$t(terms.organization) bán",
+    "price": "Giá",
+    "remaining": "Còn lại",
+    "buy": "Mua",
+    "detail": "Xem chi tiết",
+    "loading": "Đang tải",
+    "loadError": "Không tải được sản phẩm",
+    "retry": "Thử lại",
+    "count": "{{count}} sản phẩm"
+  },
+  "detail": {
+    "description": "Giới thiệu sản phẩm",
+    "targetCustomer": "Dành cho những $t(terms.organization) như thế này",
+    "problemSolved": "Vấn đề được giải quyết",
+    "salePeriod": "Thời gian bán",
+    "loginToBuy": "Hãy đăng nhập để mua",
+    "ownListing": "Đây là sản phẩm của chính bạn"
+  },
+  "purchase": {
+    "confirmTitle": "Bạn sắp mua sản phẩm này",
+    "confirm": "Xác nhận mua",
+    "doneTitle": "Đã mua xong",
+    "doneMessage": "Bạn đã mua {{title}} từ {{seller}}",
+    "balanceAfter": "Số dư sau khi mua",
+    "keepShopping": "Quay lại thị trường"
+  },
+  "unavailable": {
+    "not_started": "Chưa mở bán",
+    "ended": "Đã kết thúc bán",
+    "sold_out": "Đã bán hết"
+  },
+  "auth": {
+    "signUpTitle": "Tạo $t(terms.organization) của bạn",
+    "signUpLead": "Chỉ cần tên và mật khẩu. Chúng tôi không hỏi gì thêm.",
+    "organizationName": "Tên $t(terms.organization)",
+    "organizationNameHint": "Từ 1 đến 40 ký tự và chưa có $t(terms.organization) nào dùng",
+    "password": "Mật khẩu",
+    "passwordHint": "Ít nhất 8 ký tự",
+    "createAccount": "Tạo $t(terms.organization)",
+    "credentialsTitle": "Hãy ghi lại hai thông tin này",
+    "credentialsLead": "Chúng chỉ hiện ra lần này. Bạn không thể xem lại.",
+    "marketId": "ID",
+    "recoveryCode": "Mã khôi phục",
+    "recoveryCodeHint": "Dùng khi bạn quên mật khẩu",
+    "saved": "Đã ghi lại, vào thị trường",
+    "loginTitle": "Đăng nhập",
+    "logIn": "Đăng nhập",
+    "loggedInAs": "Đang đăng nhập",
+    "logOut": "Đăng xuất",
+    "creating": "Đang tạo",
+    "loggingIn": "Đang đăng nhập"
+  },
+  "balance": {
+    "title": "Số dư",
+    "normal": "Thường",
+    "bonus": "Thưởng",
+    "total": "Tổng"
+  },
+  "quiz": {
+    "title": "Bài kiểm tra",
+    "subtitle": "Làm tốt sẽ nhận được MP thưởng",
+    "empty": "Hiện chưa có bài kiểm tra nào",
+    "topic": "Chủ đề",
+    "questionCount": "{{count}} câu hỏi",
+    "start": "Làm bài",
+    "submit": "Nộp bài",
+    "question": "Câu {{number}}",
+    "resultTitle": "Bài của bạn đã được chấm",
+    "score": "Điểm",
+    "reward": "Thưởng {{amount}} MP",
+    "noReward": "Lần này không có thưởng",
+    "alreadyRewarded": "Bạn đã nhận thưởng của bài kiểm tra này rồi",
+    "expiresAt": "Thưởng hết hạn",
+    "loginToTake": "Hãy đăng nhập để làm bài",
+    "backToList": "Quay lại danh sách bài kiểm tra"
+  },
+  "ranking": {
+    "title": "Xếp hạng",
+    "subtitle": "Chọn một chỉ số để đổi thứ tự",
+    "rank": "Hạng",
+    "company": "$t(terms.organization)",
+    "empty": "Chưa có xếp hạng",
+    "metric": {
+      "revenue": "Doanh thu",
+      "profit": "Lợi nhuận",
+      "profit_margin": "Tỷ suất lợi nhuận",
+      "customers": "Số khách hàng",
+      "roas": "Hiệu quả chi phí quảng cáo"
+    }
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "errors": {
+    "password_too_short": "Mật khẩu cần ít nhất 8 ký tự",
+    "organization_name_invalid": "Không thể dùng tên $t(terms.organization) đó",
+    "organization_name_taken": "Tên $t(terms.organization) đó đã có người dùng",
+    "market_id_unavailable": "Hiện chưa tạo được $t(terms.organization). Vui lòng thử lại sau ít phút",
+    "cannot_buy_own_listing": "Bạn không thể mua sản phẩm của chính mình",
+    "insufficient_balance": "Bạn không đủ MP",
+    "listing_not_found": "Không tìm thấy sản phẩm đó",
+    "listing_unavailable": "Hiện không thể mua sản phẩm này",
+    "login_required": "Vui lòng đăng nhập",
+    "too_many_attempts": "Sai quá nhiều lần. Hãy đợi một lúc rồi thử lại",
+    "invalid_login": "ID hoặc mật khẩu không đúng",
+    "unknown": "Không thành công. Vui lòng thử lại"
+  },
+  "common": {
+    "cancel": "Hủy",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "required": "Bắt buộc",
+    "error": "Đã xảy ra lỗi"
+  },
+  "listingForm": {
+    "title": "Đăng bán sản phẩm",
+    "lead": "Hãy viết sao cho người mua thấy ngay đây là sản phẩm dành cho họ.",
+    "productTitle": "Tên sản phẩm",
+    "description": "Giới thiệu sản phẩm",
+    "targetCustomer": "Dành cho $t(terms.organization) nào",
+    "problemSolved": "Vấn đề được giải quyết",
+    "price": "Giá",
+    "quantity": "Số lượng có thể cung cấp",
+    "imageUrl": "Đường dẫn hình ảnh",
+    "saleStartsAt": "Ngày bắt đầu bán",
+    "saleEndsAt": "Ngày kết thúc bán",
+    "submit": "Đăng bán",
+    "submitting": "Đang đăng",
+    "done": "Sản phẩm đã được đăng",
+    "another": "Đăng thêm sản phẩm",
+    "myListings": "Sản phẩm bạn đã đăng",
+    "empty": "Bạn chưa đăng sản phẩm nào"
+  },
+  "field": {
+    "missing": "Vui lòng điền mục này",
+    "too_long": "Nội dung quá dài",
+    "not_a_positive_integer": "Hãy nhập số nguyên từ 1 trở lên",
+    "invalid_date": "Không đọc được đây là ngày",
+    "ends_before_starts": "Ngày kết thúc sớm hơn ngày bắt đầu"
+  },
+  "dashboard": {
+    "title": "Kinh doanh",
+    "lead": "Mọi con số đều được tính từ lịch sử giao dịch",
+    "revenue": "Doanh thu",
+    "expenses": "Chi phí",
+    "profit": "Lợi nhuận",
+    "profitMargin": "Tỷ suất lợi nhuận",
+    "salesCount": "Số lần bán",
+    "purchaseCount": "Số lần mua",
+    "adSpend": "Chi phí quảng cáo",
+    "productSales": "Doanh thu theo sản phẩm",
+    "revenueChart": "Doanh thu theo thời gian",
+    "noSales": "Chưa bán được sản phẩm nào",
+    "loginRequired": "Hãy đăng nhập để xem số liệu kinh doanh"
+  },
+  "transaction": {
+    "title": "Lịch sử giao dịch",
+    "when": "Thời điểm",
+    "what": "Nội dung",
+    "counterpart": "Đối tác",
+    "amount": "Số tiền",
+    "empty": "Chưa có giao dịch nào",
+    "kind": {
+      "initial_grant": "Vốn ban đầu",
+      "bonus_grant": "Thưởng bài kiểm tra",
+      "bonus_expired": "Thưởng hết hạn",
+      "purchase": "Mua sản phẩm",
+      "sale": "Bán sản phẩm",
+      "ad_spend": "Chi phí quảng cáo",
+      "reversal": "Đã hoàn tác"
+    }
+  },
+  "ads": {
+    "title": "Quảng cáo",
+    "lead": "Trả MP để sản phẩm xuất hiện ở vị trí nổi bật trên trang đầu",
+    "chooseListing": "Sản phẩm muốn quảng cáo",
+    "days": "Số ngày",
+    "price": "Chi phí",
+    "buy": "Chạy quảng cáo",
+    "active": "Đang chạy",
+    "ended": "Đã kết thúc",
+    "impressions": "Số lần hiển thị",
+    "clicks": "Số lần nhấp",
+    "ctr": "Tỷ lệ nhấp",
+    "conversions": "Lượt mua từ quảng cáo",
+    "adRevenue": "Doanh thu từ quảng cáo",
+    "roas": "Hiệu quả chi phí quảng cáo",
+    "empty": "Bạn chưa chạy quảng cáo nào",
+    "needListing": "Hãy đăng sản phẩm trước"
+  },
+  "translations": {
+    "title": "Bản dịch sang ngôn ngữ khác (không bắt buộc)",
+    "lead": "Không điền vẫn đăng bán được. Nếu điền, người đọc ngôn ngữ đó sẽ thấy bản này.",
+    "add": "Thêm bản dịch",
+    "remove": "Xóa bản dịch này",
+    "language": "Ngôn ngữ",
+    "shownAs": "Đang hiển thị bản dịch {{language}}"
+  },
+  "terms": {
+    "participant": "người tham gia",
+    "participants": "những người tham gia",
+    "organization": "doanh nghiệp",
+    "organizations": "các doanh nghiệp",
+    "administrator": "quản trị viên",
+    "administrators": "quản trị viên"
+  },
+  "rules": {
+    "title": "Quy tắc của thị trường này",
+    "lead": "Đây là các quy tắc thương mại thật, được rút gọn cho lớp học. Vi phạm sẽ bị ban tổ chức nhắc nhở.",
+    "cartel": {
+      "title": "Không bàn nhau để định giá (cấm thỏa thuận giá)",
+      "body": "Bàn với $t(terms.organization) khác để đặt cùng một giá là không được phép. Hãy tự quyết định giá của bạn.",
+      "example": "Ví dụ: cùng quyết định \"tất cả bán 1.000 MP\""
+    },
+    "marketSplit": {
+      "title": "Không chia nhau thị trường",
+      "body": "Các $t(terms.organizations) thỏa thuận \"chỗ này chỉ chúng ta bán\" cũng không được phép.",
+      "example": "Ví dụ: quyết định \"lĩnh vực này chỉ công ty A được bán\""
+    },
+    "circular": {
+      "title": "Không giao dịch chỉ để chuyển tiền vòng quanh",
+      "body": "Mua bán mà không có gì thật phía sau là không được phép. Chỉ có con số tăng lên, thực tế không bán được gì.",
+      "example": "Ví dụ: A mua của B, B mua của C, C lại mua của A"
+    },
+    "favoritism": {
+      "title": "Đừng mua chỉ vì là bạn bè",
+      "body": "Không thể cấm việc mua của bạn bè. Nhưng sự thiên lệch sẽ hiện ra trong các con số. Hãy sẵn sàng giải thích sản phẩm đó có ích gì cho bạn."
+    },
+    "watching": {
+      "title": "Những gì được nhìn thấy",
+      "body": "Tỷ lệ giao dịch qua lại giữa các $t(terms.organizations) và mức độ tập trung khi mua sẽ hiện trên màn hình của $t(terms.administrator). Việc mua của $t(terms.administrators) cũng được chia sẻ giữa các $t(terms.administrators)."
+    },
+    "penalty": "Khi một giao dịch có vẻ đáng ngờ, chúng tôi sẽ hỏi người liên quan trước. Hệ thống không bao giờ tự phạt ai."
+  },
+  "tutorial": {
+    "title": "Bắt đầu thế nào",
+    "lead": "Bốn bước, và bạn có thể vừa bán vừa mua.",
+    "step1": {
+      "title": "1. Tạo $t(terms.organization) của bạn",
+      "body": "Chỉ cần tên và mật khẩu. Hãy ghi lại ID và mã khôi phục hiện ra. Chúng sẽ không hiện lại lần nữa."
+    },
+    "step2": {
+      "title": "2. Đăng bán sản phẩm",
+      "body": "Hãy viết sản phẩm dành cho ai và giải quyết vấn đề gì. Nếu điều đó không truyền đạt được thì sẽ không bán được."
+    },
+    "step3": {
+      "title": "3. Mua từ $t(terms.organization) khác",
+      "body": "Chọn một sản phẩm trên thị trường. Bạn không thể mua sản phẩm của chính mình. Số MP bạn trả sẽ vào $t(terms.organization) kia."
+    },
+    "step4": {
+      "title": "4. Xem tình hình kinh doanh",
+      "body": "Doanh thu, chi phí, lợi nhuận và mức bán của từng sản phẩm. Nếu không bán được, hãy thử đổi cách viết, giá, hoặc cách trình bày."
+    }
+  },
+  "featured": {
+    "title": "Nổi bật",
+    "lead": "Sản phẩm mà $t(terms.organizations) đang quảng cáo",
+    "badge": "Quảng cáo"
+  },
+  "account": {
+    "title": "Cài đặt $t(terms.organization)",
+    "nameTitle": "Đổi tên $t(terms.organization)",
+    "nameLead": "Sửa lỗi gõ nhầm, hoặc đổi khi kế hoạch thay đổi.",
+    "save": "Đổi",
+    "saving": "Đang đổi",
+    "saved": "Đã đổi",
+    "recoveryTitle": "Khi bạn quên mật khẩu",
+    "recoveryLead": "Dùng mã khôi phục bạn đã ghi lại để đặt mật khẩu mới.",
+    "recoveryCode": "Mã khôi phục",
+    "newPassword": "Mật khẩu mới",
+    "reset": "Đổi mật khẩu",
+    "resetDone": "Mật khẩu đã đổi. Hãy ghi lại mã mới bên dưới."
+  },
+  "nameProblem": {
+    "empty": "Vui lòng điền mục này",
+    "too_long": "Tối đa 40 ký tự",
+    "no_visible_characters": "Hãy nhập ký tự đọc được",
+    "control_characters": "Có ký tự không dùng được",
+    "name_taken": "Tên đó đã có người dùng",
+    "not_found": "Không tìm thấy $t(terms.organization) đó"
+  }
+}

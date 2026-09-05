@@ -1,0 +1,233 @@
+{
+  "language": {
+    "label": "भाषा"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "कृपया प्रशासकको रूपमा लगइन गर्नुहोस्",
+    "load": "पढ्न सकिएन ({{status}})",
+    "offline": "सर्भरसँग जोडिन सकिएन"
+  },
+  "organizations": {
+    "title": "$t(terms.organization) सूची",
+    "description": "सहभागी $t(terms.organization) मौज्दात, बिक्री, नाफा, सामान संख्या र विज्ञापन खर्च। स्तम्भको शीर्षक थिच्दा क्रम बदलिन्छ।",
+    "summary": "{{organizations}} $t(terms.organization) / जम्मा मौज्दात {{balance}} / जम्मा बिक्री {{revenue}}",
+    "supplyMismatch": "* MP को हिसाब मिलेको छैन",
+    "bonus": "(बोनस {{amount}})",
+    "empty": "अहिलेसम्म कुनै $t(terms.organization) छैन।",
+    "columns": {
+      "organizationName": "$t(terms.organization)को नाम",
+      "balanceTotal": "मौज्दात",
+      "revenue": "बिक्री",
+      "expenses": "खर्च",
+      "profit": "नाफा",
+      "profitMargin": "नाफाको दर",
+      "listingCount": "सामान संख्या",
+      "adSpend": "विज्ञापन खर्च",
+      "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "बन्द गर्नुहोस्",
+      "listings": "सामान ({{count}})",
+      "noListings": "सामान छैन",
+      "remaining": "{{count}} बाँकी",
+      "transactions": "कारोबार ({{count}}, नयाँ ५०)",
+      "noTransactions": "कारोबार छैन",
+      "kind": {
+        "initial_grant": "सुरुको रकम",
+        "bonus_grant": "बोनस",
+        "bonus_expired": "बोनस सकियो",
+        "purchase": "किनेको",
+        "sale": "बेचेको",
+        "ad_spend": "विज्ञापन खर्च",
+        "reversal": "रद्द"
+      }
+    }
+  },
+  "tradeAnalysis": {
+    "title": "कारोबारको झुकाव",
+    "lead": "एक अर्कासँग मात्र किनबेच गर्ने र एउटै $t(terms.organization)मा केन्द्रित हुने प्रवृत्ति संख्यामा देखाइन्छ।",
+    "notice": "यो ठगीको निर्णय होइन।",
+    "detail": "साथीको सामान साँच्चै राम्रो लागेर किन्नु र अंकका लागि एक अर्काबाट किन्नु तथ्याङ्कमा उस्तै देखिन्छ। शंका लागेको जोडीलाई आफैंलाई सोध्नुहोस्।",
+    "empty": "अहिलेसम्म कुनै कारोबार छैन।",
+    "mutual": {
+      "title": "आपसी कारोबार दर",
+      "description": "दुई $t(terms.organization)बीचको कारोबार रकम ÷ ती दुई $t(terms.organization)को कुल कारोबार। {{threshold}}% नाघेका जोडी रङले देखाइन्छ। एक अर्कासँग मात्र कारोबार गर्ने दुई $t(terms.organization) 50% हुन्छन् (उही रकम कुलमा दुई पटक गनिने भएकाले)।",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "साझेदार",
+        "between": "दुईबीचमा",
+        "total": "दुईको कुल कारोबार",
+        "rate": "आपसी कारोबार दर"
+      }
+    },
+    "concentration": {
+      "title": "खरिद केन्द्रित दर",
+      "lead": "किनेको कुल रकममध्ये सबैभन्दा धेरै किनेको साझेदारले ओगटेको हिस्सा।",
+      "notice": "एउटै $t(terms.organization)बाट मात्र किनेको भए सधैं 100% हुन्छ।",
+      "detail": "थोरै पटक मात्र किनेका $t(terms.organization) पनि माथि आउँछन्, त्यसैले साझेदार संख्या र रकम सँगै हेर्नुहोस्।",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "सबैभन्दा धेरै किनेको ठाउँ",
+        "topAmount": "त्यसलाई तिरेको",
+        "totalAmount": "किनेको जम्मा",
+        "sellerCount": "साझेदार संख्या",
+        "rate": "खरिद केन्द्रित दर"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "$t(terms.administrator) खरिद अभिलेख",
+    "lead": "$t(terms.administrator)ले कसबाट कति किन्नुभयो भन्ने कुरा",
+    "notice": "अरू $t(terms.administrator)ले पनि हेर्न सक्नुहुन्छ।",
+    "detail": "आफ्नो अनजान झुकाव आफैंले चाल पाउन सकियोस् भनेर बनाइएको पर्दा हो। $t(terms.participant)ले देख्दैनन्।",
+    "summary": "{{admins}} $t(terms.administrator) / {{purchases}} खरिद / जम्मा {{amount}}",
+    "empty": "$t(terms.administrator)ले अहिलेसम्म केही किन्नुभएको छैन।",
+    "byAdmin": {
+      "title": "$t(terms.administrator) अनुसार",
+      "noPurchase": "अहिलेसम्म केही किनेको छैन",
+      "separator": ", ",
+      "seller": "{{name}} ({{amount}} / {{times}} पटक)",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "खरिद पटक",
+        "totalAmount": "किनेको रकम",
+        "concentration": "केन्द्रित दर",
+        "sellers": "किनेको ठाउँ"
+      }
+    },
+    "bySeller": {
+      "title": "$t(terms.organization) अनुसार ($t(terms.administrator)ले किनेको रकम)",
+      "description": "किन्ने $t(terms.administrator) संख्या पनि देखाइन्छ। एक जना $t(terms.administrator)ले धेरै किनेको हो कि सबैले थोरै-थोरै किनेको हो छुट्याउन।",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "बिक्री भएको रकम",
+        "count": "पटक",
+        "adminCount": "$t(terms.administrator) संख्या"
+      }
+    },
+    "recent": {
+      "title": "नयाँ क्रममा",
+      "columns": {
+        "when": "कहिले",
+        "admin": "$t(terms.administrator)",
+        "seller": "किनेको ठाउँ",
+        "amount": "रकम"
+      }
+    }
+  },
+  "passwordReset": {
+    "title": "पासवर्ड रिसेट",
+    "lead": "$t(terms.participant)ले पासवर्ड बिर्सिएको बेला यहाँबाट नयाँ पासवर्ड दिनुहोस्।",
+    "notice": "पहिले कक्षामै व्यक्ति ठीक हो कि होइन जाँच्नुहोस्।",
+    "detail": "यो प्रणालीलाई कुन Market ID कसको हो थाहा छैन। तलका अक्षर एक पटक मात्र देखिन्छन्, त्यसैले त्यहीँ सारेर सम्बन्धित व्यक्तिलाई दिनुहोस्।",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "जारी गर्नुहोस्",
+    "submitting": "जारी गर्दै",
+    "result": {
+      "title": "जारी भयो",
+      "warning": "यो पर्दा बन्द गरेपछि फेरि हेर्न सकिँदैन।",
+      "temporaryPassword": "अस्थायी पासवर्ड",
+      "recoveryCode": "नयाँ रिकभरी कोड",
+      "next": "दिइसकेपछि पासवर्ड आफैँले बदल्न लगाउनुहोस्।"
+    },
+    "error": {
+      "required": "Market ID हाल्नुहोस्।",
+      "notFound": "यो Market ID भेटिएन ({{marketId}})। टाइप गर्दा गल्ती भयो कि हेर्नुहोस्।"
+    }
+  },
+  "marketSettings": {
+    "title": "सेटिङ",
+    "lead": "कक्षाअनुसार अंकहरू बदल्न सकिन्छ।",
+    "notice": "सुरक्षित गर्नेबित्तिकै सबैलाई लागू हुन्छ।",
+    "detail": "पहिलेकै अंकमा फर्कन तल रहेको \"सबै पूर्वनिर्धारितमा फर्काउनुहोस्\" थिच्नुहोस्।",
+    "defaultHint": "पूर्वनिर्धारित {{value}}",
+    "rangeHint": "{{min}} देखि {{max}} सम्मको पूर्ण संख्या",
+    "save": "सुरक्षित गर्नुहोस्",
+    "saving": "सुरक्षित गर्दै",
+    "saved": "सुरक्षित भयो।",
+    "reset": "सबै पूर्वनिर्धारितमा फर्काउनुहोस्",
+    "resetDone": "पूर्वनिर्धारितमा फर्कियो।",
+    "unknownField": "थाहा नभएको वस्तु",
+    "fields": {
+      "initialFunds": {
+        "label": "सुरुमा दिइने रकम",
+        "help": "नयाँ $t(terms.organization) बनाउँदा एक पटक मात्र दिइन्छ। पहिलेदेखि भएको मौज्दात बदलिँदैन।"
+      },
+      "loginMaxAttempts": {
+        "label": "लगइन रोक्नुअघिको असफल पटक",
+        "help": "लगातार यति पटक असफल भएपछि केही समय लगइन गर्न पाइँदैन।"
+      },
+      "loginLockMinutes": {
+        "label": "लगइन रोकिने समय (मिनेट)",
+        "help": "रोकिएको बेला सही पासवर्डले पनि छिर्न पाइँदैन।"
+      },
+      "mutualTradeThreshold": {
+        "label": "रङ लगाइने आपसी कारोबार दर (%)",
+        "help": "\"कारोबारको झुकाव\" पर्दामा यो दर नाघेका जोडीमा रङ लाग्छ।"
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}} पूर्ण संख्यामा हाल्नुहोस्।",
+      "outOfRange": "{{field}} {{min}} देखि {{max}} सम्म हुनुपर्छ।",
+      "unknownKey": "{{field}} बदल्न मिल्दैन।"
+    },
+    "quizzes": {
+      "title": "परीक्षाको बोनस तालिका",
+      "lead": "अंकअनुसार दिइने रकम। हरेक परीक्षाको आ-आफ्नै तालिका हुन सक्छ।",
+      "empty": "अहिलेसम्म कुनै परीक्षा छैन।",
+      "topic": "विषय",
+      "questionCount": "{{questions}} प्रश्न",
+      "open": "खुला छ",
+      "closed": "बन्द छ",
+      "columns": {
+        "minScore": "यो अंक वा माथि",
+        "amount": "दिइने रकम"
+      },
+      "addTier": "पङ्क्ति थप्नुहोस्",
+      "removeTier": "हटाउनुहोस्",
+      "validDays": "बोनस चल्ने दिन",
+      "saved": "तालिका सुरक्षित भयो।",
+      "problem": {
+        "empty": "तालिका खाली छ। कम्तीमा एउटा पङ्क्ति हाल्नुहोस्।",
+        "notAList": "हालेको मान चल्दैन। अंक मात्र हाल्नुहोस्।",
+        "scoreOutOfRange": "अंक 0 देखि 100 सम्मको पूर्ण संख्या हुनुपर्छ ({{value}})।",
+        "amountNegative": "रकम 0 वा सोभन्दा माथिको पूर्ण संख्या हुनुपर्छ ({{value}})।",
+        "missingZero": "0 अंक हुँदा दिइने रकम तोक्नुहोस्।",
+        "duplicateScore": "एउटै अंक दुई पटक आएको छ ({{value}})।",
+        "notMonotonic": "बढी अंक ल्याउँदा कम रकम पर्ने भएको छ।"
+      },
+      "translation": {
+        "title": "परीक्षाको अनुवाद",
+        "lead": "हरेक भाषाको शीर्षक, विषय, प्रश्न र विकल्प भर्नुहोस्। खाली छाडेमा मूल भाषा देखिन्छ।",
+        "language": "अनुवाद गर्ने भाषा",
+        "quizTitle": "शीर्षक",
+        "quizTopic": "विषय",
+        "question": "प्रश्न {{number}}",
+        "choice": "विकल्प {{number}}",
+        "save": "अनुवाद सुरक्षित गर्नुहोस्",
+        "saved": "अनुवाद सुरक्षित भयो।",
+        "problem": {
+          "choicesCountMismatch": "विकल्पको सङ्ख्या मूलसँग फरक छ। सही उत्तरको स्थान नबिग्रियोस् भनी उही सङ्ख्या राख्नुहोस्।",
+          "unknownQuestion": "यो प्रश्न मूलमा छैन।",
+          "tooLong": "धेरै लामो भयो।",
+          "unknownLocale": "समर्थन नगरिएको भाषा।"
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
+      }
+    }
+  },
+  "terms": {
+    "participant": "विद्यार्थी",
+    "organization": "कम्पनी",
+    "administrator": "शिक्षक"
+  }
+}

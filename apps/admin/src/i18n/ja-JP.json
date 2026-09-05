@@ -1,0 +1,233 @@
+{
+  "language": {
+    "label": "言語"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "管理者としてログインしてください",
+    "load": "読み込めません（{{status}}）",
+    "offline": "バックエンドにつながりません"
+  },
+  "organizations": {
+    "title": "$t(terms.organization)一覧",
+    "description": "参加している$t(terms.organization)の残高・売上・利益・商品数・広告費。列の見出しを押すと並べ替わります。",
+    "summary": "{{organizations}} 社／残高の合計 {{balance}}／売上の合計 {{revenue}}",
+    "supplyMismatch": "※ MP の勘定が合っていません",
+    "bonus": "（ボーナス {{amount}}）",
+    "empty": "まだ$t(terms.organization)がありません。",
+    "columns": {
+      "organizationName": "$t(terms.organization)名",
+      "balanceTotal": "残高",
+      "revenue": "売上",
+      "expenses": "支出",
+      "profit": "利益",
+      "profitMargin": "利益率",
+      "listingCount": "商品数",
+      "adSpend": "広告費",
+      "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "閉じる",
+      "listings": "商品（{{count}}件）",
+      "noListings": "商品はありません",
+      "remaining": "残り{{count}}",
+      "transactions": "取引（{{count}}件・新しい順に50件まで）",
+      "noTransactions": "取引はありません",
+      "kind": {
+        "initial_grant": "初期資金",
+        "bonus_grant": "ボーナス",
+        "bonus_expired": "ボーナス失効",
+        "purchase": "購入",
+        "sale": "売上",
+        "ad_spend": "広告費",
+        "reversal": "取り消し"
+      }
+    }
+  },
+  "tradeAnalysis": {
+    "title": "取引の偏り",
+    "lead": "買い合いや1社への偏りを数字で出します。",
+    "notice": "不正の判定ではありません。",
+    "detail": "仲の良い相手の商品を本当に良いと思って買うことと、点数のために買い合うことは、データからは区別できません。気になった組は本人に聞いてください。",
+    "empty": "まだ取引がありません。",
+    "mutual": {
+      "title": "相互取引率",
+      "description": "2社の間の取引額 ÷ その2社の総取引額。{{threshold}}% を超えた組を色で示します。互いとしか取引していない2社は 50% になります（総取引額に同じ額が2回入るため）。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "相手",
+        "between": "2社の間",
+        "total": "2社の総取引",
+        "rate": "相互取引率"
+      }
+    },
+    "concentration": {
+      "title": "購入集中率",
+      "lead": "買った額のうち、一番多く買っている相手が占める割合。",
+      "notice": "1社からしか買っていなければ必ず 100% です。",
+      "detail": "買った回数が少ないだけの$t(terms.organization)も上位に来るので、相手の数と金額を見てください。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "一番多い購入先",
+        "topAmount": "その相手へ",
+        "totalAmount": "買った額",
+        "sellerCount": "相手の数",
+        "rate": "購入集中率"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "$t(terms.administrator)の購入ログ",
+    "lead": "$t(terms.administrator)が誰からいくら買ったかを、",
+    "notice": "$t(terms.administrator)どうしで見られるようにしています。",
+    "detail": "意図しない偏りに自分で気づけるようにするための画面です。$t(terms.participant)には見えません。",
+    "summary": "$t(terms.administrator) {{admins}} 人／購入 {{purchases}} 件／合計 {{amount}}",
+    "empty": "まだ$t(terms.administrator)の購入がありません。",
+    "byAdmin": {
+      "title": "$t(terms.administrator)ごと",
+      "noPurchase": "まだ買っていません",
+      "separator": "、",
+      "seller": "{{name}}（{{amount}} / {{times}}回）",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "購入回数",
+        "totalAmount": "買った額",
+        "concentration": "集中率",
+        "sellers": "買った先"
+      }
+    },
+    "bySeller": {
+      "title": "$t(terms.organization)ごと（$t(terms.administrator)から買われた額）",
+      "description": "買った$t(terms.administrator)の人数も出しています。1人の$t(terms.administrator)がたくさん買ったのか、みんなが少しずつ買ったのかを見分けるためです。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "買われた額",
+        "count": "回数",
+        "adminCount": "$t(terms.administrator)の人数"
+      }
+    },
+    "recent": {
+      "title": "新しい順",
+      "columns": {
+        "when": "いつ",
+        "admin": "$t(terms.administrator)",
+        "seller": "買った先",
+        "amount": "金額"
+      }
+    }
+  },
+  "passwordReset": {
+    "title": "パスワードの初期化",
+    "lead": "$t(terms.participant)がパスワードを忘れたときに、ここから新しいものを発行します。",
+    "notice": "本人かどうかは教室で確かめてください。",
+    "detail": "この仕組みは Market ID と人の対応を持っていません。発行した文字はこの画面にしか出ないので、その場で書き写して渡してください。",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "発行する",
+    "submitting": "発行しています",
+    "result": {
+      "title": "発行しました",
+      "warning": "この画面を閉じると二度と見られません。",
+      "temporaryPassword": "一時パスワード",
+      "recoveryCode": "新しい再発行コード",
+      "next": "渡したあとは、本人に自分でパスワードを変えてもらってください。"
+    },
+    "error": {
+      "required": "Market ID を入力してください。",
+      "notFound": "その Market ID は見つかりません（{{marketId}}）。打ち間違いがないか確かめてください。"
+    }
+  },
+  "marketSettings": {
+    "title": "設定",
+    "lead": "授業に合わせて数字を変えられます。",
+    "notice": "保存するとすぐに全員へ効きます。",
+    "detail": "元の数字に戻したいときは、下の「すべて既定値に戻す」を押してください。",
+    "defaultHint": "既定値 {{value}}",
+    "rangeHint": "{{min}} から {{max}} までの整数",
+    "save": "保存する",
+    "saving": "保存しています",
+    "saved": "保存しました。",
+    "reset": "すべて既定値に戻す",
+    "resetDone": "既定値に戻しました。",
+    "unknownField": "知らない項目",
+    "fields": {
+      "initialFunds": {
+        "label": "はじめに配る資金",
+        "help": "新しい$t(terms.organization)ができたときに1回だけ配ります。すでにある残高は変わりません。"
+      },
+      "loginMaxAttempts": {
+        "label": "ログインを止めるまでの失敗回数",
+        "help": "続けてこの回数だけ失敗すると、しばらくログインできなくなります。"
+      },
+      "loginLockMinutes": {
+        "label": "ログインを止めておく時間（分）",
+        "help": "止まっている間は、正しいパスワードでも入れません。"
+      },
+      "mutualTradeThreshold": {
+        "label": "相互取引率の色を付ける割合（%）",
+        "help": "「取引の偏り」の画面で、この割合を超えた組に色が付きます。"
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}}は整数で入れてください。",
+      "outOfRange": "{{field}}は {{min}} から {{max}} までにしてください。",
+      "unknownKey": "{{field}} は変えられません。"
+    },
+    "quizzes": {
+      "title": "テストのボーナス換算表",
+      "lead": "得点に応じて配る額です。テストごとに別の表を持てます。",
+      "empty": "まだテストがありません。",
+      "topic": "題材",
+      "questionCount": "{{questions}} 問",
+      "open": "受け付けています",
+      "closed": "受け付けを閉じています",
+      "columns": {
+        "minScore": "この点以上",
+        "amount": "配る額"
+      },
+      "addTier": "行を足す",
+      "removeTier": "消す",
+      "validDays": "ボーナスが使える日数",
+      "saved": "換算表を保存しました。",
+      "problem": {
+        "empty": "表が空です。1行以上入れてください。",
+        "notAList": "入れた値が使えません。数字だけを入れてください。",
+        "scoreOutOfRange": "得点は0から100の整数にしてください（{{value}}）。",
+        "amountNegative": "額は0以上の整数にしてください（{{value}}）。",
+        "missingZero": "0点のときの額を決めてください。",
+        "duplicateScore": "同じ得点が2回出てきます（{{value}}）。",
+        "notMonotonic": "得点が高いほうの額が、低いほうより少なくなっています。"
+      },
+      "translation": {
+        "title": "テストの翻訳",
+        "lead": "各言語の題名・題目・設問・選択肢を入れます。空の欄はその言語でも原文が出ます。",
+        "language": "翻訳する言語",
+        "quizTitle": "題名",
+        "quizTopic": "題材",
+        "question": "第 {{number}} 問",
+        "choice": "選択肢 {{number}}",
+        "save": "翻訳を保存",
+        "saved": "翻訳を保存しました。",
+        "problem": {
+          "choicesCountMismatch": "選択肢の数が原文と違います。正解の位置がずれるため、原文と同じ数にしてください。",
+          "unknownQuestion": "原文に無い設問です。",
+          "tooLong": "文字数が多すぎます。",
+          "unknownLocale": "対応していない言語です。"
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
+      }
+    }
+  },
+  "terms": {
+    "participant": "生徒",
+    "organization": "企業",
+    "administrator": "先生"
+  }
+}

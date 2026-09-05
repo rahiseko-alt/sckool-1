@@ -1,0 +1,233 @@
+{
+  "language": {
+    "label": "语言"
+  },
+  "money": {
+    "unit": "MP"
+  },
+  "error": {
+    "unauthorized": "请以管理员身份登录",
+    "load": "无法读取（{{status}}）",
+    "offline": "连接不上后台服务"
+  },
+  "organizations": {
+    "title": "$t(terms.organization)一览",
+    "description": "参加的$t(terms.organization)的余额、销售额、利润、商品数和广告费。点击列标题可以改变排序。",
+    "summary": "{{organizations}} 家$t(terms.organization)／余额合计 {{balance}}／销售额合计 {{revenue}}",
+    "supplyMismatch": "※ MP 的账目对不上",
+    "bonus": "（奖励 {{amount}}）",
+    "empty": "还没有$t(terms.organization)。",
+    "columns": {
+      "organizationName": "$t(terms.organization)名称",
+      "balanceTotal": "余额",
+      "revenue": "销售额",
+      "expenses": "支出额",
+      "profit": "利润",
+      "profitMargin": "利润率",
+      "listingCount": "商品数量",
+      "adSpend": "广告费",
+      "marketId": "Market ID"
+    },
+    "detail": {
+      "close": "关闭",
+      "listings": "商品（共{{count}}项）",
+      "noListings": "没有商品",
+      "remaining": "剩余{{count}}",
+      "transactions": "交易（{{count}}笔，最新50笔）",
+      "noTransactions": "没有交易",
+      "kind": {
+        "initial_grant": "初始资金",
+        "bonus_grant": "奖励",
+        "bonus_expired": "奖励过期",
+        "purchase": "购买",
+        "sale": "销售",
+        "ad_spend": "广告费",
+        "reversal": "撤销"
+      }
+    }
+  },
+  "tradeAnalysis": {
+    "title": "交易的偏向",
+    "lead": "用数字显示互相购买以及集中在一家$t(terms.organization)的情况。",
+    "notice": "这不是作弊的判定。",
+    "detail": "真心觉得好而购买要好朋友的商品，和为了分数互相购买，在数据上是分不出来的。看到在意的组合，请直接问本人。",
+    "empty": "还没有交易。",
+    "mutual": {
+      "title": "相互交易率",
+      "description": "两家$t(terms.organization)之间的交易额 ÷ 这两家$t(terms.organization)的交易总额。超过 {{threshold}}% 的组合会用颜色标出。只和对方交易的两家$t(terms.organization)会是 50%（同一笔金额在总额里算了两次）。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "partner": "对方",
+        "between": "两家之间",
+        "total": "两家的总交易",
+        "rate": "相互交易率"
+      }
+    },
+    "concentration": {
+      "title": "购买集中率",
+      "lead": "买入总额之中，买得最多的那一家所占的比例。",
+      "notice": "只从一家买过的$t(terms.organization)一定是 100%。",
+      "detail": "只是购买次数很少的$t(terms.organization)也会排在前面，请连同对方的数量和金额一起看。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "topSeller": "买得最多的一家",
+        "topAmount": "给这一家",
+        "totalAmount": "买入总额",
+        "sellerCount": "对方的数量",
+        "rate": "购买集中率"
+      }
+    }
+  },
+  "purchaseLog": {
+    "title": "$t(terms.administrator)的购买记录",
+    "lead": "$t(terms.administrator)从谁那里买了多少，",
+    "notice": "$t(terms.administrator)之间可以互相查看。",
+    "detail": "这个画面是为了让$t(terms.administrator)自己察觉无意中的偏向。$t(terms.participant)看不到。",
+    "summary": "$t(terms.administrator) {{admins}} 人／购买 {{purchases}} 笔／合计 {{amount}}",
+    "empty": "$t(terms.administrator)还没有购买过。",
+    "byAdmin": {
+      "title": "按$t(terms.administrator)",
+      "noPurchase": "还没有买过",
+      "separator": "、",
+      "seller": "{{name}}（{{amount}} / {{times}}次）",
+      "columns": {
+        "admin": "$t(terms.administrator)",
+        "purchaseCount": "购买次数",
+        "totalAmount": "买入金额",
+        "concentration": "集中度",
+        "sellers": "买入对象"
+      }
+    },
+    "bySeller": {
+      "title": "按$t(terms.organization)（被$t(terms.administrator)买走的金额）",
+      "description": "也显示购买的$t(terms.administrator)人数，用来分辨是一位$t(terms.administrator)买了很多，还是大家各买了一点。",
+      "columns": {
+        "company": "$t(terms.organization)",
+        "amount": "被买走的金额",
+        "count": "次数",
+        "adminCount": "$t(terms.administrator)人数"
+      }
+    },
+    "recent": {
+      "title": "按时间从新到旧",
+      "columns": {
+        "when": "时间",
+        "admin": "$t(terms.administrator)",
+        "seller": "买入对象",
+        "amount": "金额"
+      }
+    }
+  },
+  "passwordReset": {
+    "title": "重置密码",
+    "lead": "当$t(terms.participant)忘记密码时，在这里发放新的密码。",
+    "notice": "请先在教室里确认本人身份。",
+    "detail": "本系统不掌握哪个 Market ID 属于谁。下面的字符只显示这一次，请当场抄写并交给本人。",
+    "marketIdPlaceholder": "MKT-XXXX-XXXX",
+    "submit": "发放",
+    "submitting": "正在发放",
+    "result": {
+      "title": "已发放",
+      "warning": "离开这个画面后就再也看不到了。",
+      "temporaryPassword": "临时密码",
+      "recoveryCode": "新的补发码",
+      "next": "交给本人之后，请让本人自己修改密码。"
+    },
+    "error": {
+      "required": "请输入 Market ID。",
+      "notFound": "找不到这个 Market ID（{{marketId}}）。请确认是否输错。"
+    }
+  },
+  "marketSettings": {
+    "title": "设置",
+    "lead": "可以按照课程调整这些数字。",
+    "notice": "保存后立即对所有人生效。",
+    "detail": "想恢复原来的数字时，请按下面的“全部恢复默认值”。",
+    "defaultHint": "默认值 {{value}}",
+    "rangeHint": "{{min}} 到 {{max}} 之间的整数",
+    "save": "保存",
+    "saving": "正在保存",
+    "saved": "已保存。",
+    "reset": "全部恢复默认值",
+    "resetDone": "已恢复默认值。",
+    "unknownField": "未知项目",
+    "fields": {
+      "initialFunds": {
+        "label": "初始发放的资金",
+        "help": "新建$t(terms.organization)时只发放一次。已有的余额不会改变。"
+      },
+      "loginMaxAttempts": {
+        "label": "锁定登录前的失败次数",
+        "help": "连续失败这么多次后，一段时间内无法登录。"
+      },
+      "loginLockMinutes": {
+        "label": "锁定登录的时间（分钟）",
+        "help": "锁定期间，即使密码正确也无法登录。"
+      },
+      "mutualTradeThreshold": {
+        "label": "标色的互相交易率（%）",
+        "help": "在“交易的偏向”画面上，超过这个比例的组合会被标色。"
+      }
+    },
+    "problem": {
+      "notAnInteger": "{{field}}请填写整数。",
+      "outOfRange": "{{field}}请填写 {{min}} 到 {{max}} 之间的数。",
+      "unknownKey": "{{field}} 无法修改。"
+    },
+    "quizzes": {
+      "title": "测验的奖励对照表",
+      "lead": "按分数发放的金额。每个测验可以有各自的表。",
+      "empty": "还没有测验。",
+      "topic": "题材",
+      "questionCount": "{{questions}} 题",
+      "open": "正在接受作答",
+      "closed": "已停止作答",
+      "columns": {
+        "minScore": "达到这个分数",
+        "amount": "发放的金额"
+      },
+      "addTier": "添加一行",
+      "removeTier": "删除",
+      "validDays": "奖励可以使用的天数",
+      "saved": "已保存对照表。",
+      "problem": {
+        "empty": "表是空的。请至少填写一行。",
+        "notAList": "填入的值无法使用。请只填写数字。",
+        "scoreOutOfRange": "分数请填写 0 到 100 的整数（{{value}}）。",
+        "amountNegative": "金额请填写 0 以上的整数（{{value}}）。",
+        "missingZero": "请决定 0 分时的金额。",
+        "duplicateScore": "同一个分数出现了两次（{{value}}）。",
+        "notMonotonic": "分数高的一方金额比分数低的一方还少。"
+      },
+      "translation": {
+        "title": "测验翻译",
+        "lead": "为每种语言填写标题、题目、问题和选项。留空的字段将显示原文。",
+        "language": "翻译的语言",
+        "quizTitle": "标题",
+        "quizTopic": "题目",
+        "question": "第 {{number}} 题",
+        "choice": "选项 {{number}}",
+        "save": "保存翻译",
+        "saved": "翻译已保存。",
+        "problem": {
+          "choicesCountMismatch": "选项数量与原文不同。请保持相同数量，以免正确答案错位。",
+          "unknownQuestion": "原文中没有此问题。",
+          "tooLong": "太长了。",
+          "unknownLocale": "不支持的语言。"
+        },
+        "locale": {
+          "en": "English",
+          "zh-CN": "简体中文",
+          "vi-VN": "Tiếng Việt",
+          "ne-NP": "नेपाली",
+          "th-TH": "ไทย"
+        }
+      }
+    }
+  },
+  "terms": {
+    "participant": "学生",
+    "organization": "企业",
+    "administrator": "老师"
+  }
+}
