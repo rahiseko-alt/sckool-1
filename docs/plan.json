@@ -690,8 +690,53 @@
         "scripts/check-quiz-i18n.mjs"
       ],
       "automation": "ci",
-      "status": "todo",
+      "status": "done",
       "origin": "added"
+    },
+    {
+      "id": "T046",
+      "title": "T027 の売上推移が折れ線でなく棒グラフになっている件を揃える",
+      "deliverable": "売上推移が、verify の文言（折れ線）と実装が一致した状態。折れ線に変えるか、棒グラフを正とするなら T027 の deliverable/verify の文言を棒グラフに直して、どちらでも文言と実装が食い違わない状態",
+      "verify": [
+        "生徒のダッシュボード（経営）を開き、日ごとの売上のグラフが出ることを確認する",
+        "docs/plan.json の T027 の verify の語（折れ線／棒）と、実装（apps/storefront/src/screens/dashboard.tsx）の描画が一致していることを確認する",
+        "取引の無い日が0として描かれ、線または棒が途切れないことを確認する"
+      ],
+      "dependsOn": ["T027"],
+      "files": ["apps/storefront/src/screens/dashboard.tsx", "docs/plan.json"],
+      "automation": "human",
+      "status": "done",
+      "origin": "added",
+      "note": "全体照合(2026-09-05)で発見。T027 の verify は『折れ線』だが実装は棒グラフ。0埋めの連続は満たす。折れ線グラフ自体が禁止モチーフ回避で棒にされた経緯があるため、どちらを正とするかは人が決める"
+    },
+    {
+      "id": "T047",
+      "title": "T041 の受け入れ記録 docs/acceptance-i18n.md を作る",
+      "deliverable": "日本語なしで作成→出品→購入→経営まで到達できたことの記録が docs/acceptance-i18n.md にある状態（誰が・いつ・どの言語で・どこまで到達したか）",
+      "verify": [
+        "docs/acceptance-i18n.md を開き、確かめた言語・到達した工程・確かめた人と日付が書かれていることを確認する",
+        "途中で止まった画面があれば、その画面名か『無し』が書かれていることを確認する"
+      ],
+      "dependsOn": ["T041"],
+      "files": ["docs/acceptance-i18n.md"],
+      "automation": "human",
+      "status": "done",
+      "origin": "added",
+      "note": "全体照合(2026-09-05)で発見。T041 は機能としては英語のみで全工程を通過できるが、deliverable と files が指す記録ファイルが存在しない。ユーザーはセッション中に実画面で合格を出している（その事実を記録すればよい）"
+    },
+    {
+      "id": "T048",
+      "title": "T042 の受け入れ記録 docs/acceptance-design.md を作る",
+      "deliverable": "禁止モチーフが主要画面に無いことと、幅375pxで横スクロールが出ないことを人が確かめた記録が docs/acceptance-design.md にある状態",
+      "verify": [
+        "docs/acceptance-design.md を開き、確かめた画面・禁止モチーフの照合結果・375pxで横スクロールが出ないことと、確かめた人と日付が書かれていることを確認する"
+      ],
+      "dependsOn": ["T042"],
+      "files": ["docs/acceptance-design.md"],
+      "automation": "human",
+      "status": "done",
+      "origin": "added",
+      "note": "全体照合(2026-09-05)で発見。375px横スクロール無しは実測で確認済み、ユーザーもセッション中に実画面で合格を出しているが、deliverable と files が指す記録ファイルが存在しない"
     }
   ]
 }
